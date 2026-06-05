@@ -1,0 +1,129 @@
+/* Configuración General */
+body {
+    background-color: #FDF5E6; /* Crema del fondo de la imagen 2 */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Tarjeta Principal */
+.card-verificacion {
+    background-color: #f5edd8; /* Beige de la tarjeta de login */
+    width: 420px;
+    border: 2px solid #2D1B14; /* Borde marrón oscuro */
+    border-radius: 5px;
+    box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Encabezado Naranja */
+.header-naranja {
+    background-color: #E8821A; /* Naranja BurgerSoft */
+    padding: 25px;
+    text-align: center;
+    border-bottom: 2px solid #2D1B14;
+}
+
+.header-naranja h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #000;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+/* Cuerpo de la Tarjeta */
+.cuerpo-tarjeta {
+    padding: 35px 25px;
+    text-align: center;
+}
+
+.texto-instruccion {
+    color: #2D1B14;
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+
+/* Contenedor de los 6 cuadros */
+.contenedor-codigo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.input-codigo {
+    width: 48px;
+    height: 55px;
+    background-color: #3D1C11; /* Marrón oscuro de los inputs del login */
+    border: 2px solid #000;
+    border-radius: 4px;
+    color: #E8821A; /* El número será naranja al escribir */
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    outline: none;
+}
+
+/* Efecto al seleccionar un cuadro */
+.input-codigo:focus {
+    border-color: #E8821A;
+    box-shadow: 0 0 8px rgba(243, 146, 55, 0.5);
+}
+.boton-regresar {
+    position: fixed;  /* fijo respecto a la ventana */
+    top: 20px;        /* distancia desde arriba */
+    right: 20px;      /* distancia desde la derecha */
+    width: 150px; 
+    padding: 12px;
+    background: #E8821A; 
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff; 
+    cursor: pointer;
+    z-index: 1000; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+.boton-regresar:hover {
+    background: #d4b86a; 
+    transform: translateY(-2px);
+}
+
+/* Botón Estilo BurgerSoft */
+.btn-Entrar {
+    background-color: #E8821A;
+    color: #000;
+    border: 2px solid #2D1B14;
+    padding: 14px;
+    width: 100%;
+    font-weight: 900;
+    font-size: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-Entrar:hover {
+    background-color: #e07b1f;
+    transform: translateY(-2px);
+}
+
+.btn-Entrar:active {
+    transform: translateY(0);
+}
+footer {
+    margin-top: 150px;
+    text-align: center;
+    color: var(--color-oscuro);
+    font-size: 0.9rem;
+    font-weight: bold;
+}
