@@ -6,61 +6,408 @@ $navActivo = 'promociones';
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Burguersoft – Promociones</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700;800&display=swap">
-<link rel="stylesheet" href="../estilos/estilos-header-lader-admin.css">
-<link rel="stylesheet" href="../estilos/promociones.css">
-<link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burgersoft — Promociones</title>
+    <link rel="stylesheet" href="../estilos/estilos-header-lader-admin.css">
+    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <style>
+        .promos-page { padding: 36px 40px 60px; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .topbar input {
+            flex: 1;
+            min-width: 220px;
+            padding: 11px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            background: var(--surface);
+            color: var(--text-900);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .topbar input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-glow); }
+        .topbar input::placeholder { color: var(--text-400); }
+
+        .meta-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .meta-bar span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-400); }
+        .meta-bar::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        .promos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 22px;
+        }
+
+        .promo-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s;
+        }
+
+        .promo-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
+        }
+
+        .promo-img-wrap {
+            height: 190px;
+            background: var(--surface-3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.45s var(--ease);
+        }
+
+        .promo-card:hover .promo-img-wrap img { transform: scale(1.06); }
+
+        .promo-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--brand);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .promo-body {
+            padding: 18px 20px 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .promo-nombre {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-900);
+            line-height: 1.3;
+        }
+
+        .promo-desc {
+            font-size: 13px;
+            color: var(--text-400);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .promo-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .tag {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 9px;
+            background: rgba(232,130,26,0.1);
+            border: 1px solid rgba(232,130,26,0.25);
+            border-radius: 20px;
+            color: #8a4a10;
+        }
+
+        .tag-empty { background: rgba(22,8,0,0.05); border-color: var(--border); color: var(--text-400); font-weight: 400; font-style: italic; }
+
+        .promo-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(245,237,216,0.4);
+        }
+
+        .promo-precio {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--brand);
+        }
+
+        .promo-actions { display: flex; gap: 8px; }
+
+        .btn-edit-p, .btn-del-p {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 20px;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.2s, transform 0.15s;
+            color: #fff;
+        }
+
+        .btn-edit-p { background: var(--info); }
+        .btn-del-p  { background: var(--danger); }
+        .btn-edit-p:hover, .btn-del-p:hover { filter: brightness(0.85); transform: translateY(-1px); }
+
+        .empty-state { grid-column: 1/-1; text-align: center; padding: 80px 40px; color: var(--text-400); font-size: 16px; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(22,8,0,0.55);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.show { display: flex; animation: fadeM 0.2s; }
+        @keyframes fadeM { from { opacity:0; } to { opacity:1; } }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--r-lg);
+            padding: 36px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideM 0.25s;
+        }
+
+        .modal-content::-webkit-scrollbar { width: 4px; }
+        .modal-content::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+        @keyframes slideM { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+        .modal-content h2 {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text-900);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: var(--text-600);
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            background: var(--surface-2);
+            color: var(--text-900);
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+
+        .form-group textarea { resize: vertical; min-height: 75px; }
+
+        .prod-search-wrap input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            background: var(--surface-2);
+            color: var(--text-900);
+            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+            transition: border-color 0.2s;
+        }
+
+        .prod-search-wrap input:focus { border-color: var(--brand); }
+
+        .prod-lista {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            background: var(--surface);
+            margin-bottom: 10px;
+            scrollbar-width: thin;
+        }
+
+        .prod-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        .prod-item:last-child { border-bottom: none; }
+        .prod-item:hover { background: rgba(232,130,26,0.06); }
+        .prod-item.selected { background: rgba(232,130,26,0.11); }
+
+        .prod-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--brand); flex-shrink: 0; cursor: pointer; }
+        .prod-item img { width: 36px; height: 36px; border-radius: var(--r-sm); object-fit: cover; background: var(--surface-3); flex-shrink: 0; }
+
+        .prod-item-nombre { font-size: 13px; font-weight: 700; color: var(--text-900); }
+        .prod-item-precio { font-size: 11.5px; color: var(--brand); font-weight: 600; }
+
+        .prod-seleccionados { display: flex; flex-wrap: wrap; gap: 6px; min-height: 30px; align-items: center; }
+        .prod-sel-label { font-size: 12px; color: var(--text-400); font-style: italic; }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: rgba(232,130,26,0.12);
+            border: 1px solid rgba(232,130,26,0.35);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #8a4a10;
+        }
+
+        .chip button { background: none; border: none; cursor: pointer; color: #b05010; font-size: 14px; line-height: 1; padding: 0; transition: color 0.15s; }
+        .chip button:hover { color: var(--danger); }
+
+        .preview-img { width: 100%; max-height: 170px; margin-top: 10px; border-radius: var(--r-sm); object-fit: cover; display: none; border: 1px solid var(--border); }
+        .preview-img.show { display: block; }
+
+        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+        .btn-cancel-p {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: 1.5px solid var(--border-strong);
+            border-radius: var(--r-sm);
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-600);
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+
+        .btn-cancel-p:hover { background: var(--surface-3); }
+
+        .btn-save-p {
+            flex: 2;
+            padding: 12px;
+            background: var(--brand);
+            border: none;
+            border-radius: var(--r-sm);
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 13px;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(232,130,26,0.35);
+            transition: all 0.2s;
+        }
+
+        .btn-save-p:hover { background: var(--brand-deep); transform: translateY(-1px); }
+
+        body.dark-mode .promo-card { background: var(--surface); }
+        body.dark-mode .promo-img-wrap { background: var(--surface-2); }
+        body.dark-mode .promo-footer { background: rgba(255,255,255,0.03); }
+        body.dark-mode .modal-content { background: var(--surface); }
+        body.dark-mode .prod-lista { background: var(--surface-2); }
+        body.dark-mode .prod-item { border-bottom-color: rgba(255,255,255,0.05); }
+        body.dark-mode .topbar input { background: var(--surface); color: var(--text-900); }
+    </style>
 </head>
 <body>
 <?php include __DIR__ . '/../includes/admin_layout.php'; ?>
 
 <div class="main-content">
-<div class="container-promos">
+<div class="promos-page">
 
-    <div class="promos-header">
+    <div class="page-header">
         <div>
             <h1>Combos y Promociones</h1>
-            <p class="subtitulo">Gestiona las ofertas activas del local</p>
+            <div class="subtitulo">Gestiona las ofertas activas del local</div>
         </div>
+        <button class="btn-primary" onclick="abrirModal()">+ Añadir promoción</button>
     </div>
 
-    <div class="top-bar">
+    <div class="topbar">
         <input type="text" id="buscar" placeholder="Buscar promoción...">
-        <button class="btn-agregar" onclick="abrirModal()">Añadir promoción</button>
     </div>
 
-    <div class="promo-meta">
+    <div class="meta-bar">
         <span id="contador-promos">0 promociones</span>
     </div>
 
-    <div id="listaPromos" class="cards">
-        <div class="empty-message">Cargando promociones...</div>
+    <div class="promos-grid" id="listaPromos">
+        <div class="empty-state">Cargando promociones...</div>
     </div>
 
 </div>
 </div>
 
-<!-- MODAL -->
 <div id="formulario" class="modal">
     <div class="modal-content">
         <h2 id="tituloForm">Añadir Promoción</h2>
 
         <div class="form-group">
-            <label for="nombre">Nombre *</label>
+            <label>Nombre *</label>
             <input type="text" id="nombre" placeholder="Ej: Combo Burger Deluxe">
         </div>
 
         <div class="form-group">
-            <label for="descripcion">Descripción</label>
+            <label>Descripción</label>
             <textarea id="descripcion" placeholder="Ej: Hamburguesa con queso, papas y bebida"></textarea>
         </div>
 
         <div class="form-group">
-            <label for="precio">Precio *</label>
+            <label>Precio *</label>
             <input type="number" id="precio" placeholder="Ej: 15000" step="100" min="0">
         </div>
 
@@ -76,20 +423,20 @@ $navActivo = 'promociones';
         </div>
 
         <div class="form-group">
-            <label for="imagen">Imagen</label>
+            <label>Imagen</label>
             <input type="file" id="imagen" accept="image/*">
-            <img id="preview" class="preview">
+            <img id="preview" class="preview-img">
         </div>
 
-        <div class="modal-buttons">
-            <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
-            <button class="btn-guardar" onclick="guardarPromo()">Guardar</button>
+        <div class="modal-actions">
+            <button class="btn-cancel-p" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn-save-p" onclick="guardarPromo()">Guardar</button>
         </div>
     </div>
 </div>
 
 <div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title"> Accesibilidad</div>
+    <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">
         <div class="acc-row-label">Tema</div>
         <div class="acc-row-btns">
@@ -98,9 +445,9 @@ $navActivo = 'promociones';
         </div>
     </div>
     <div class="acc-row">
-        <div class="acc-row-label">Tamano de letra</div>
+        <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A-</button>
+            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
             <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
         </div>
     </div>
@@ -113,8 +460,9 @@ $navActivo = 'promociones';
     </div>
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
-
-<button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
+</button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
 
@@ -125,35 +473,30 @@ let todosProductos = [];
 let seleccionados  = new Set();
 let editandoId     = null;
 
-async function init() {
-    await Promise.all([cargarPromos(), cargarProductos()]);
-}
+function togglePanel() { document.getElementById('accPanel').classList.toggle('open'); }
 
-// ── Carga de datos ─────────────────────────────────────────────────────────
+async function init() { await Promise.all([cargarPromos(), cargarProductos()]); }
+
 async function cargarPromos() {
     try {
         const res = await fetch(CTRL);
         promociones = await res.json();
         renderPromos();
     } catch (e) {
-        document.getElementById('listaPromos').innerHTML =
-            '<div class="empty-message">No se pudo conectar al servidor.</div>';
+        document.getElementById('listaPromos').innerHTML = '<div class="empty-state">No se pudo conectar al servidor.</div>';
     }
 }
 
 async function cargarProductos() {
     try {
-        const res      = await fetch(`${CTRL}?accion=productos`);
+        const res = await fetch(`${CTRL}?accion=productos`);
         todosProductos = await res.json();
-    } catch (e) {
-        todosProductos = [];
-    }
+    } catch (e) { todosProductos = []; }
 }
 
-// ── Render tarjetas ────────────────────────────────────────────────────────
 function renderPromos() {
-    const lista     = document.getElementById('listaPromos');
-    const busqueda  = document.getElementById('buscar').value.toLowerCase().trim();
+    const lista    = document.getElementById('listaPromos');
+    const busqueda = document.getElementById('buscar').value.toLowerCase().trim();
     const filtradas = promociones.filter(p =>
         (p.nombre_promocion || '').toLowerCase().includes(busqueda)
     );
@@ -162,137 +505,108 @@ function renderPromos() {
         filtradas.length === 1 ? '1 promoción' : `${filtradas.length} promociones`;
 
     if (!filtradas.length) {
-        lista.innerHTML = '<div class="empty-message">No hay promociones. ¡Agrega la primera!</div>';
+        lista.innerHTML = '<div class="empty-state">No hay promociones. ¡Agrega la primera!</div>';
         return;
     }
 
     lista.innerHTML = filtradas.map(p => {
-        const imgSrc   = p.imagen || '../estilos/img/promocion.png';
-        const prods    = p.productos || [];
-        const prodsHtml = prods.length
-            ? prods.map(pr => `<span class="tag-prod">${pr.nombre}</span>`).join('')
-            : '<span class="tag-prod tag-vacio">Sin productos</span>';
+        const imgSrc = p.imagen || '../estilos/img/promocion.png';
+        const prods  = p.productos || [];
+        const tagsHtml = prods.length
+            ? prods.map(pr => `<span class="tag">${pr.nombre}</span>`).join('')
+            : '<span class="tag tag-empty">Sin productos</span>';
 
         return `
-        <div class="card">
-            <div class="card-img-wrap">
-                <img src="${imgSrc}" class="card-img" alt="${p.nombre_promocion}"
+        <div class="promo-card">
+            <div class="promo-img-wrap">
+                <img src="${imgSrc}" alt="${p.nombre_promocion}"
                      onerror="this.onerror=null;this.src='../estilos/img/promocion.png'">
-                <span class="card-badge">Promo</span>
+                <span class="promo-badge">Promo</span>
             </div>
-            <div class="card-body">
-                <div class="card-nombre">${p.nombre_promocion}</div>
-                ${p.descripcion ? `<div class="card-descripcion">${p.descripcion}</div>` : ''}
-                <div class="card-productos">${prodsHtml}</div>
+            <div class="promo-body">
+                <div class="promo-nombre">${p.nombre_promocion}</div>
+                ${p.descripcion ? `<div class="promo-desc">${p.descripcion}</div>` : ''}
+                <div class="promo-tags">${tagsHtml}</div>
             </div>
-            <div class="card-footer">
-                <div class="card-precio">$${Number(p.precio).toLocaleString('es-CO')}</div>
-                <div class="card-actions">
-                    <button class="btn-editar"   onclick="editarPromo(${p.id})">Editar</button>
-                    <button class="btn-eliminar" onclick="eliminarPromo(${p.id})">Eliminar</button>
+            <div class="promo-footer">
+                <div class="promo-precio">$${Number(p.precio).toLocaleString('es-CO')}</div>
+                <div class="promo-actions">
+                    <button class="btn-edit-p" onclick="editarPromo(${p.id})">Editar</button>
+                    <button class="btn-del-p" onclick="eliminarPromo(${p.id})">Eliminar</button>
                 </div>
             </div>
         </div>`;
     }).join('');
 }
 
-// ── Selector de productos ─────────────────────────────────────────────────
 function filtrarProductos() {
     const q = document.getElementById('prod-buscar').value.toLowerCase().trim();
-    const lista = q
-        ? todosProductos.filter(p => p.nombre.toLowerCase().includes(q))
-        : todosProductos;
+    const lista = q ? todosProductos.filter(p => p.nombre.toLowerCase().includes(q)) : todosProductos;
     renderListaProductos(lista);
 }
 
 function renderListaProductos(lista) {
     const cont = document.getElementById('prod-lista');
-    if (!lista.length) {
-        cont.innerHTML = '<div class="prod-empty">No se encontraron productos</div>';
-        return;
-    }
+    if (!lista.length) { cont.innerHTML = '<div style="padding:14px;text-align:center;font-size:13px;color:var(--text-400);">Sin resultados</div>'; return; }
     cont.innerHTML = lista.map(p => `
         <label class="prod-item ${seleccionados.has(p.id) ? 'selected' : ''}">
-            <input type="checkbox" value="${p.id}"
-                   ${seleccionados.has(p.id) ? 'checked' : ''}
+            <input type="checkbox" value="${p.id}" ${seleccionados.has(p.id) ? 'checked' : ''}
                    onchange="toggleProducto(${p.id}, this.checked)">
-            <img src="${p.img || '../estilos/img/promocion.png'}"
-                 onerror="this.src='../estilos/img/promocion.png'" alt="">
-            <div class="prod-item-info">
-                <span class="prod-item-nombre">${p.nombre}</span>
-                <span class="prod-item-precio">$${Number(p.valor).toLocaleString('es-CO')}</span>
+            <img src="${p.img || '../estilos/img/promocion.png'}" onerror="this.src='../estilos/img/promocion.png'" alt="">
+            <div>
+                <div class="prod-item-nombre">${p.nombre}</div>
+                <div class="prod-item-precio">$${Number(p.valor).toLocaleString('es-CO')}</div>
             </div>
         </label>
     `).join('');
 }
 
 function toggleProducto(id, checked) {
-    if (checked) seleccionados.add(id);
-    else seleccionados.delete(id);
-    actualizarChips();
-    filtrarProductos();
+    if (checked) seleccionados.add(id); else seleccionados.delete(id);
+    actualizarChips(); filtrarProductos();
 }
 
 function actualizarChips() {
     const cont = document.getElementById('prod-seleccionados');
-    if (!seleccionados.size) {
-        cont.innerHTML = '<span class="prod-sel-label">Ningún producto seleccionado</span>';
-        return;
-    }
+    if (!seleccionados.size) { cont.innerHTML = '<span class="prod-sel-label">Ningún producto seleccionado</span>'; return; }
     cont.innerHTML = [...seleccionados].map(id => {
         const p = todosProductos.find(x => x.id === id);
         if (!p) return '';
-        return `<span class="chip">${p.nombre}
-                    <button onclick="toggleProducto(${id}, false)" title="Quitar">×</button>
-                </span>`;
+        return `<span class="chip">${p.nombre}<button onclick="toggleProducto(${id},false)" title="Quitar">×</button></span>`;
     }).join('');
 }
 
-// ── Modal ──────────────────────────────────────────────────────────────────
 function abrirModal() {
-    editandoId = null;
-    seleccionados.clear();
+    editandoId = null; seleccionados.clear();
     document.getElementById('tituloForm').textContent = 'Añadir Promoción';
-    ['nombre','descripcion','precio','imagen','prod-buscar'].forEach(id =>
-        document.getElementById(id).value = ''
-    );
+    ['nombre','descripcion','precio','prod-buscar'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('imagen').value = '';
     document.getElementById('preview').classList.remove('show');
     renderListaProductos(todosProductos);
     actualizarChips();
     document.getElementById('formulario').classList.add('show');
 }
 
-function cerrarModal() {
-    document.getElementById('formulario').classList.remove('show');
-    editandoId = null;
-    seleccionados.clear();
-}
+function cerrarModal() { document.getElementById('formulario').classList.remove('show'); editandoId = null; seleccionados.clear(); }
 
 async function editarPromo(id) {
     const promo = promociones.find(p => p.id === id);
     if (!promo) return;
-    editandoId = id;
-
-    seleccionados.clear();
+    editandoId = id; seleccionados.clear();
     try {
         const res = await fetch(`${CTRL}?accion=productos_promo&id=${id}`);
         const ids = await res.json();
         ids.forEach(pid => seleccionados.add(Number(pid)));
     } catch(e) {}
-
     document.getElementById('tituloForm').textContent = 'Editar Promoción';
-    document.getElementById('nombre').value           = promo.nombre_promocion;
-    document.getElementById('descripcion').value      = promo.descripcion || '';
-    document.getElementById('precio').value           = promo.precio;
-    document.getElementById('imagen').value           = '';
-    document.getElementById('prod-buscar').value      = '';
-
+    document.getElementById('nombre').value      = promo.nombre_promocion;
+    document.getElementById('descripcion').value = promo.descripcion || '';
+    document.getElementById('precio').value      = promo.precio;
+    document.getElementById('imagen').value      = '';
+    document.getElementById('prod-buscar').value = '';
     const prev = document.getElementById('preview');
-    if (promo.imagen) { prev.src = promo.imagen; prev.classList.add('show'); }
-    else prev.classList.remove('show');
-
-    renderListaProductos(todosProductos);
-    actualizarChips();
+    if (promo.imagen) { prev.src = promo.imagen; prev.classList.add('show'); } else prev.classList.remove('show');
+    renderListaProductos(todosProductos); actualizarChips();
     document.getElementById('formulario').classList.add('show');
 }
 
@@ -301,30 +615,24 @@ async function eliminarPromo(id) {
     try {
         const res  = await fetch(`${CTRL}?id=${id}`, { method: 'DELETE' });
         const data = await res.json();
-        if (data.success) cargarPromos();
-        else alert('Error: ' + (data.error || ''));
+        if (data.success) cargarPromos(); else alert('Error: ' + (data.error || ''));
     } catch (e) { alert('Error de conexión'); }
 }
 
-// ── Guardar ────────────────────────────────────────────────────────────────
 async function guardarPromo() {
     const nombre      = document.getElementById('nombre').value.trim();
     const descripcion = document.getElementById('descripcion').value.trim();
     const precio      = document.getElementById('precio').value;
     const imagenFile  = document.getElementById('imagen').files[0];
-
     if (!nombre || !precio) { alert('Nombre y precio son obligatorios'); return; }
-
     const fd = new FormData();
     fd.append('nombre_promocion', nombre);
-    fd.append('descripcion',      descripcion);
-    fd.append('precio',           precio);
-    fd.append('productos_ids',    JSON.stringify([...seleccionados]));
+    fd.append('descripcion', descripcion);
+    fd.append('precio', precio);
+    fd.append('productos_ids', JSON.stringify([...seleccionados]));
     if (imagenFile) fd.append('imagen', imagenFile);
-
     const url    = editandoId ? `${CTRL}?id=${editandoId}` : CTRL;
     const method = editandoId ? 'PUT' : 'POST';
-
     try {
         const res  = await fetch(url, { method, body: fd });
         const data = await res.json();
@@ -334,13 +642,9 @@ async function guardarPromo() {
 }
 
 document.getElementById('imagen').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = ev => {
-        document.getElementById('preview').src = ev.target.result;
-        document.getElementById('preview').classList.add('show');
-    };
+    reader.onload = ev => { document.getElementById('preview').src = ev.target.result; document.getElementById('preview').classList.add('show'); };
     reader.readAsDataURL(file);
 });
 

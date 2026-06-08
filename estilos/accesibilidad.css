@@ -1,764 +1,99 @@
-/*
-   ACCESIBILIDAD.CSS — BURGUERSOFT
-
-/* ── VARIABLES DEL MODO OSCURO ──────────────────────────────── */
-:root {
-    --dm-fondo:          #1a1a1a;
-    --dm-fondo-card:     #242424;
-    --dm-fondo-elevado:  #2e2e2e;
-    --dm-fondo-input:    #2a2a2a;
-    --dm-borde:          rgba(232, 130, 26, 0.20);
-    --dm-borde-fuerte:   rgba(232, 130, 26, 0.40);
-    --dm-naranja:        #E8821A;
-    --dm-naranja-suave:  rgba(232, 130, 26, 0.12);
-    --dm-texto:          #f0ebe3;
-    --dm-texto-suave:    #a89888;
-    --dm-peligro:        #C8382A;
-    --dm-sombra:         0 8px 32px rgba(0, 0, 0, 0.55);
-}
-
-/* ══════════════════════════════════════════════════════════════
-   1. WIDGET FLOTANTE
-══════════════════════════════════════════════════════════════ */
-
-#widget-accesibilidad {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 1000000;
-}
-
-#boton-accesibilidad {
-    background: var(--dm-naranja) !important;
-    border: none !important;
-    border-radius: 50% !important;
-    width: 56px !important;
-    height: 56px !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 0 !important;
-    box-shadow: 0 4px 18px rgba(232, 130, 26, 0.45) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-#boton-accesibilidad:hover {
-    transform: scale(1.1) !important;
-    box-shadow: 0 6px 24px rgba(232, 130, 26, 0.65) !important;
-}
-
-#boton-accesibilidad::before {
-    content: "🧍";
-    filter: brightness(6) saturate(1.5) invert(0.8) !important;
-    font-size: 28px !important;
-    display: block !important;
-    /* Sin filter para que el emoji se vea con sus colores naturales */
-}
-
-/* ══════════════════════════════════════════════════════════════
-   2. PANEL DE OPCIONES
-══════════════════════════════════════════════════════════════ */
-
-#menu-accesibilidad {
-    display: none;
-    background: #ffffff !important;
-    border-radius: 16px !important;
-    padding: 22px !important;
-    width: 270px !important;
-    position: absolute !important;
-    bottom: 70px !important;
-    right: 0 !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25) !important;
-    border: 1px solid rgba(232, 130, 26, 0.35) !important;
-}
-
-#menu-accesibilidad.active { display: block !important; }
-
-#menu-accesibilidad h4 {
-    margin: 0 0 18px !important;
-    text-align: center !important;
-    font-size: 14px !important;
-    font-weight: 900 !important;
-    letter-spacing: 0.8px !important;
-    text-transform: uppercase !important;
-    color: #2c1810 !important;
-    border-bottom: 2px solid var(--dm-naranja) !important;
-    padding-bottom: 10px !important;
-}
-
-.opcion-acc {
-    margin-bottom: 18px !important;
-    position: relative !important;
-}
-
-.opcion-acc label {
-    display: block !important;
-    font-size: 12px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.6px !important;
-    text-transform: uppercase !important;
-    color: #2c1810 !important;
-    margin-bottom: 8px !important;
-}
-
-.opcion-acc input[type="range"] {
-    width: 100% !important;
-    accent-color: var(--dm-naranja) !important;
-}
-
-.opcion-acc select {
-    width: 100% !important;
-    padding: 8px 10px !important;
-    border: 1.5px solid rgba(44, 24, 16, 0.18) !important;
-    border-radius: 8px !important;
-    font-size: 13px !important;
-    background: #fdf8f0 !important;
-    color: #2c1810 !important;
-    outline: none !important;
-}
-
-#val-size {
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important;
-    font-size: 12px !important;
-    font-weight: 800 !important;
-    color: var(--dm-naranja) !important;
-}
-
-#btn-contraste {
-    width: 100% !important;
-    padding: 12px !important;
-    background: linear-gradient(135deg, var(--dm-naranja), #d4761a) !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 10px !important;
-    font-weight: 900 !important;
-    font-size: 13px !important;
-    letter-spacing: 0.6px !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 14px rgba(232, 130, 26, 0.38) !important;
-    transition: all 0.2s ease !important;
-}
-
-#btn-contraste:hover {
-    background: linear-gradient(135deg, #d4761a, #bf6714) !important;
-    transform: translateY(-1px) !important;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   3. MODO OSCURO — BASE GLOBAL
-══════════════════════════════════════════════════════════════ */
-
-html.dark-mode,
-body.dark-mode {
-    background-color: var(--dm-fondo) !important;
-    background-image: none !important;
-    color: var(--dm-texto) !important;
-}
-
-body.dark-mode section,
-body.dark-mode main,
-body.dark-mode .hero,
-body.dark-mode .nosotros-section,
-body.dark-mode .nosotros-ubicacion,
-body.dark-mode .map-content,
-body.dark-mode .menu-section,
-body.dark-mode .contact-section,
-body.dark-mode .promociones,
-body.dark-mode .contenedor,
-body.dark-mode .main-content,
-body.dark-mode .productos-container,
-body.dark-mode #productos-container,
-body.dark-mode .productos-grid,
-body.dark-mode .titulo-seccion,
-body.dark-mode .container,
-body.dark-mode .config-form {
-    background-color: var(--dm-fondo) !important;
-    background-image: none !important;
-}
-
-body.dark-mode header {
-    background-color: #111111 !important;
-    background-image: none !important;
-    border-bottom: 1px solid var(--dm-borde-fuerte) !important;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.4) !important;
-}
-
-body.dark-mode header a{
-    color: var(--dm-texto) !important;
-    background-color: #111111 !important;
-}
-
-body.dark-mode footer {
-    background-color: #111111 !important;
-    border-top: 1px solid var(--dm-borde) !important;
-}
-
-body.dark-mode .footer-content,
-body.dark-mode .footer-brand {
-    background-color: #111111 !important;
-    color: var(--dm-texto-suave) !important;
-    border: none !important;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   4. TIPOGRAFÍA
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode p,
-body.dark-mode span,
-body.dark-mode li,
-body.dark-mode td,
-body.dark-mode th,
-body.dark-mode label:not(#menu-accesibilidad label),
-body.dark-mode .section-text,
-body.dark-mode .descripcion,
-body.dark-mode .nosotros-content p,
-body.dark-mode .icon-box p,
-body.dark-mode .prod-card-desc {
-    color: var(--dm-texto) !important;
-}
-
-body.dark-mode a { color: var(--dm-texto) !important; }
-
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode h5,
-body.dark-mode h6,
-body.dark-mode .nom-local,
-body.dark-mode .product-name,
-body.dark-mode .prod-card-nombre,
-body.dark-mode .section-title,
-body.dark-mode .cat-nombre {
-    color: var(--dm-naranja) !important;
-}
-
-body.dark-mode .product-price,
-body.dark-mode .prod-card-precio,
-body.dark-mode .new-price {
-    color: var(--dm-naranja) !important;
-    font-weight: 800 !important;
-}
-
-body.dark-mode .old-price {
-    color: var(--dm-texto-suave) !important;
-}
-
-/* Header nav links */
-body.dark-mode .header-center a {
-    color: rgba(240, 235, 227, 0.75) !important;
-}
-
-body.dark-mode .header-center a:hover {
-    color: #ffffff !important;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   5. IMÁGENES
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode img {
-    background-color: transparent !important;
-    opacity: 1 !important;
-}
-
-body.dark-mode .carousel-slide,
-body.dark-mode .product-image,
-body.dark-mode .prod-card-img {
-    background-color: var(--dm-fondo-elevado) !important;
-}
-
-body.dark-mode .logo,
-body.dark-mode .logon,
-body.dark-mode header .logo,
-body.dark-mode header a.logo {
-    background-color: transparent !important;
-    filter: drop-shadow(0 0 14px rgba(249, 154, 60, 0.7)) !important;
-    width: 70px;
-    height: 70px
-}
-
-/* ══════════════════════════════════════════════════════════════
-   6. TARJETAS DE PRODUCTOS
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode .product-card,
-body.dark-mode .prod-card {
-    background-color: var(--dm-fondo-card) !important;
-    border: 1px solid var(--dm-borde) !important;
-    box-shadow: var(--dm-sombra) !important;
-}
-
-body.dark-mode .product-card:hover,
-body.dark-mode .prod-card:hover {
-    border-color: var(--dm-naranja) !important;
-}
-
-body.dark-mode .product-info { background-color: transparent !important; }
-body.dark-mode .prod-card-footer { border-top-color: var(--dm-borde) !important; background: transparent !important; }
-body.dark-mode .sale-badge { background: var(--dm-peligro) !important; color: #fff !important; }
-body.dark-mode .btn-add { background: var(--dm-naranja) !important; color: #fff !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   7. FORMULARIOS E INPUTS
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode input[type="text"],
-body.dark-mode input[type="email"],
-body.dark-mode input[type="password"],
-body.dark-mode input[type="number"],
-body.dark-mode input[type="date"],
-body.dark-mode input[type="datetime-local"],
-body.dark-mode input[type="search"],
-body.dark-mode input[type="file"],
-body.dark-mode textarea,
-body.dark-mode .input {
-    background-color: var(--dm-fondo-input) !important;
-    color: var(--dm-texto) !important;
-    border: 1.5px solid var(--dm-borde) !important;
-    border-radius: 10px !important;
-}
-
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder,
-body.dark-mode .input::placeholder {
-    color: var(--dm-texto-suave) !important;
-}
-
-body.dark-mode input:focus,
-body.dark-mode textarea:focus,
-body.dark-mode .input:focus {
-    border-color: var(--dm-naranja) !important;
-    box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.18) !important;
-    outline: none !important;
-    background-color: #2d2d2d !important;
-}
-
-body.dark-mode select {
-    background-color: var(--dm-fondo-input) !important;
-    color: var(--dm-texto) !important;
-    border: 1.5px solid var(--dm-borde) !important;
-    border-radius: 8px !important;
-}
-
-body.dark-mode .campo,
-body.dark-mode .campo input,
-body.dark-mode .campo select {
-    background-color: var(--dm-fondo-input) !important;
-    color: var(--dm-texto) !important;
-    border-color: var(--dm-borde) !important;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   8. BOTONES
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode .btn-primario,
-body.dark-mode .btn-enviar,
-body.dark-mode .btn-confirmar,
-body.dark-mode .btn-guardar,
-body.dark-mode .boton,
-body.dark-mode .save-btn {
-    background: linear-gradient(135deg, var(--dm-naranja), #d4761a) !important;
-    color: #ffffff !important;
-    border: none !important;
-}
-
-body.dark-mode .btn-secundario,
-body.dark-mode .btn-regresar,
-body.dark-mode .boton-regresar,
-body.dark-mode .btn-cancelar,
-body.dark-mode .btn-vaciar {
-    background: transparent !important;
-    color: var(--dm-naranja) !important;
-    border: 1.5px solid var(--dm-borde-fuerte) !important;
-}
-
-body.dark-mode .btn-peligro,
-body.dark-mode .btn-eliminar,
-body.dark-mode .eliminar {
-    background: var(--dm-peligro) !important;
-    color: #ffffff !important;
-    border: none !important;
-}
-
-body.dark-mode .btn-whatsapp { background: #25D366 !important; color: #fff !important; }
-body.dark-mode .btn-factura { background: var(--dm-naranja) !important; color: #fff !important; }
-body.dark-mode .btn-sesion { background: var(--dm-naranja) !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   9. TABLAS
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode table {
-    background-color: var(--dm-fondo-card) !important;
-    box-shadow: var(--dm-sombra) !important;
-}
-
-body.dark-mode thead,
-body.dark-mode th {
-    background-color: #111111 !important;
-    color: var(--dm-naranja) !important;
-    border-bottom: 2px solid var(--dm-borde) !important;
-}
-
-body.dark-mode td {
-    color: var(--dm-texto) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
-}
-
-body.dark-mode tr:nth-child(even) { background-color: rgba(255,255,255,0.02) !important; }
-body.dark-mode tbody tr:hover { background-color: var(--dm-naranja-suave) !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   10. SIDEBAR (Admin)
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode .sidebar {
-    background: linear-gradient(180deg, #111111 0%, #1a0d05 100%) !important;
-    box-shadow: 3px 0 24px rgba(0,0,0,0.6) !important;
-}
-
-body.dark-mode .logo{
-    background-image: url("img/icono.png") !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-}
-
-body.dark-mode .sidebar-header {
-    background-color: #0d0d0d !important;
-    border-bottom-color: var(--dm-borde) !important;
-}
-
-body.dark-mode .sidebar-header hr {
-    background: linear-gradient(to bottom, transparent, var(--dm-naranja), transparent) !important;
-}
-
-body.dark-mode .sidebar-item a { color: rgba(240, 235, 227, 0.65) !important; }
-body.dark-mode .sidebar-item:hover { background: var(--dm-naranja-suave) !important; border-left-color: var(--dm-naranja) !important; }
-body.dark-mode .sidebar-item:hover a { color: #ffffff !important; }
-body.dark-mode .sidebar-footer { border-top-color: var(--dm-borde) !important; background: transparent !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   11. HEADER NAV (Admin)
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode .header-nav {
-    background: #1a0d05 !important;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.5) !important;
-    border-bottom: 1px solid var(--dm-borde) !important;
-}
-
-
-
-body.dark-mode .nav-item { color: rgba(240, 235, 227, 0.75) !important;}
-body.dark-mode .nav-item:hover { background: var(--dm-naranja-suave) !important; color: #ffffff !important; }
-body.dark-mode .nav-item.active { background: rgba(232, 130, 26, 0.20) !important; color: var(--dm-naranja) !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   12. LOGIN / REGISTRO / RECUPERAR
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode .header-bar {
-    background-color: #111111 !important;
-    color: var(--dm-naranja) !important;
-}
-
-body.dark-mode .card {
-    background-color: var(--dm-fondo) !important;
-    box-shadow: var(--dm-sombra) !important;
-}
-
-body.dark-mode .card h2 { color: var(--dm-naranja) !important; }
-body.dark-mode .link,
-body.dark-mode .card a { color: var(--dm-naranja) !important; }
-body.dark-mode .linea { background: var(--dm-borde) !important; }
-body.dark-mode .circulo { color: var(--dm-texto-suave) !important; }
-body.dark-mode .enlace-externo { color: var(--dm-texto-suave) !important; }
-body.dark-mode .enlace-externo a { color: var(--dm-naranja) !important; }
-body.dark-mode .footer-btn { background-color: #111111 !important; color: var(--dm-texto-suave) !important; }
-body.dark-mode .footer-btn:hover { color: var(--dm-naranja) !important; }
-body.dark-mode .btn-regresar { background: transparent !important; color: var(--dm-naranja) !important; border-color: var(--dm-borde-fuerte) !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   13. CARRITO
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode #carrito {
-    background-color: var(--dm-fondo-card) !important;
-    border: 1px solid var(--dm-borde-fuerte) !important;
-    box-shadow: var(--dm-sombra) !important;
-}
-
-body.dark-mode #carrito h3 { color: var(--dm-naranja) !important; }
-body.dark-mode #lista-carrito li { color: var(--dm-texto) !important; border-bottom-color: var(--dm-borde) !important; background: transparent !important; }
-body.dark-mode #total { color: var(--dm-naranja) !important; }
-body.dark-mode #carrito select { background: var(--dm-fondo-input) !important; color: var(--dm-texto) !important; border-color: var(--dm-borde) !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   14. MODALES Y FACTURA
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode .modal-contenido,
-body.dark-mode .mesa-box,
-body.dark-mode #invoice-box {
-    background-color: var(--dm-fondo-card) !important;
-    border: 1px solid var(--dm-borde-fuerte) !important;
-    box-shadow: var(--dm-sombra) !important;
-}
-
-body.dark-mode .modal-contenido h3,
-body.dark-mode .mesa-box h3 { color: var(--dm-naranja) !important; }
-body.dark-mode .invoice-header { background-color: var(--dm-fondo-card) !important; border-bottom: 2px solid var(--dm-naranja) !important; color: var(--dm-naranja) !important; }
-body.dark-mode .invoice-total { color: var(--dm-naranja) !important; font-weight: 900 !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   15. PANEL DE ACCESIBILIDAD EN MODO OSCURO
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode #menu-accesibilidad {
-    background: var(--dm-fondo-card) !important;
-    border-color: var(--dm-borde-fuerte) !important;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.6) !important;
-}
-
-body.dark-mode #menu-accesibilidad h4 { color: var(--dm-texto) !important; }
-body.dark-mode #menu-accesibilidad label { color: var(--dm-texto) !important; }
-body.dark-mode .opcion-acc select { background: var(--dm-fondo-input) !important; color: var(--dm-texto) !important; border-color: var(--dm-borde) !important; }
-
-/* ══════════════════════════════════════════════════════════════
-   16. PÁGINAS ADMIN — EXTRA
-══════════════════════════════════════════════════════════════ */
-
-body.dark-mode .form-tab { background-color: var(--dm-fondo-card) !important; color: var(--dm-texto) !important; border-color: var(--dm-borde) !important; }
-body.dark-mode .form-tab.activo { background-color: var(--dm-fondo-elevado) !important; color: var(--dm-naranja) !important; border-bottom: none !important; }
-body.dark-mode .contenedor-form { background-color: var(--dm-fondo-card) !important; border: 1px solid var(--dm-borde-fuerte) !important; border-radius: 16px !important; color: var(--dm-texto) !important; }
-body.dark-mode .top-bar { background-color: var(--dm-fondo-card) !important; border-bottom: 1px solid var(--dm-borde) !important; }
-body.dark-mode .busqueda-usuarios { background: transparent !important; color: var(--dm-naranja) !important; }
-body.dark-mode .cat-titulo { color: var(--dm-naranja) !important; background: transparent !important; border-bottom-color: var(--dm-borde-fuerte) !important; }
-body.dark-mode .profile-card { background-color: transparent !important; border: none !important; }
-body.dark-mode .imagen-placeholder,
-body.dark-mode .preview { background-color: var(--dm-fondo-elevado) !important; border: 2px dashed var(--dm-borde-fuerte) !important; color: var(--dm-texto-suave) !important; }
-body.dark-mode .imagen-zona { background: transparent !important; border: none !important; }
-body.dark-mode .imagen-controles,
-body.dark-mode .imagen-nota { background-color: var(--dm-fondo-card) !important; color: var(--dm-texto-suave) !important; }
-body.dark-mode .ingredientes-zona { background-color: var(--dm-fondo-card) !important; border: 1px solid var(--dm-borde-fuerte) !important; }
-body.dark-mode .ingredientes-titulo { color: var(--dm-naranja) !important; }
-body.dark-mode #lista-receta li { background-color: var(--dm-fondo-elevado) !important; border-color: var(--dm-borde) !important; color: var(--dm-texto) !important; }
-body.dark-mode .cat-card { background-color: var(--dm-fondo-card) !important; border: 1px solid var(--dm-borde) !important; }
-body.dark-mode .cat-card:hover { border-color: var(--dm-naranja) !important; }
-body.dark-mode .cat-card-nombre { background-color: var(--dm-naranja) !important; color: #1a1a1a !important; }
-body.dark-mode .lista-categorias { background-color: var(--dm-fondo-card) !important; color: var(--dm-texto) !important; }
-body.dark-mode .stat-card { background-color: var(--dm-fondo-card) !important; border-color: var(--dm-borde) !important; }
-body.dark-mode .stat-card h4 { color: var(--dm-naranja) !important; opacity: 0.75; }
-body.dark-mode .stat-card .stat-valor { color: var(--dm-texto) !important; }
-
-/* Quitar fondo del label en modo oscuro */
-body.dark-mode label,
-body.dark-mode .campo label,
-body.dark-mode .fila label,
-body.dark-mode .contenedor,
-body.dark-mode .fila {
-    background-color: #2a2a2a !important;
-    background: #2a2a2a !important;
-    color: #E8821A !important;
-}
-body.dark-mode .campo input{
-    background-color: #1a1a1a!important;
-}
-
-body.dark-mode .icono-sidebar {
-    filter: brightness(0) invert(1);
-}
-
-body.dark-mode .navbar,
-body.dark-mode .card {
-    border: none !important;
-    background-color: transparent !important;
-}
-
-body.dark-mode .nosotros-ubicacion{
-    border-top: #d4761a 3px solid;
-    border-bottom: #d4761a 3px solid;
-}
-/* ══════════════════════════════════════════════════════════════
-   NUEVO PANEL DE ACCESIBILIDAD (.acc-panel)
-══════════════════════════════════════════════════════════════ */
-
-/* Botón flotante FAB */
-.acc-fab {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 1000000;
-    background: var(--dm-naranja) !important;
-    border: none !important;
-    border-radius: 50% !important;
-    width: 56px !important;
-    height: 56px !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: 0 4px 18px rgba(232, 130, 26, 0.45) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-.acc-fab:hover {
-    transform: scale(1.1) !important;
-    box-shadow: 0 6px 24px rgba(232, 130, 26, 0.65) !important;
-}
-
-/* Panel */
 .acc-panel {
-    display: none;
     position: fixed;
-    bottom: 96px;
-    right: 28px;
-    z-index: 999999;
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 22px;
-    width: 270px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(232, 130, 26, 0.35);
+    bottom: 84px;
+    right: 24px;
+    background: var(--surface, #fff);
+    border: 1px solid var(--border-strong, rgba(232,130,26,0.35));
+    border-radius: var(--r-lg, 20px);
+    padding: 20px;
+    width: 230px;
+    box-shadow: var(--shadow-lg, 0 16px 56px rgba(22,8,0,0.18));
+    z-index: 150;
+    display: none;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.acc-panel.activo { display: block; }
+.acc-panel.open { display: flex; }
 
 .acc-panel-title {
-    text-align: center;
-    font-size: 14px;
-    font-weight: 900;
-    letter-spacing: 0.8px;
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
-    color: #2c1810;
-    border-bottom: 2px solid var(--dm-naranja);
+    letter-spacing: 0.8px;
+    color: var(--text-600, #6b4c38);
     padding-bottom: 10px;
-    margin-bottom: 18px;
+    border-bottom: 1px solid var(--border, rgba(232,130,26,0.15));
 }
 
-/* Filas de opciones */
-.acc-row {
-    margin-bottom: 16px;
-}
+.acc-row { display: flex; flex-direction: column; gap: 7px; }
 
 .acc-row-label {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-    color: #2c1810;
-    margin-bottom: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-600, #6b4c38);
 }
 
-.acc-row-btns {
-    display: flex;
-    gap: 8px;
-}
+.acc-row-btns { display: flex; gap: 6px; }
 
-/* Botones de opciones */
 .acc-btn-option,
-.acc_tema {
+.acc_tema,
+.acc-btn-reset {
     flex: 1;
-    padding: 9px 12px;
-    border: 1.5px solid rgba(44, 24, 16, 0.18);
+    padding: 7px 10px;
+    background: var(--surface-3, #f5ede0);
+    border: 1px solid var(--border, rgba(232,130,26,0.15));
     border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
+    font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-900, #160800);
     cursor: pointer;
-    background: #fdf8f0;
-    color: #2c1810;
-    transition: all 0.2s ease;
+    transition: background 0.15s, color 0.15s;
+    box-shadow: none;
 }
 
 .acc-btn-option:hover,
 .acc_tema:hover {
-    background: var(--dm-naranja);
+    background: var(--brand, #E8821A);
     color: #fff;
-    border-color: var(--dm-naranja);
+    border-color: var(--brand, #E8821A);
+    transform: none;
+    box-shadow: none;
 }
 
-.acc-btn-option.activo,
-.acc_tema.activo {
-    background: var(--dm-naranja);
-    color: #fff;
-    border-color: var(--dm-naranja);
-}
-
-/* Botón restablecer */
 .acc-btn-reset {
     width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, var(--dm-naranja), #d4761a);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-weight: 900;
-    font-size: 13px;
-    letter-spacing: 0.6px;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(232, 130, 26, 0.38);
-    transition: all 0.2s ease;
-    margin-top: 6px;
+    flex: none;
+    color: var(--text-600, #6b4c38);
 }
 
 .acc-btn-reset:hover {
-    background: linear-gradient(135deg, #d4761a, #bf6714);
-    transform: translateY(-1px);
+    background: #f0e0cc;
+    transform: none;
+    box-shadow: none;
 }
 
-/* ── Panel en modo oscuro ────────────────────────────────────── */
-body.dark-mode .acc-panel {
-    background: var(--dm-fondo-card) !important;
-    border-color: var(--dm-borde-fuerte) !important;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.6) !important;
+.acc-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    background: var(--brand, #E8821A);
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 18px rgba(232,130,26,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 150;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 0;
 }
 
-body.dark-mode .acc-panel-title {
-    color: var(--dm-texto) !important;
-    border-bottom-color: var(--dm-naranja) !important;
-}
-
-body.dark-mode .acc-row-label {
-    color: var(--dm-texto) !important;
-}
-
-body.dark-mode .acc-btn-option,
-body.dark-mode .acc_tema {
-    background: var(--dm-fondo-input) !important;
-    color: var(--dm-texto) !important;
-    border-color: var(--dm-borde) !important;
-}
-
-body.dark-mode .acc-btn-option:hover,
-body.dark-mode .acc_tema:hover,
-body.dark-mode .acc-btn-option.activo,
-body.dark-mode .acc_tema.activo {
-    background: var(--dm-naranja) !important;
-    color: #fff !important;
-    border-color: var(--dm-naranja) !important;
-}
-
-
-
-/* ══════════════════════════════════════════════════════════════
-   TIPO DE LETRA — ACCESIBILIDAD
-══════════════════════════════════════════════════════════════ */
-
-/* Fuente Sans-Serif (legible, moderna) */
-body.font-sans,
-body.font-sans * {
-    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif !important;
-}
-
-/* Fuente Serif (clásica, más formal) */
-body.font-serif,
-body.font-serif * {
-    font-family: 'Georgia', 'Times New Roman', Times, serif !important;
+.acc-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 28px rgba(232,130,26,0.6);
 }
