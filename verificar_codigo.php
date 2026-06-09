@@ -125,31 +125,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </p>
     </div>
 
-    <div id="widget-accesibilidad">
-        <button id="boton-accesibilidad" title="Opciones de Accesibilidad"></button>
-        <div id="menu-accesibilidad">
-            <h4>Panel de Accesibilidad</h4>
-            <div class="opcion-acc">
-                <label>Tamaño de letra: <span id="val-size">100%</span></label>
-                <input type="range" id="slider-size" min="80" max="150" value="100">
-            </div>
-            <div class="opcion-acc">
-                <label>Tipo de fuente:</label>
-                <select id="select-font">
-                    <option value="Arial, sans-serif">Predeterminada</option>
-                    <option value="'Courier New', monospace">Monoespaciado</option>
-                    <option value="'Georgia', serif">Elegante (Serif)</option>
-                    <option value="'OpenDyslexic', sans-serif">Lectura Fácil</option>
-                </select>
-            </div>
-            <div class="opcion-acc">
-                <button id="btn-contraste" onclick="toggleContrast()">Activar Modo Oscuro</button>
-            </div>
+   <div class="acc-panel" id="accPanel">
+    <div class="acc-panel-title">Accesibilidad</div>
+    <div class="acc-row">
+        <div class="acc-row-label">Tema</div>
+        <div class="acc-row-btns">
+            <button class="acc_tema" onclick="setTema('claro')">Claro</button>
+            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
         </div>
     </div>
+    <div class="acc-row">
+        <div class="acc-row-label">Tamaño de letra</div>
+        <div class="acc-row-btns">
+            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
+            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
+        </div>
+    </div>
+    <div class="acc-row">
+        <div class="acc-row-label">Tipo de letra</div>
+        <div class="acc-row-btns">
+            <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
+            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
+        </div>
+    </div>
+    <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
+</div>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="estilos/img/accesibilidad.png" alt="Accesibilidad">
+</button>
+<link rel="stylesheet" href="estilos/accesibilidad.css">
+<script src="js/accesibilidad.js"></script>
 
-    <link rel="stylesheet" href="estilos/Accesibilidad.css">
-    <script src="js/Accesibilidad.js"></script>
 
     <script>
     // Auto-avance entre cajitas al escribir

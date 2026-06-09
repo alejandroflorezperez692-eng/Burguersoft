@@ -970,7 +970,8 @@ function prepararEdicion(id) {
     document.getElementById('btn-submit').textContent      = 'Guardar cambios';
     document.getElementById('btn-cancelar').style.display  = 'inline-flex';
     cargarReceta(p.id);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    document.querySelector('.form-panel').scrollIntoView({ behavior: 'smooth' });
 }
 
 function cancelarEdicion() {

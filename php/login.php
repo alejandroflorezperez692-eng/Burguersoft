@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <div class="acc-row">
-        <div class="acc-row-label">Tamano de letra</div>
+        <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="cambiarFuente(-1)">A-</button>
             <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>

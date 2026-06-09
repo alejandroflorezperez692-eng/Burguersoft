@@ -28,7 +28,7 @@ try {
     $venta_id = (int)$pdo->lastInsertId();
 
     foreach ($items as $item) {
-        $producto_id     = (int)($item['producto_id']     ?? 0);
+        $producto_id     = (int)($item['id_producto']     ?? 0);
         $cantidad        = (int)($item['cantidad']        ?? 1);
         $precio_unitario = (float)($item['precio_unitario'] ?? 0);
         $subtotal        = $cantidad * $precio_unitario;

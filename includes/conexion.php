@@ -4,6 +4,8 @@ $db_usuario  = 'root';
 $db_password = '';
 $db_nombre   = 'burguersoft';
 
+$conn = new mysqli($db_host, $db_usuario, $db_password, $db_nombre);
+
 try {
     $pdo = new PDO(
         "mysql:host=$db_host;dbname=$db_nombre;charset=utf8mb4",

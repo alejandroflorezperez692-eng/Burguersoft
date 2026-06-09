@@ -23,7 +23,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
-        <a href="../php/login.php" class="btn-regresar">Regresar</a>
+        <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
 
     <div class="header-bar">¿TIENES PROBLEMAS?</div>

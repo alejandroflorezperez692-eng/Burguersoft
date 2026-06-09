@@ -313,6 +313,16 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                 </div>
             </form>
         </div>
+                    <div class="mp-field mp-full" style="margin-top:12px">
+                <label class="mp-label">Confirmar con contraseña <span class="mp-req">*</span></label>
+                <div class="mp-pw">
+                    <input type="password" name="password_confirm" id="pwConfirmDatos"
+                        placeholder="Ingresa tu contraseña para guardar" required/>
+                    <button type="button" class="mp-pw-toggle" onclick="mpTogglePW('pwConfirmDatos',this)">Mostrar</button>
+                </div>
+            </div>
+
+            <div class="mp-actions">
 
         <div class="mp-tab-panel mp-hidden" id="mp-panel-pwd">
             <form method="POST" action="" onsubmit="return validarFormPassword()">
@@ -377,7 +387,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                 </div>
                 <div class="mp-info-row">
                     <span class="mp-info-lbl">Tipo documento</span>
-                    <span><?= hv($uModal['tipo_documento'] ?: '—') ?></span>
+                    <span><?= hv($uModal['Tdocumento'] ?: '—') ?></span>
                 </div>
                 <div class="mp-info-row">
                     <span class="mp-info-lbl">N.º documento</span>
@@ -427,7 +437,11 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
 
-.perfil-dropdown{position:relative}
+.mp-panel { opacity: 0 !important; pointer-events: none !important; }
+.mp-panel.mp-show { opacity: 1 !important; pointer-events: all !important; }
+
+.perfil-dropdown { position: relative; }
+.dropdown-menu { display: none; }
 .btn-perfil{display:flex;align-items:center;gap:10px;cursor:pointer;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);border-radius:50px;padding:4px 14px 4px 4px;transition:background .25s,transform .2s;margin-left:30px}
 .icono-circulo-perfil{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:white}
 .perfil-nombre{font-size:14px;font-weight:600;color:white;white-space:nowrap}
@@ -437,7 +451,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 .dropdown-menu a:hover{background:#cbbfbf}
 .dropdown-icon{width:18px;height:18px;object-fit:contain;flex-shrink:0}
 .cerrar-sesion{color:#e63946!important;font-weight:600}
-.perfil-dropdown:hover .dropdown-menu{display:block}
 .btn-sesion{background:transparent;border:none;cursor:pointer}
 
 .mp-overlay{position:fixed;inset:0;background:rgba(26,9,13,.55);backdrop-filter:blur(4px);z-index:10000;opacity:0;pointer-events:none;transition:opacity .28s ease}
@@ -492,6 +505,10 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
     .mp-body,.mp-head{padding:16px}
 }
 </style>
+<style>
+.dropdown-menu { display: none !important; }
+.dropdown-menu.abierto { display: block !important; }
+</style>
 
 <script>
 function verificarCoincidencia() {
@@ -508,51 +525,55 @@ function verificarCoincidencia() {
     }
 }
 
-const tipoDocumento = document.getElementById('tipo_documento');
-const numeroDocumento = document.getElementById('Ndocumento');
+function limpiarErrorActual() {
+    const el = document.getElementById('mpPw1');
+    if (el) { el.style.borderColor = ''; el.style.boxShadow = ''; }
+}
 
-function configurarDocumento(limpiar = true) {
-    const tipo = tipoDocumento.value;
-    if (limpiar) numeroDocumento.value = '';
-
+function configurarDocumento(limpiar) {
+    const tipoDoc = document.getElementById('Tdocumento');
+    const numDoc  = document.getElementById('Ndocumento');
+    if (!tipoDoc || !numDoc) return;
+    const tipo = tipoDoc.value;
+    if (limpiar) numDoc.value = '';
     if (tipo === 'Cédula de Ciudadanía') {
-        numeroDocumento.setAttribute('inputmode', 'numeric');
-        numeroDocumento.setAttribute('maxlength', '10');
-        numeroDocumento.setAttribute('minlength', '6');
-        numeroDocumento.oninput = function () { this.value = this.value.replace(/[^0-9]/g, ''); };
+        numDoc.setAttribute('inputmode','numeric'); numDoc.setAttribute('maxlength','10'); numDoc.setAttribute('minlength','6');
+        numDoc.oninput = function(){ this.value = this.value.replace(/[^0-9]/g,''); };
     } else if (tipo === 'Tarjeta de Identidad') {
-        numeroDocumento.setAttribute('inputmode', 'numeric');
-        numeroDocumento.setAttribute('maxlength', '11');
-        numeroDocumento.setAttribute('minlength', '10');
-        numeroDocumento.oninput = function () { this.value = this.value.replace(/[^0-9]/g, ''); };
+        numDoc.setAttribute('inputmode','numeric'); numDoc.setAttribute('maxlength','11'); numDoc.setAttribute('minlength','10');
+        numDoc.oninput = function(){ this.value = this.value.replace(/[^0-9]/g,''); };
     } else if (tipo === 'Cédula de Extranjería') {
-        numeroDocumento.setAttribute('inputmode', 'numeric');
-        numeroDocumento.setAttribute('maxlength', '10');
-        numeroDocumento.setAttribute('minlength', '6');
-        numeroDocumento.oninput = function () { this.value = this.value.replace(/[^0-9]/g, ''); };
+        numDoc.setAttribute('inputmode','numeric'); numDoc.setAttribute('maxlength','10'); numDoc.setAttribute('minlength','6');
+        numDoc.oninput = function(){ this.value = this.value.replace(/[^0-9]/g,''); };
     } else if (tipo === 'Pasaporte') {
-        numeroDocumento.setAttribute('inputmode', 'text');
-        numeroDocumento.setAttribute('maxlength', '9');
-        numeroDocumento.setAttribute('minlength', '6');
-        numeroDocumento.oninput = function () { this.value = this.value.replace(/[^a-zA-Z0-9]/g, ''); };
+        numDoc.setAttribute('inputmode','text'); numDoc.setAttribute('maxlength','9'); numDoc.setAttribute('minlength','6');
+        numDoc.oninput = function(){ this.value = this.value.replace(/[^a-zA-Z0-9]/g,''); };
     } else {
-        numeroDocumento.setAttribute('maxlength', '12');
-        numeroDocumento.oninput = function () {};
+        numDoc.setAttribute('maxlength','12');
+        numDoc.oninput = function(){};
     }
 }
 
-tipoDocumento.addEventListener('change', () => configurarDocumento(true));
-configurarDocumento(false);
-
 document.addEventListener('DOMContentLoaded', () => {
+
     const dd = document.querySelector('.perfil-dropdown');
     const mn = document.querySelector('.dropdown-menu');
-    let t;
     if (dd && mn) {
-        dd.addEventListener('mouseenter', () => { clearTimeout(t); mn.style.display='block'; });
-        dd.addEventListener('mouseleave', () => { t = setTimeout(() => mn.style.display='none', 200); });
+        dd.querySelector('.btn-perfil').addEventListener('click', e => {
+            e.stopPropagation();
+            mn.classList.toggle('abierto');
+        });
+        document.addEventListener('click', () => mn.classList.remove('abierto'));
     }
 
+    /* Tipo de documento */
+    const tipoDoc = document.getElementById('Tdocumento');
+    if (tipoDoc) {
+        tipoDoc.addEventListener('change', () => configurarDocumento(true));
+        configurarDocumento(false);
+    }
+
+    /* Carrito */
     const btnCart   = document.getElementById('toggleCart');
     const btnClose  = document.getElementById('closeCart');
     const cartPanel = document.getElementById('cartPanel');
@@ -561,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
-            if (cartPanel?.classList.contains('active')) cartPanel.classList.remove('active');
+            cartPanel?.classList.remove('active');
             cerrarModalPerfil();
         }
     });
@@ -605,51 +626,31 @@ function mpTogglePW(id, btn) {
 
 function mpSetChip(id, s) {
     const map = { 'mpc-len':'longitud','mpc-may':'mayuscula','mpc-num':'numero','mpc-sym':'especial' };
-    const labels = {
-        'mpc-len': 'Mínimo 8 caracteres',
-        'mpc-may': 'Al menos una mayúscula',
-        'mpc-num': 'Al menos un número',
-        'mpc-sym': 'Al menos un símbolo (@, #, $, etc.)'
-    };
+    const labels = { 'mpc-len':'Mínimo 8 caracteres','mpc-may':'Al menos una mayúscula','mpc-num':'Al menos un número','mpc-sym':'Al menos un símbolo (@, #, $, etc.)' };
     const el = document.getElementById(map[id]);
     if (!el) return;
-    if (s === 'ok') {
-        el.style.color = '#27500A';
-        el.textContent = '✅ ' + labels[id];
-    } else if (s === 'bad') {
-        el.style.color = '#C0392B';
-        el.textContent = '❌ ' + labels[id];
-    } else {
-        el.style.color = '#999';
-        el.textContent = '⏳ ' + labels[id];
-    }
+    el.style.color = s==='ok'?'#27500A':s==='bad'?'#C0392B':'#999';
+    el.textContent = (s==='ok'?'✅ ':s==='bad'?'❌ ':'⏳ ') + labels[id];
 }
 
 function mpCheckRules(v) {
     const f = v.length > 0;
-    const len = v.length >= 8;
-    const may = /[A-Z]/.test(v);
-    const num = /[0-9]/.test(v);
-    const sym = /[@#$%^&*()\-_=+!]/.test(v);
-
-    mpSetChip('mpc-len', !f?'': len?'ok':'bad');
-    mpSetChip('mpc-may', !f?'': may?'ok':'bad');
-    mpSetChip('mpc-num', !f?'': num?'ok':'bad');
-    mpSetChip('mpc-sym', !f?'': sym?'ok':'bad');
-
-    const score = [len, may, num, sym].filter(Boolean).length;
-    const colores = ['#e63946','#ff9f1c','#2ec4b6','#27ae60'];
+    const len = v.length >= 8, may = /[A-Z]/.test(v), num = /[0-9]/.test(v), sym = /[@#$%^&*()\-_=+!]/.test(v);
+    mpSetChip('mpc-len', !f?'':len?'ok':'bad');
+    mpSetChip('mpc-may', !f?'':may?'ok':'bad');
+    mpSetChip('mpc-num', !f?'':num?'ok':'bad');
+    mpSetChip('mpc-sym', !f?'':sym?'ok':'bad');
+    const score = [len,may,num,sym].filter(Boolean).length;
     const progreso = document.getElementById('progreso');
     if (progreso) {
-        progreso.style.width = (score * 25) + '%';
-        progreso.style.background = colores[score - 1] || '#e0e0e0';
+        progreso.style.width = (score*25)+'%';
+        progreso.style.background = ['#e63946','#ff9f1c','#2ec4b6','#27ae60'][score-1]||'#e0e0e0';
     }
 }
 
 function validarFormPassword() {
     const nueva = document.getElementById('mpPw2').value;
     const confirmar = document.getElementById('mpPw3').value;
-
     if (nueva !== confirmar) {
         const msg = document.getElementById('msg-confirmar');
         msg.style.color = '#C0392B';
@@ -657,12 +658,7 @@ function validarFormPassword() {
         document.getElementById('mpPw3').focus();
         return false;
     }
-
-    if (nueva.length < 8) {
-        alert('La contraseña debe tener al menos 8 caracteres.');
-        return false;
-    }
-
+    if (nueva.length < 8) { alert('La contraseña debe tener al menos 8 caracteres.'); return false; }
     return true;
 }
 </script>

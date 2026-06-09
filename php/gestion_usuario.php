@@ -264,15 +264,15 @@ $navActivo = 'usuarios';
     <div class="stat-grid" style="margin-bottom:28px;">
         <div class="stat-card" style="--accent:#E8821A;">
             <div class="stat-label">Total usuarios</div>
-            <div class="stat-val" id="total-usuarios">—</div>
+            <div class="stat-val" style="font-family: var(--font-sans);" id="total-usuarios">—</div>
         </div>
         <div class="stat-card" style="--accent:#ffd700;">
             <div class="stat-label">Administradores</div>
-            <div class="stat-val" id="count-admin">—</div>
+            <div class="stat-val" style="font-family: var(--font-sans);" id="count-admin">—</div>
         </div>
         <div class="stat-card" style="--accent:#2ecc71;">
             <div class="stat-label">Activos</div>
-            <div class="stat-val" id="count-activos">—</div>
+            <div class="stat-val" style="font-family: var(--font-sans); " id="count-activos">—</div>
         </div>
     </div>
 

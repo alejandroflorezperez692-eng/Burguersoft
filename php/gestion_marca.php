@@ -397,12 +397,12 @@ $navActivo = 'marca';
         </div>
 
         <div class="form-group">
-            <label>Teléfono</label>
+            <label>Teléfono*</label>
             <input type="text" id="m-telefono" placeholder="Número de contacto">
         </div>
 
         <div class="form-group">
-            <label>Correo</label>
+            <label>Correo*</label>
             <input type="email" id="m-correo" placeholder="correo@empresa.com">
         </div>
 

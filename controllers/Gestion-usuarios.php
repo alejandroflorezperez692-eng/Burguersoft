@@ -2,12 +2,14 @@
 require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
+iniciarSesionSegura();
+if (empty($_SESSION['id_usuario']))             { http_response_code(401); echo json_encode(['error' => 'No autorizado']); exit; }
+if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador') { http_response_code(403); echo json_encode(['error' => 'Sin permisos']); exit; }
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
-
-requerirAdmin();
 
 $pdo = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
@@ -23,7 +25,7 @@ if ($method === 'GET' && !$id) {
             u.apellido,
             u.correo,
             u.telefono,
-            u.tipo_documento,
+            u.Tdocumento,
             u.Ndocumento,
             u.estado,
             r.nombre AS rol

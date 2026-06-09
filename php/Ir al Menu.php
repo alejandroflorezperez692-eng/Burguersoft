@@ -29,7 +29,7 @@ session_start();
             color: var(--primario);
             font-family: 'Lucida Sans', sans-serif;
             letter-spacing: 1px;
-        }
+}
 
         /* ── CONTENEDOR MENÚ ── */
         #productos-container {
@@ -138,41 +138,7 @@ session_start();
         }
         .btn-add:hover { background: var(--primario); }
 
-        /* ── CARRITO ── */
-        #carrito {
-            position: fixed;
-            right: 20px;
-            top: 120px;
-            width: 270px;
-            background: #fff;
-            border: 2px solid var(--primario);
-            border-radius: 14px;
-            padding: 16px;
-            box-shadow: 0 8px 28px rgba(61,33,17,.18);
-            z-index: 9999;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        #carrito h3 { margin: 0 0 10px; color: var(--primario); font-size: 16px; }
-        #lista-carrito { list-style: none; padding: 0; margin: 0 0 8px; font-size: 13px; }
-        #lista-carrito li { padding: 4px 0; border-bottom: 1px solid #eee; color: #333; }
-        #total { font-weight: bold; color: var(--alerta); margin: 8px 0; font-size: 15px; }
-        #carrito label { font-size: 12px; font-weight: bold; color: #555; }
-        #carrito select {
-            width: 100%; padding: 6px 8px; border: 1px solid #ccc;
-            border-radius: 6px; font-size: 13px; margin: 4px 0 10px;
-        }
-        .carrito-btns { display: flex; flex-direction: column; gap: 6px; }
-        .carrito-btns button {
-            padding: 8px; border: none; border-radius: 7px;
-            cursor: pointer; font-weight: bold; font-size: 13px;
-        }
-        .btn-enviar  { background: var(--secundario); color: #fff; }
-        .btn-vaciar  { background: #555; color: #fff; }
-        .btn-factura { background: var(--primario); color: #fff; }
-        .btn-enviar:hover  { background: #d47300; }
-        .btn-vaciar:hover  { background: #333; }
-        .btn-factura:hover { background: #5a3320; }
+        .btn-cerrar-inv { background: #464646; color: #fff; }
 
         /* ── CARGANDO ── */
         .cargando { text-align: center; padding: 60px; color: #888; font-size: 15px; }
@@ -237,37 +203,6 @@ session_start();
 <body>
 
 <?php include __DIR__ . '/../includes/header_publico.php'; ?>
-
-<!-- CARRUSEL -->
-<section class="hero">
-    <div class="carousel-container">
-        <div class="carousel-slide active" style="background-image:url('https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/4e4293857c03d819e4ae51de1e86d66a.jpg');"></div>
-        <div class="carousel-slide" style="background-image:url('https://ranchera.com.co/wp-content/uploads/2022/11/perro-colombiano-1.jpg');"></div>
-        <div class="carousel-slide" style="background-image:url('https://chefstv.net/wp-content/uploads/2024/03/0045-empanadas-saltenas-fritas-wide-web.webp');"></div>
-        <div class="carousel-slide" style="background-image:url('https://www.elespectador.com/resizer/v2/4YMEEW2QBVGALOUC7LSPUFNKMU.jpg?auth=1913090d3e141e8a3ccce35509259201363e9dddf853024e2f30ac71ce6383a9&width=1110&height=739&smart=true&quality=60');"></div>
-    </div>
-</section>
-
-<!-- CARRITO -->
-<div id="carrito">
-    <h3>🛒 Mi pedido</h3>
-    <ul id="lista-carrito"></ul>
-    <p id="total">Total: $0</p>
-    <label for="pago">Método de pago:</label>
-    <select id="pago" title="Método de pago">
-        <option value="Efectivo">Efectivo</option>
-        <option value="Nequi">Nequi</option>
-        <option value="Daviplata">Daviplata</option>
-        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-    </select>
-    <div class="carrito-btns">
-        <button type="button" class="btn-enviar"  onclick="enviarPedido()"> Enviar Pedido</button>
-        <button type="button" class="btn-vaciar"  onclick="vaciarCarrito()"> Vaciar</button>
-        <button type="button" class="btn-factura" onclick="mostrarFactura()"> Ver factura</button>
-    </div>
-</div>
-
-<!-- Modal pedido -->
 <div id="pedido-modal" role="dialog" aria-modal="true" aria-label="Seleccionar método de pedido">
     <div class="modal-contenido">
         <h3>¿Cómo deseas realizar el pedido?</h3>
@@ -309,7 +244,7 @@ session_start();
 
 <!-- ACCESIBILIDAD -->
 <div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title"> Accesibilidad</div>
+    <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">
         <div class="acc-row-label">Tema</div>
         <div class="acc-row-btns">
@@ -318,9 +253,9 @@ session_start();
         </div>
     </div>
     <div class="acc-row">
-        <div class="acc-row-label">Tamano de letra</div>
+        <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A-</button>
+            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
             <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
         </div>
     </div>
@@ -333,8 +268,9 @@ session_start();
     </div>
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
-
-<button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
+</button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
 
@@ -459,7 +395,7 @@ session_start();
         });
         const items = Array.from(map.values());
         try {
-            await fetch('http://localhost:3000/guardar-pedido', {
+            await fetch('../controllers/pedidos.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nom_cliente: nom_cliente || 'Cliente', metodo_pago, items })

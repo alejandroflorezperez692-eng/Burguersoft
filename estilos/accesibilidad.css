@@ -97,3 +97,139 @@
     transform: scale(1.1);
     box-shadow: 0 8px 28px rgba(232,130,26,0.6);
 }
+/* ── Modo Oscuro ─────────────────────────────────────────────────────────── */
+body.dark-mode {
+    --color-fondo:       #121212;
+    --color-fondo-alt:   #1a1a1a;
+    --color-texto:       #f0e8dc;
+    --color-texto-suave: #c8a880;
+    --color-primario:    #f5c98a;
+    --color-borde:       rgba(232,130,26,0.25);
+    background-color: #121212 !important;
+    color: #f0e8dc !important;
+}
+
+/* Header y nav */
+body.dark-mode header,
+body.dark-mode .nav-container,
+body.dark-mode .site-header {
+    background-color: #1e1208 !important;
+}
+
+body.dark-mode .nav-link,
+body.dark-mode .nav-links a {
+    color: #f0e8dc !important;
+}
+
+/* Secciones de contenido */
+body.dark-mode body,
+body.dark-mode .hero + section,
+body.dark-mode .nosotros-section,
+body.dark-mode .nosotros-ubicacion,
+body.dark-mode .contact-section,
+body.dark-mode .promociones,
+body.dark-mode .map-content,
+body.dark-mode .section-title,
+body.dark-mode .section-text {
+    background-color: #1a1a1a !important;
+    color: #f0e8dc !important;
+}
+
+/* Textos */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4 {
+    color: #f5c98a !important;
+}
+
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode li,
+body.dark-mode label,
+body.dark-mode .descripcion {
+    color: #c8b09a !important;
+}
+
+/* Cards de productos / promociones */
+body.dark-mode .producto-card,
+body.dark-mode .promo-card,
+body.dark-mode .icon-box,
+body.dark-mode .card {
+    background-color: #2a1c12 !important;
+    border-color: rgba(232,130,26,0.2) !important;
+    color: #f0e8dc !important;
+}
+
+body.dark-mode .producto-card h3,
+body.dark-mode .promo-card h3 {
+    color: #f5c98a !important;
+}
+
+body.dark-mode .producto-card p,
+body.dark-mode .promo-card p {
+    color: #c8b09a !important;
+}
+
+/* Footer */
+body.dark-mode footer {
+    background-color: #110a04 !important;
+}
+
+body.dark-mode .footer-container,
+body.dark-mode .footer-brand,
+body.dark-mode .footer-section {
+    background-color: #110a04 !important;
+    color: #c8b09a !important;
+}
+
+body.dark-mode .footer-bottom {
+    background-color: #0a0603 !important;
+    color: #8a6a50 !important;
+}
+
+body.dark-mode footer h3,
+body.dark-mode footer h4 {
+    color: #f5c98a !important;
+}
+
+body.dark-mode footer p,
+body.dark-mode footer span,
+body.dark-mode footer li {
+    color: #c8b09a !important;
+}
+
+/* Panel de accesibilidad en dark */
+body.dark-mode .acc-panel {
+    background-color: #2a1c12 !important;
+    border-color: rgba(232,130,26,0.3) !important;
+}
+
+body.dark-mode .acc-panel-title,
+body.dark-mode .acc-row-label {
+    color: #f5c98a !important;
+    border-color: rgba(232,130,26,0.2) !important;
+}
+
+body.dark-mode .acc-btn-option,
+body.dark-mode .acc_tema,
+body.dark-mode .acc-btn-reset {
+    background-color: #3a2410 !important;
+    color: #f0e8dc !important;
+    border-color: rgba(232,130,26,0.25) !important;
+}
+
+/* Inputs */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #2a1c12 !important;
+    color: #f0e8dc !important;
+    border-color: rgba(232,130,26,0.3) !important;
+}
+
+/* ── Cursor Grande ───────────────────────────────────────────────────────── */
+body.big-cursor,
+body.big-cursor * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 2 L8 26 L13 21 L17 30 L20 29 L16 20 L23 20 Z' fill='%23E8821A' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 8 2, auto !important;
+}

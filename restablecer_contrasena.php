@@ -1,9 +1,4 @@
 <?php
-// ============================================================
-//  restablecer_contrasena.php
-//  PASO 3: Muestra formulario de nueva contraseña.
-//  Solo accesible si el código fue verificado en el paso anterior.
-// ============================================================
 session_start();
 require_once 'includes/funciones.php';
 
@@ -33,7 +28,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 <body>
     <div class="navbar">
         <img src="estilos/img/icono.png" class="logo">
-        <a href="login.php" class="btn-regresar">Ir al login</a>
+        <a href="../burguersoft/php/login.php" class="btn-regresar">Ir al login</a>
     </div>
 
     <div class="header-bar">NUEVA CONTRASEÑA</div>
@@ -65,7 +60,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
     </div>
 
 <div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title"> Accesibilidad</div>
+    <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">
         <div class="acc-row-label">Tema</div>
         <div class="acc-row-btns">
@@ -74,26 +69,26 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
         </div>
     </div>
     <div class="acc-row">
-        <div class="acc-row-label">Tamano de letra</div>
+        <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A-</button>
+            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
             <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
         </div>
     </div>
     <div class="acc-row">
-        <div class="acc-row-label">Cursor</div>
+        <div class="acc-row-label">Tipo de letra</div>
         <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="setCursor('normal')">Normal</button>
-            <button class="acc-btn-option" onclick="setCursor('grande')">Grande</button>
+            <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
+            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
         </div>
     </div>
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
-
-<button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
-
-    <link rel="stylesheet" href="estilos/Accesibilidad.css">
-    <script src="js/Accesibilidad.js"></script>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="estilos/img/accesibilidad.png" alt="Accesibilidad">
+</button>
+<link rel="stylesheet" href="estilos/accesibilidad.css">
+<script src="js/accesibilidad.js"></script>
 
     <script>
     document.getElementById('nuevaPass').addEventListener('input', function () {

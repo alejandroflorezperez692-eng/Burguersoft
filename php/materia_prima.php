@@ -254,15 +254,15 @@ $navActivo = 'materia';
     <div class="stat-grid" style="margin-bottom:28px;">
         <div class="stat-card" style="--accent:#E8821A;">
             <div class="stat-label">Total Materia Prima</div>
-            <div class="stat-val" id="kpi-total">—</div>
+            <div class="stat-val" style="font-family: var(--font-sans);" id="kpi-total">—</div>
         </div>
         <div class="stat-card" style="--accent:#2ecc71;">
             <div class="stat-label">Disponibles</div>
-            <div class="stat-val" id="kpi-disponibles">—</div>
+            <div class="stat-val" style="font-family: var(--font-sans);" id="kpi-disponibles">—</div>
         </div>
         <div class="stat-card" style="--accent:#E8821A;">
             <div class="stat-label">Valor promedio</div>
-            <div class="stat-val" id="kpi-promedio">—</div>
+            <div class="stat-val" style="font-family: var(--font-sans);" id="kpi-promedio">—</div>
         </div>
     </div>
 

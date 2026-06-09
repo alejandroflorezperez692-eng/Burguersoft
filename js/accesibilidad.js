@@ -1,39 +1,40 @@
 // Variables Globales
 let fontSizeFactor = parseFloat(localStorage.getItem('acc_factor')) || 1.0;
-const panel = document.getElementById('accPanel');
-const body  = document.body;
+let panel, body;
 
-// 1. Inicialización (Cargar preferencias guardadas)
-(function init() {
-    if (localStorage.getItem('acc_tema') === 'oscuro') {
-        body.classList.add('dark-mode');
-    }
-    if (localStorage.getItem('acc_cursor') === 'grande') {
-        body.classList.add('big-cursor');
-    }
-    // Aplicar escala de fuente si existe
-    if (fontSizeFactor !== 1.0) {
-        window.addEventListener('DOMContentLoaded', () => aplicarEscala(fontSizeFactor));
-    }
-})();
+// 1. Inicialización al cargar el DOM
+document.addEventListener('DOMContentLoaded', function () {
+    panel = document.getElementById('accPanel');
+    body  = document.body;
 
-// 2. Funciones del Panel
-function togglePanel() {
-    panel.classList.toggle('activo');
-}
+    if (localStorage.getItem('acc_tema') === 'oscuro')  body.classList.add('dark-mode');
+    if (localStorage.getItem('acc_cursor') === 'grande') body.classList.add('big-cursor');
 
-document.addEventListener('click', function(e) {
-    if (panel.classList.contains('activo') && !panel.contains(e.target) && !e.target.closest('#accFab')) {
-        panel.classList.remove('activo');
-    }
+    const fontGuardada = localStorage.getItem('acc_font');
+    if (fontGuardada) body.style.fontFamily = fontGuardada;
+
+    if (fontSizeFactor !== 1.0) aplicarEscala(fontSizeFactor);
+
+    // Cerrar panel al hacer clic fuera
+    document.addEventListener('click', function (e) {
+        if (!panel) return;
+        if (panel.classList.contains('open') &&
+            !panel.contains(e.target) &&
+            !e.target.closest('#accFab')) {
+            panel.classList.remove('open');
+        }
+    });
 });
 
-// 3. Lógica de Tamaño de Fuente (Aumentar/Disminuir)
-function cambiarFuente(direccion) {
-    // direccion es 1 para subir, -1 para bajar
-    let nuevoFactor = fontSizeFactor + (direccion * 0.1);
+// 2. Toggle del panel
+function togglePanel() {
+    if (!panel) panel = document.getElementById('accPanel');
+    panel.classList.toggle('open');
+}
 
-    // Límites de seguridad (80% a 200%)
+// 3. Tamaño de fuente
+function cambiarFuente(direccion) {
+    let nuevoFactor = Math.round((fontSizeFactor + direccion * 0.1) * 10) / 10;
     if (nuevoFactor >= 0.8 && nuevoFactor <= 2.0) {
         fontSizeFactor = nuevoFactor;
         aplicarEscala(fontSizeFactor);
@@ -42,22 +43,18 @@ function cambiarFuente(direccion) {
 }
 
 function aplicarEscala(factor) {
-    // Seleccionamos todas las etiquetas de texto
     const elementos = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, a, li, button, label, b, i, strong, td, th');
-
     elementos.forEach(el => {
-        // Guardamos el tamaño original solo la primera vez
         if (!el.dataset.origSize) {
             el.dataset.origSize = window.getComputedStyle(el).fontSize;
         }
-        const tamanoBase = parseFloat(el.dataset.origSize);
-        const nuevoTamano = (tamanoBase * factor) + 'px';
-        el.style.setProperty('font-size', nuevoTamano, 'important');
+        el.style.setProperty('font-size', (parseFloat(el.dataset.origSize) * factor) + 'px', 'important');
     });
 }
 
-// 4. Tema y Cursor
+// 4. Tema
 function setTema(modo) {
+    if (!body) body = document.body;
     if (modo === 'oscuro') {
         body.classList.add('dark-mode');
         localStorage.setItem('acc_tema', 'oscuro');
@@ -67,7 +64,9 @@ function setTema(modo) {
     }
 }
 
+// 5. Cursor
 function setCursor(tipo) {
+    if (!body) body = document.body;
     if (tipo === 'grande') {
         body.classList.add('big-cursor');
         localStorage.setItem('acc_cursor', 'grande');
@@ -77,13 +76,20 @@ function setCursor(tipo) {
     }
 }
 
-// 5. Restablecer Todo
-function restablecer() {
-    localStorage.clear();
-    location.reload(); // Recarga la página para limpiar todos los estilos inline y clases
+// 6. Tipo de fuente
+function aplicarFuente(fuente) {
+    if (!body) body = document.body;
+    body.style.fontFamily = fuente;
+    localStorage.setItem('acc_font', fuente);
 }
 
-// Validaciones de Input (Tus funciones originales)
+// 7. Restablecer
+function restablecer() {
+    localStorage.clear();
+    location.reload();
+}
+
+// Validaciones de input
 function soloLetras(input) {
     input.value = input.value.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]/g, "");
 }

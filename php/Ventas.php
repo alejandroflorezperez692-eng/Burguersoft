@@ -270,12 +270,12 @@ $navActivo = 'ventas';
     <div class="stat-grid" style="margin-bottom:28px;">
         <div class="stat-card" style="--accent:#E8821A;--icon-bg:rgba(232,130,26,0.1);">
             <div class="stat-label">Total ventas</div>
-            <div class="stat-val" id="kpi-total">—</div>
+            <div class="stat-val" style ="font-family: var(--font-sans) !important;" id="kpi-total">—</div>
             <div class="stat-sub">Registros en sistema</div>
         </div>
         <div class="stat-card" style="--accent:#2ecc71;--icon-bg:rgba(46,204,113,0.1);">
             <div class="stat-label">Ingresos totales</div>
-            <div class="stat-val" id="kpi-ingresos">—</div>
+            <div class="stat-val" style ="font-family: var(--font-sans) !important;" id="kpi-ingresos">—</div>
             <div class="stat-sub">Suma acumulada</div>
         </div>
     </div>
@@ -293,7 +293,7 @@ $navActivo = 'ventas';
 
     <div class="form-panel">
         <div class="form-panel-title">
-             <span id="form-title">Nueva Venta</span>
+             <span id="form-title" style="font-family: var(--font-sans);">Nueva Venta</span>
         </div>
         <div class="form-row-grid">
             <div class="field-group">
@@ -336,7 +336,7 @@ $navActivo = 'ventas';
 
     <div class="table-section">
         <div class="table-toolbar">
-            <h3>Historial de ventas</h3>
+            <h3 style="font-family: var(--font-sans);">Historial de ventas</h3>
             <input type="text" class="search-input" id="buscar" placeholder="Buscar por cliente, producto...">
         </div>
         <table class="ventas-table" id="tablaVentas">
