@@ -344,7 +344,7 @@ $navActivo = 'marca';
 
     <div class="page-header">
         <div>
-            <h1>Gestión de Marcas</h1>
+            <h1 style="font-family: var(--font-sans);">Gestión de Marcas</h1>
             <div class="subtitulo">Proveedores y socios del negocio</div>
         </div>
         <button class="btn-primary" onclick="abrirModal()">+ Nueva marca</button>

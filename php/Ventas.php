@@ -262,29 +262,21 @@ $navActivo = 'ventas';
 
     <div class="page-header">
         <div>
-            <h1>Gestión de Ventas</h1>
+            <h1 style ="font-family: var(--font-sans) !important;">Gestión de Ventas</h1>
             <div class="subtitulo">Historial y registro de transacciones</div>
         </div>
     </div>
 
     <div class="stat-grid" style="margin-bottom:28px;">
         <div class="stat-card" style="--accent:#E8821A;--icon-bg:rgba(232,130,26,0.1);">
-            <div class="stat-icon">💳</div>
             <div class="stat-label">Total ventas</div>
             <div class="stat-val" id="kpi-total">—</div>
             <div class="stat-sub">Registros en sistema</div>
         </div>
         <div class="stat-card" style="--accent:#2ecc71;--icon-bg:rgba(46,204,113,0.1);">
-            <div class="stat-icon">💰</div>
             <div class="stat-label">Ingresos totales</div>
             <div class="stat-val" id="kpi-ingresos">—</div>
             <div class="stat-sub">Suma acumulada</div>
-        </div>
-        <div class="stat-card" style="--accent:#2d89ef;--icon-bg:rgba(45,137,239,0.1);">
-            <div class="stat-icon">📦</div>
-            <div class="stat-label">Ticket promedio</div>
-            <div class="stat-val" id="kpi-promedio">—</div>
-            <div class="stat-sub">Por transacción</div>
         </div>
     </div>
 
@@ -301,7 +293,7 @@ $navActivo = 'ventas';
 
     <div class="form-panel">
         <div class="form-panel-title">
-            ✏️ <span id="form-title">Nueva Venta</span>
+             <span id="form-title">Nueva Venta</span>
         </div>
         <div class="form-row-grid">
             <div class="field-group">

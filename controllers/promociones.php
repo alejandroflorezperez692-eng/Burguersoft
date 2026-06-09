@@ -56,7 +56,7 @@ if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 4
 
 // ── POST ─────────────────────────────────────────────────────────────────────
 if ($method === 'POST') {
-    $nombre        = limpiar($_POST['nombre_promocion'] ?? '');
+    $nombre        = limpiar($_POST['nombre'] ?? '');
     $descripcion   = limpiar($_POST['descripcion']      ?? '');
     $precio        = (float)($_POST['precio']           ?? 0);
     $estado        = limpiar($_POST['estado']           ?? 'Activa');
@@ -105,7 +105,7 @@ if ($method === 'POST') {
 if ($method === 'PUT') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
 
-    $nombre        = limpiar($_POST['nombre_promocion'] ?? '');
+    $nombre        = limpiar($_POST['nombre'] ?? '');
     $descripcion   = limpiar($_POST['descripcion']      ?? '');
     $precio        = (float)($_POST['precio']           ?? 0);
     $estado        = limpiar($_POST['estado']           ?? 'Activa');

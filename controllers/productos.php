@@ -7,6 +7,10 @@ if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 4
 
 $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
+// Soporte para _method override: permite enviar PUT/DELETE desde formularios/fetch
+if ($method === 'POST' && !empty($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+    $method = strtoupper($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
+}
 $accion = $_GET['accion'] ?? '';
 $id     = (int)($_GET['id'] ?? 0);
 
@@ -16,6 +20,13 @@ $categorias_enum = [
     'Hamburguesa','Perros Caliente','Salchipapa','Fritos',
     'Arepas','Picada','Bebidas Frias','Bebidas Calientes','Pizza'
 ];
+
+// ── Helper: calcula estado según cantidad ────────────────────────────────────
+function calcularEstado(int $cantidad): string {
+    if ($cantidad === 0)   return 'Agotado';
+    if ($cantidad <= 5)    return 'Por agotarse';
+    return 'Disponible';
+}
 
 // ── GET categorías (devuelve el enum como lista) ─────────────────────────────
 if ($accion === 'categorias' && $method === 'GET') {
@@ -42,13 +53,14 @@ if ($accion === 'productos') {
         }
     }
 
-    if ($method === 'POST') {
+   if ($method === 'POST') {
         $nombre      = limpiar($_POST['nombre']      ?? '');
         $valor       = (float)($_POST['valor']       ?? 0);
         $descripcion = limpiar($_POST['descripcion'] ?? '');
         $categoria   = limpiar($_POST['categoria']   ?? '');
         $catidad     = limpiar($_POST['catidad']      ?? '0');
-        $estado      = limpiar($_POST['estado']      ?? 'Disponible');
+        $catidad_int = (int)$catidad;
+        $estado      = calcularEstado($catidad_int);
 
         if (!$nombre || $valor <= 0 || !$categoria)
             jsonResponse(['error' => 'Nombre, precio y categoría son obligatorios'], 400);
@@ -82,7 +94,11 @@ if ($accion === 'productos') {
         $descripcion = limpiar($_POST['descripcion'] ?? '');
         $categoria   = limpiar($_POST['categoria']   ?? '');
         $catidad     = limpiar($_POST['catidad']      ?? '0');
-        $estado      = limpiar($_POST['estado']      ?? 'Disponible');
+        $catidad_int = (int)$catidad;
+        $estado      = calcularEstado($catidad_int);
+
+        if ( $valor <= 0 || !$categoria || $catidad <= 0)
+            jsonResponse(['error' => 'Precio, categoría y cantidad mayor a 0 son obligatorios'], 400);
 
         if (!empty($_FILES['imagen']['tmp_name'])) {
             $dir = __DIR__ . '/../uploads/productos/';

@@ -57,15 +57,15 @@ $esAdmin     = $rolAdmin === 'Administrador';
             </a>
         </div>
 
-        <div class="sidebar-item">
+        <div class="sidebar-item <?= $navActivo === 'backups' ? 'active' : '' ?>">
             <a href="../php/backups.php">
                 <img src="../estilos/img/engranaje.png" class="icono-sidebar" alt="">
-                Backups
+                Copias de seguridad
             </a>
         </div>
 
         <?php if ($esAdmin): ?>
-        <div class="sidebar-item">
+        <div class="sidebar-item <?= $navActivo === 'usuarios' ? 'active' : '' ?>">
             <a href="../php/gestion_usuario.php">
                 <img src="../estilos/img/equipo.png" class="icono-sidebar" alt="">
                 Usuarios
@@ -78,7 +78,7 @@ $esAdmin     = $rolAdmin === 'Administrador';
 
 <nav class="header-nav">
 
-    <a href="../php/config_cuenta.php" class="nav-item admin-name <?= $navActivo === 'config_cuenta' ? 'active' : '' ?>">
+    <a href="../php/config_cuenta.php" class="nav-item <?= $navActivo === 'config_cuenta' ? 'active' : '' ?> admin-name ">
         <img src="../estilos/img/usuario.png" class="icono-sidebar" alt="perfil">
         <span><?= htmlspecialchars($nombreAdmin) ?></span>
     </a>

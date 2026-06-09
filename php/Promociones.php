@@ -371,7 +371,7 @@ $navActivo = 'promociones';
 
     <div class="page-header">
         <div>
-            <h1>Combos y Promociones</h1>
+            <h1 style="font-family: var(--font-sans);">Combos y Promociones</h1>
             <div class="subtitulo">Gestiona las ofertas activas del local</div>
         </div>
         <button class="btn-primary" onclick="abrirModal()">+ Añadir promoción</button>
@@ -409,6 +409,16 @@ $navActivo = 'promociones';
         <div class="form-group">
             <label>Precio *</label>
             <input type="number" id="precio" placeholder="Ej: 15000" step="100" min="0">
+        </div>
+
+        <div class="form-group">
+            <label>Fecha de inicio *</label>
+            <input type="date" id="fecha_inicio">
+        </div>
+
+        <div class="form-group">
+            <label>Fecha de fin *</label>
+            <input type="date" id="fecha_fin">
         </div>
 
         <div class="form-group">
@@ -599,7 +609,7 @@ async function editarPromo(id) {
         ids.forEach(pid => seleccionados.add(Number(pid)));
     } catch(e) {}
     document.getElementById('tituloForm').textContent = 'Editar Promoción';
-    document.getElementById('nombre').value      = promo.nombre_promocion;
+    document.getElementById('nombre').value      = promo.nombre;
     document.getElementById('descripcion').value = promo.descripcion || '';
     document.getElementById('precio').value      = promo.precio;
     document.getElementById('imagen').value      = '';
@@ -626,7 +636,7 @@ async function guardarPromo() {
     const imagenFile  = document.getElementById('imagen').files[0];
     if (!nombre || !precio) { alert('Nombre y precio son obligatorios'); return; }
     const fd = new FormData();
-    fd.append('nombre_promocion', nombre);
+    fd.append('nombre', nombre);
     fd.append('descripcion', descripcion);
     fd.append('precio', precio);
     fd.append('productos_ids', JSON.stringify([...seleccionados]));
@@ -647,6 +657,27 @@ document.getElementById('imagen').addEventListener('change', e => {
     reader.onload = ev => { document.getElementById('preview').src = ev.target.result; document.getElementById('preview').classList.add('show'); };
     reader.readAsDataURL(file);
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+        // Obtener fecha actual
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        const fechaActual = `${yyyy}-${mm}-${dd}`;
+
+        // Asignar fecha mínima
+        const inputFecha = document.getElementById('fecha-inicio');
+        inputFecha.min = fechaActual;
+
+        // Validar también si el usuario escribe manualmente
+        inputFecha.addEventListener('input', function () {
+            if (this.value < fechaActual) {
+                alert("No puedes seleccionar una fecha anterior a hoy.");
+                this.value = fechaActual;
+            }
+        });
+    });
 
 document.getElementById('buscar').addEventListener('input', renderPromos);
 document.addEventListener('DOMContentLoaded', init);

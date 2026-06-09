@@ -9,15 +9,15 @@ $categorias_enum = [
 ];
 
 $cat_icons = [
-    'Hamburguesa'      => '🍔',
-    'Perros Caliente'  => '🌭',
-    'Salchipapa'       => '🍟',
-    'Fritos'           => '🥐',
-    'Arepas'           => '🫓',
-    'Picada'           => '🥩',
-    'Bebidas Frias'    => '🥤',
-    'Bebidas Calientes'=> '☕',
-    'Pizza'            => '🍕',
+    'Hamburguesa'      => '',
+    'Perros Caliente'  => '',
+    'Salchipapa'       => '',
+    'Fritos'           => '',
+    'Arepas'           => '',
+    'Picada'           => '',
+    'Bebidas Frias'    => '',
+    'Bebidas Calientes'=> '',
+    'Pizza'            => '',
 ];
 ?>
 <!DOCTYPE html>
@@ -31,73 +31,19 @@ $cat_icons = [
     <style>
         .menu-page { padding: 36px 40px 60px; }
 
-        .toolbar {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-        }
-
-        .search-input {
-            flex: 1;
-            min-width: 220px;
-            padding: 11px 16px 11px 42px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--r-sm);
-            font-family: var(--font-sans);
-            font-size: 14px;
-            background: var(--surface);
-            color: var(--text-900);
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            position: relative;
-        }
-
-        .search-wrap {
-            flex: 1;
-            position: relative;
-            min-width: 220px;
-        }
-
-        .search-wrap::before {
-            content: '🔍';
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 14px;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .search-input:focus {
-            border-color: var(--brand);
-            box-shadow: 0 0 0 3px var(--brand-glow);
-        }
-
-        .search-input::placeholder { color: var(--text-400); }
-
-        .layout-cols {
-            display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 28px;
-            align-items: flex-start;
-        }
-
+        /*  PANEL FORMULARIO (arriba, horizontal)  */
         .form-panel {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--r-lg);
             box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: calc(var(--header-h) + 20px);
             overflow: hidden;
+            margin-bottom: 36px;
         }
 
         .form-panel-header {
             background: var(--text-900);
-            padding: 20px 24px;
+            padding: 18px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -112,7 +58,28 @@ $cat_icons = [
             margin: 0;
         }
 
-        .form-panel-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
+        .form-panel-body {
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Fila principal: campos en columnas */
+        .form-main-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 14px;
+            align-items: end;
+        }
+
+        /* Fila secundaria: descripción + imagen + ingredientes */
+        .form-secondary-row {
+            display: grid;
+            grid-template-columns: 1fr 260px 1fr;
+            gap: 14px;
+            align-items: start;
+        }
 
         .field {
             display: flex;
@@ -152,71 +119,72 @@ $cat_icons = [
             background: var(--surface);
         }
 
-        .field textarea { resize: vertical; min-height: 70px; }
+        .field textarea { resize: vertical; min-height: 96px; }
         .field input::placeholder, .field textarea::placeholder { color: var(--text-400); }
 
-        .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
+        /* Zona de imagen */
         .img-upload-zone {
             border: 2px dashed var(--border-strong);
             border-radius: var(--r-md);
-            padding: 16px;
+            padding: 14px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             cursor: pointer;
             transition: border-color 0.2s, background 0.2s;
             background: var(--surface-2);
+            height: 100%;
+            box-sizing: border-box;
         }
 
         .img-upload-zone:hover { border-color: var(--brand); background: rgba(232,130,26,0.04); }
         .img-upload-zone.has-img { border-style: solid; border-color: var(--brand); }
 
         .img-thumb {
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border-radius: var(--r-sm);
             object-fit: cover;
             display: none;
             flex-shrink: 0;
-            background: var(--surface-3);
         }
 
         .img-thumb.visible { display: block; }
 
         .img-placeholder {
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border-radius: var(--r-sm);
             background: var(--surface-3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 26px;
             flex-shrink: 0;
         }
 
         .img-info { flex: 1; min-width: 0; }
-        .img-info-name { font-size: 12px; font-weight: 600; color: var(--text-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .img-info-hint { font-size: 11px; color: var(--text-400); margin-top: 3px; }
+        .img-info-name { font-size: 11.5px; font-weight: 600; color: var(--text-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .img-info-hint { font-size: 10.5px; color: var(--text-400); margin-top: 2px; line-height: 1.3; }
 
         .btn-pick-img {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 6px 12px;
+            padding: 5px 10px;
             background: var(--text-900);
             color: #fff;
             border: none;
             border-radius: var(--r-sm);
             cursor: pointer;
-            transition: opacity 0.2s;
             margin-top: 6px;
             display: inline-block;
             box-shadow: none;
+            transition: opacity 0.18s;
         }
 
-        .btn-pick-img:hover { opacity: 0.8; transform: none; box-shadow: none; }
+        .btn-pick-img:hover { opacity: 0.75; transform: none; box-shadow: none; }
 
+        /* Ingredientes compacto */
         .ingredientes-section {
             border: 1px solid var(--border);
             border-radius: var(--r-md);
@@ -225,20 +193,17 @@ $cat_icons = [
 
         .ing-header {
             background: var(--surface-3);
-            padding: 10px 14px;
-            font-size: 11px;
+            padding: 9px 14px;
+            font-size: 10.5px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.7px;
             color: var(--text-600);
         }
 
-        .ing-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+        .ing-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
 
-        .ing-row {
-            display: flex;
-            gap: 8px;
-        }
+        .ing-row { display: flex; gap: 7px; }
 
         .ing-row select,
         .ing-row input {
@@ -247,7 +212,7 @@ $cat_icons = [
             border: 1.5px solid var(--border);
             border-radius: var(--r-sm);
             font-family: var(--font-sans);
-            font-size: 13px;
+            font-size: 12.5px;
             background: var(--surface-2);
             color: var(--text-900);
             outline: none;
@@ -255,7 +220,7 @@ $cat_icons = [
             transition: border-color 0.2s;
         }
 
-        .ing-row input { max-width: 90px; }
+        .ing-row input { max-width: 80px; }
         .ing-row select:focus, .ing-row input:focus { border-color: var(--brand); }
 
         .btn-add-ing {
@@ -265,12 +230,11 @@ $cat_icons = [
             border: none;
             border-radius: var(--r-sm);
             font-weight: 700;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
-            white-space: nowrap;
             flex-shrink: 0;
-            transition: background 0.18s;
             box-shadow: none;
+            transition: background 0.18s;
         }
 
         .btn-add-ing:hover { background: var(--brand-deep); transform: none; box-shadow: none; }
@@ -281,48 +245,50 @@ $cat_icons = [
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
+            max-height: 120px;
+            overflow-y: auto;
+            scrollbar-width: thin;
         }
 
         #lista-receta li {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 7px 10px;
+            padding: 6px 10px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--r-sm);
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--text-900);
         }
 
-        .receta-empty { color: var(--text-400); font-size: 12.5px; text-align: center; padding: 6px 0; }
+        .receta-empty { color: var(--text-400); font-size: 12px; text-align: center; padding: 4px 0; }
 
         .btn-del-ing {
-            background: rgba(200,56,42,0.12);
+            background: rgba(200,56,42,0.1);
             color: var(--danger);
             border: none;
-            border-radius: 5px;
-            padding: 3px 8px;
+            border-radius: 4px;
+            padding: 2px 7px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             box-shadow: none;
         }
 
         .btn-del-ing:hover { background: var(--danger); color: #fff; transform: none; box-shadow: none; }
 
+        /* Footer del formulario */
         .form-panel-footer {
-            padding: 16px 24px 22px;
+            padding: 14px 28px 22px;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             border-top: 1px solid var(--border);
         }
 
         .btn-submit-form {
-            width: 100%;
-            padding: 12px;
+            padding: 11px 32px;
             background: var(--brand);
             border: none;
             border-radius: var(--r-sm);
@@ -338,8 +304,7 @@ $cat_icons = [
         .btn-submit-form:hover { background: var(--brand-deep); transform: translateY(-1px); }
 
         .btn-cancel-form {
-            width: 100%;
-            padding: 10px;
+            padding: 11px 24px;
             background: transparent;
             border: 1.5px solid var(--border-strong);
             border-radius: var(--r-sm);
@@ -349,13 +314,55 @@ $cat_icons = [
             color: var(--text-600);
             cursor: pointer;
             display: none;
-            transition: background 0.18s;
             box-shadow: none;
+            transition: background 0.18s;
         }
 
         .btn-cancel-form:hover { background: var(--surface-3); transform: none; box-shadow: none; }
 
-        .menu-container { display: flex; flex-direction: column; gap: 32px; }
+        /*  BUSCADOR + CATÁLOGO  */
+        .catalog-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .search-wrap::before {
+            content: '';
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 11px 16px 11px 40px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            background: var(--surface);
+            color: var(--text-900);
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-glow); }
+        .search-input::placeholder { color: var(--text-400); }
+
+        .menu-container { display: flex; flex-direction: column; gap: 36px; }
 
         .cat-header {
             display: flex;
@@ -379,7 +386,7 @@ $cat_icons = [
         }
 
         .cat-name {
-            font-family: var(--font-display);
+            font-family: var(--font-sans);
             font-size: 20px;
             font-weight: 700;
             color: var(--text-900);
@@ -421,7 +428,7 @@ $cat_icons = [
 
         .product-img {
             width: 100%;
-            height: 160px;
+            height: 155px;
             object-fit: cover;
             display: block;
             background: var(--surface-3);
@@ -431,7 +438,7 @@ $cat_icons = [
         .product-card:hover .product-img { transform: scale(1.04); }
 
         .product-body {
-            padding: 13px 15px;
+            padding: 12px 14px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -439,9 +446,9 @@ $cat_icons = [
         }
 
         .product-name {
-            font-family: var(--font-display);
+            font-family: var(--font-sans);
             font-weight: 700;
-            font-size: 14.5px;
+            font-size: 14px;
             color: var(--text-900);
             line-height: 1.3;
         }
@@ -464,8 +471,8 @@ $cat_icons = [
         }
 
         .product-price {
-            font-family: var(--font-display);
-            font-size: 16px;
+            font-family: var(--font-sans);
+            font-size: 15px;
             font-weight: 900;
             color: var(--brand);
         }
@@ -475,7 +482,7 @@ $cat_icons = [
             align-items: center;
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 10px;
+            font-size: 13px;
             font-weight: 700;
         }
 
@@ -486,7 +493,7 @@ $cat_icons = [
         .product-actions {
             display: flex;
             gap: 8px;
-            padding: 10px 14px 13px;
+            padding: 10px 13px 13px;
             border-top: 1px solid var(--border);
         }
 
@@ -497,24 +504,17 @@ $cat_icons = [
             border-radius: var(--r-sm);
             cursor: pointer;
             font-weight: 700;
-            font-size: 12.5px;
-            transition: filter 0.18s, transform 0.15s;
+            font-size: 12px;
             color: #fff;
             box-shadow: none;
+            transition: filter 0.18s, transform 0.15s;
         }
 
         .btn-edit-p { background: var(--info); }
         .btn-del-p  { background: var(--danger); }
         .btn-edit-p:hover, .btn-del-p:hover { filter: brightness(0.87); transform: translateY(-1px); box-shadow: none; }
 
-        .empty-state {
-            grid-column: 1/-1;
-            text-align: center;
-            padding: 60px;
-            color: var(--text-400);
-            font-size: 15px;
-        }
-
+        /* Modal confirmar eliminar */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -532,8 +532,8 @@ $cat_icons = [
         .modal-box {
             background: var(--surface);
             border-radius: var(--r-lg);
-            padding: 32px;
-            max-width: 400px;
+            padding: 36px;
+            max-width: 380px;
             width: 92%;
             box-shadow: var(--shadow-lg);
             text-align: center;
@@ -542,15 +542,8 @@ $cat_icons = [
 
         @keyframes slideM { from { transform:translateY(16px);opacity:0; } to { transform:translateY(0);opacity:1; } }
 
-        .modal-box .modal-icon { font-size: 42px; margin-bottom: 12px; }
-
-        .modal-box p {
-            font-size: 15px;
-            color: var(--text-900);
-            margin-bottom: 24px;
-            line-height: 1.5;
-        }
-
+        .modal-box .modal-icon { font-size: 40px; margin-bottom: 12px; }
+        .modal-box p { font-size: 15px; color: var(--text-900); margin-bottom: 24px; line-height: 1.5; }
         .modal-actions { display: flex; gap: 10px; justify-content: center; }
 
         .btn-confirm-del {
@@ -561,30 +554,31 @@ $cat_icons = [
             border-radius: var(--r-sm);
             font-family: var(--font-sans);
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
-            transition: background 0.18s;
             box-shadow: 0 4px 14px rgba(200,56,42,0.3);
+            transition: background 0.18s;
         }
 
         .btn-confirm-del:hover { background: #a82d22; transform: none; }
 
         .btn-cancel-del {
-            padding: 10px 24px;
+            padding: 10px 22px;
             background: transparent;
             border: 1.5px solid var(--border-strong);
             border-radius: var(--r-sm);
             font-family: var(--font-sans);
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-600);
             cursor: pointer;
-            transition: background 0.18s;
             box-shadow: none;
+            transition: background 0.18s;
         }
 
         .btn-cancel-del:hover { background: var(--surface-3); transform: none; box-shadow: none; }
 
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 28px;
@@ -608,15 +602,19 @@ $cat_icons = [
         .toast.ok  { background: #1a7a42; }
         .toast.err { background: var(--danger); }
 
-        @media (max-width: 900px) {
-            .layout-cols { grid-template-columns: 1fr; }
-            .form-panel { position: static; }
+        @media (max-width: 1100px) {
+            .form-main-row { grid-template-columns: 1fr 1fr 1fr; }
+            .form-secondary-row { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 700px) {
+            .form-main-row { grid-template-columns: 1fr 1fr; }
+            .form-secondary-row { grid-template-columns: 1fr; }
         }
 
         body.dark-mode .form-panel { background: var(--surface); }
         body.dark-mode .form-panel-header { background: #0e0500; }
         body.dark-mode .ing-header { background: var(--surface-2); }
-        body.dark-mode .ingredientes-section { border-color: var(--border); }
         body.dark-mode .img-upload-zone { background: var(--surface-2); }
         body.dark-mode .img-placeholder { background: var(--surface-3); }
         body.dark-mode #lista-receta li { background: var(--surface-2); }
@@ -639,75 +637,49 @@ $cat_icons = [
 
     <div class="page-header">
         <div>
-            <h1>Gestión del Menú</h1>
-            <div class="subtitulo">Productos disponibles en el menú</div>
-        </div>
-    </div>
+            <h1 style = "font-family: var(--font-sans) !important;">Gestión del Menú</h1>
+            <div class="subtitulo">Productos disponibles en el menú</div></div></div>
 
-    <div class="toolbar">
-        <div class="search-wrap">
-            <input type="text" id="buscar" class="search-input" placeholder="Buscar por nombre o categoría...">
-        </div>
-    </div>
+    <!--  FORMULARIO HORIZONTAL ARRIBA  -->
+    <div class="form-panel">
 
-    <div class="layout-cols">
+        <form id="formProducto" novalidate>
+            <input type="hidden" id="editId">
+            <input type="hidden" id="prodImagenActual">
 
-        <div class="form-panel">
-            <div class="form-panel-header">
-                <h3 id="form-titulo">Agregar Producto</h3>
-            </div>
+            <div class="form-panel-body">
 
-            <form id="formProducto" novalidate>
-                <input type="hidden" id="editId">
-                <input type="hidden" id="prodImagenActual">
-
-                <div class="form-panel-body">
+                <!-- Fila 1: campos principales en columnas -->
+                <div class="form-main-row">
                     <div class="field">
                         <label>Nombre *</label>
-                        <input type="text" id="nombre" placeholder="Ej: Hamburguesa Especial" required>
-                    </div>
+                        <input type="text" id="nombre" placeholder="Ej: Hamburguesa Especial" required></div>
+                    <div class="field">
+                        <label>Precio *</label>
+                        <input type="number" id="precio" placeholder="12000" min="0" required></div>
+                    <div class="field">
+                        <label>Cantidad</label>
+                        <input type="text" id="catidad" placeholder="Ej: 10" oninput="actualizarEstado(this.value)"></div>
+                    <div class="field">
+                        <label>Categoría *</label>
+                        <select id="categoria" required>
+                            <option value="">Selecciona...</option>
+                            <?php foreach ($categorias_enum as $cat): ?>
+                            <option value="<?= htmlspecialchars($cat) ?>"><?= htmlspecialchars($cat) ?></option>
+                            <?php endforeach; ?></select></div>
+                    <input type="hidden" id="estado" value="Disponible"></div>
 
-                    <div class="fields-row">
-                        <div class="field">
-                            <label>Precio *</label>
-                            <input type="number" id="precio" placeholder="12000" min="0" required>
-                        </div>
-                        <div class="field">
-                            <label>Cantidad</label>
-                            <input type="text" id="catidad" placeholder="Ej: 10">
-                        </div>
-                    </div>
-
+                <!-- Fila 2: descripción + imagen + ingredientes -->
+                <div class="form-secondary-row">
                     <div class="field">
                         <label>Descripción</label>
-                        <textarea id="descripcion" placeholder="Ej: Carne 150g, queso, tocineta…"></textarea>
-                    </div>
-
-                    <div class="fields-row">
-                        <div class="field">
-                            <label>Categoría *</label>
-                            <select id="categoria" required>
-                                <option value="">Selecciona...</option>
-                                <?php foreach ($categorias_enum as $cat): ?>
-                                <option value="<?= htmlspecialchars($cat) ?>"><?= htmlspecialchars($cat) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label>Estado</label>
-                            <select id="estado">
-                                <option value="Disponible">Disponible</option>
-                                <option value="Agotado">Agotado</option>
-                                <option value="Por agotarse">Por agotarse</option>
-                            </select>
-                        </div>
-                    </div>
+                        <textarea id="descripcion" placeholder="Ej: Carne 150g, queso, tocineta…"></textarea></div>
 
                     <div class="field">
                         <label>Imagen del producto</label>
                         <div class="img-upload-zone" id="prod-preview-box"
                              onclick="document.getElementById('prodImagenFile').click()">
-                            <div class="img-placeholder" id="prod-preview-placeholder">🍔</div>
+                            <div class="img-placeholder" id="prod-preview-placeholder"></div>
                             <img id="prodPreview" src="" alt="" class="img-thumb">
                             <div class="img-info">
                                 <div class="img-info-name" id="prodImagenNombre">Ningún archivo seleccionado</div>
@@ -715,54 +687,43 @@ $cat_icons = [
                                 <button type="button" class="btn-pick-img"
                                         onclick="event.stopPropagation();document.getElementById('prodImagenFile').click()">
                                     Seleccionar
-                                </button>
-                            </div>
-                        </div>
+                                </button></div></div>
                         <input type="file" id="prodImagenFile" accept="image/*"
-                               style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;">
-                    </div>
+                               style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"></div>
 
-                    <div class="ingredientes-section">
-                        <div class="ing-header">Ingredientes (Receta)</div>
-                        <div class="ing-body">
-                            <div class="ing-row">
-                                <select id="ing-select-mp">
-                                    <option value="">Seleccionar materia prima…</option>
-                                </select>
-                                <input type="number" id="ing-cantidad" placeholder="Cant." min="0.01" step="0.01">
-                                <button type="button" class="btn-add-ing" onclick="agregarIngrediente()">+</button>
-                            </div>
-                            <ul id="lista-receta">
-                                <li class="receta-empty">Sin ingredientes asignados.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                    <div class="field">
+                        <label>Ingredientes</label>
+                        <div class="ingredientes-section">
+                            <div class="ing-body">
+                                <div class="ing-row">
+                                    <select id="ing-select-mp">
+                                        <option value="">Seleccionar materia prima…</option></select>
+                                    <input type="number" id="ing-cantidad" placeholder="Cant." min="0.01" step="0.01">
+                                    <button type="button" class="btn-add-ing" onclick="agregarIngrediente()">+</button></div>
+                                <ul id="lista-receta">
+                                    <li class="receta-empty">Sin ingredientes asignados.</li></ul></div></div></div></div></div>
 
-                <div class="form-panel-footer">
-                    <button type="submit" class="btn-submit-form" id="btn-submit">Guardar Producto</button>
-                    <button type="button" class="btn-cancel-form" id="btn-cancelar" onclick="cancelarEdicion()">Cancelar edición</button>
-                </div>
-            </form>
-        </div>
+            <div class="form-panel-footer">
+                <button type="submit" class="btn-submit-form" id="btn-submit">Guardar Producto</button>
+                <button type="button" class="btn-cancel-form" id="btn-cancelar" onclick="cancelarEdicion()">Cancelar edición</button></div></form></div>
 
-        <div class="menu-container" id="menu-container">
-            <div style="text-align:center;padding:60px;color:var(--text-400);">Cargando menú...</div>
-        </div>
-    </div>
+    <!--  BUSCADOR + CATÁLOGO  -->
+    <div class="catalog-toolbar">
+        <div class="search-wrap">
+            <input type="text" id="buscar" class="search-input" placeholder="Buscar por nombre o categoría..."></div></div>
 
-</div>
+    <div class="menu-container" id="menu-container">
+        <div style="text-align:center;padding:60px;color:var(--text-400);">Cargando menú...</div></div></div>
 </div>
 
+<!-- Modal confirmar eliminar -->
 <div class="modal-overlay" id="modal-eliminar">
     <div class="modal-box">
-        <div class="modal-icon">🗑️</div>
-        <p id="modal-texto">¿Estás seguro de que deseas eliminar este producto?</p>
+        
+        <p id="modal-texto">¿Eliminar este producto?</p>
         <div class="modal-actions">
             <button class="btn-cancel-del" onclick="cerrarModal()">Cancelar</button>
-            <button class="btn-confirm-del" id="btn-confirmar-ok">Sí, eliminar</button>
-        </div>
-    </div>
+            <button class="btn-confirm-del" id="btn-confirmar-ok">Sí, eliminar</button></div></div>
 </div>
 
 <div class="acc-panel" id="accPanel">
@@ -771,23 +732,17 @@ $cat_icons = [
         <div class="acc-row-label">Tema</div>
         <div class="acc-row-btns">
             <button class="acc_tema" onclick="setTema('claro')">Claro</button>
-            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
-        </div>
-    </div>
+            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button></div></div>
     <div class="acc-row">
         <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
-            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
-        </div>
-    </div>
+            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button></div></div>
     <div class="acc-row">
         <div class="acc-row-label">Tipo de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
-            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
-        </div>
-    </div>
+            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button></div></div>
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
 <button class="acc-fab" id="accFab" onclick="togglePanel()">
@@ -801,7 +756,6 @@ $cat_icons = [
 <script>
 const CTRL = '../controllers/productos.php';
 
-const CAT_ICONS = <?= json_encode($cat_icons) ?>;
 const CAT_ORDER = <?= json_encode($categorias_enum) ?>;
 
 let productos           = [];
@@ -853,7 +807,6 @@ function renderMenu(filtro = '') {
         const header = document.createElement('div');
         header.className = 'cat-header';
         header.innerHTML = `
-            <div class="cat-icon">${CAT_ICONS[cat] || '🍽️'}</div>
             <div class="cat-name">${cat}</div>
             <div class="cat-count">${grupos[cat].length} ${grupos[cat].length === 1 ? 'producto' : 'productos'}</div>
         `;
@@ -871,8 +824,8 @@ function renderMenu(filtro = '') {
 function crearTarjeta(p) {
     const card = document.createElement('div');
     card.className = 'product-card';
-    const imgSrc     = p.img || '../estilos/img/default.jpg';
-    const estadoCls  = 'estado-' + p.estado.replace(/ /g, '_');
+    const imgSrc    = p.img || '../estilos/img/default.jpg';
+    const estadoCls = 'estado-' + p.estado.replace(/ /g, '_');
     card.innerHTML = `
         <img class="product-img" src="${imgSrc}" alt="${p.nombre}"
              onerror="this.src='../estilos/img/default.jpg'">
@@ -881,13 +834,10 @@ function crearTarjeta(p) {
             <div class="product-desc">${p.descripcion || ''}</div>
             <div class="product-meta">
                 <div class="product-price">$${Number(p.valor).toLocaleString('es-CO')}</div>
-                <span class="product-estado ${estadoCls}">${p.estado}</span>
-            </div>
-        </div>
+                <span class="product-estado ${estadoCls}">${p.estado}</span></div></div>
         <div class="product-actions">
             <button class="btn-edit-p" onclick="prepararEdicion(${p.id})">Editar</button>
-            <button class="btn-del-p"  onclick="confirmarEliminar(${p.id}, '${p.nombre.replace(/'/g,"\\'")}')">Eliminar</button>
-        </div>`;
+            <button class="btn-del-p"  onclick="confirmarEliminar(${p.id}, '${p.nombre.replace(/'/g,"\\'")}')">Eliminar</button></div>`;
     return card;
 }
 
@@ -914,6 +864,28 @@ function quitarImagenProd() {
     document.getElementById('prod-preview-box').classList.remove('has-img');
 }
 
+function calcularEstado(cantidad) {
+    const n = parseInt(cantidad) || 0;
+    if (n === 0)    return 'Agotado';
+    if (n <= 5)     return 'Por agotarse';
+    return 'Disponible';
+}
+
+function actualizarEstado(valor) {
+    const estado = calcularEstado(valor);
+    document.getElementById('estado').value = estado;
+    const display = document.getElementById('estado-display');
+    const colores = {
+        'Disponible':   { bg: '#d5f5e3', color: '#1a7a42' },
+        'Agotado':      { bg: '#fde8e8', color: '#922222' },
+        'Por agotarse': { bg: 'rgba(232,130,26,0.15)', color: '#8a4a10' }
+    };
+    const c = colores[estado];
+    display.style.background = c.bg;
+    display.style.color      = c.color;
+    display.textContent      = estado;
+}
+
 document.getElementById('formProducto').addEventListener('submit', async e => {
     e.preventDefault();
     const id          = document.getElementById('editId').value;
@@ -934,14 +906,25 @@ document.getElementById('formProducto').addEventListener('submit', async e => {
     fd.append('categoria',   categoria);
     fd.append('estado',      estado);
     fd.append('catidad',     catidad || '0');
+    
     if (file) fd.append('imagen', file);
 
     const url    = id ? `${CTRL}?accion=productos&id=${id}` : `${CTRL}?accion=productos`;
-    const method = id ? 'PUT' : 'POST';
+    const fetchOptions = { method: 'POST', body: fd };
+    if (id) fetchOptions.headers = { 'X-HTTP-Method-Override': 'PUT' };
 
     try {
-        const res  = await fetch(url, { method, body: fd });
-        const data = await res.json();
+        const res  = await fetch(url, fetchOptions);
+        
+        // Validar si el servidor respondió con un error (400, 500, etc)
+        if (!res.ok) {
+            const textoError = await res.text();
+            console.error("Respuesta del servidor:", textoError);
+            toast(`Error del servidor (${res.status})`, 'err');
+            return;
+        }
+        
+       const data = await res.json();
         if (data.success || data.id) {
             const nuevoId = data.id;
             if (nuevoId && ingredientesNuevos.length > 0) {
@@ -973,6 +956,7 @@ function prepararEdicion(id) {
     document.getElementById('categoria').value   = p.categoria;
     document.getElementById('estado').value      = p.estado;
     document.getElementById('catidad').value     = p.catidad || '0';
+    actualizarEstado(p.catidad || '0');
     document.getElementById('prodImagenActual').value = p.img || '';
     if (p.img) {
         const prev = document.getElementById('prodPreview');
@@ -982,9 +966,9 @@ function prepararEdicion(id) {
         document.getElementById('prod-preview-box').classList.add('has-img');
         document.getElementById('prodImagenNombre').textContent = 'Imagen actual cargada';
     }
-    document.getElementById('form-titulo').textContent     = '✏️ Editando: ' + p.nombre;
+
     document.getElementById('btn-submit').textContent      = 'Guardar cambios';
-    document.getElementById('btn-cancelar').style.display  = 'block';
+    document.getElementById('btn-cancelar').style.display  = 'inline-flex';
     cargarReceta(p.id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -993,7 +977,6 @@ function cancelarEdicion() {
     document.getElementById('formProducto').reset();
     document.getElementById('editId').value              = '';
     document.getElementById('prodImagenActual').value    = '';
-    document.getElementById('form-titulo').textContent   = 'Agregar Producto';
     document.getElementById('btn-submit').textContent    = 'Guardar Producto';
     document.getElementById('btn-cancelar').style.display = 'none';
     ingredientesNuevos = [];
@@ -1032,8 +1015,8 @@ function renderListaReceta(lista) {
     ul.innerHTML = '';
     lista.forEach((ing, idx) => {
         const li = document.createElement('li');
-        li.innerHTML = `<span>${ing.nombre} — <strong>${ing.cantidad}</strong> und.</span>
-                        <button class="btn-del-ing" onclick="eliminarIngrediente(${ing.id || -1}, ${idx})">✕</button>`;
+        li.innerHTML = `<span>${ing.nombre} — <strong>${ing.cantidad}</strong></span>
+                        <button class="btn-del-ing" onclick="eliminarIngrediente(${ing.id || -1}, ${idx})"></button>`;
         ul.appendChild(li);
     });
 }

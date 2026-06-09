@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/funciones.php';
 requerirAdmin();
+$navActivo = 'backups';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -191,7 +192,7 @@ requerirAdmin();
 
     <div class="page-header">
         <div>
-            <h1>Copias de Seguridad</h1>
+            <h1 style="font-family: var(--font-sans);">Copias de Seguridad</h1>
             <div class="subtitulo">Gestiona el respaldo completo de la base de datos</div>
         </div>
     </div>
@@ -200,21 +201,18 @@ requerirAdmin();
 
     <div class="actions-grid">
         <div class="action-card" style="--card-accent:#E8821A;--icon-bg:rgba(232,130,26,0.1);">
-            <div class="action-icon">📸</div>
             <h3>Registrar copia</h3>
             <p>Guarda un registro de copia manual en el historial del sistema.</p>
             <button class="action-btn" style="--btn-color:#E8821A;--btn-shadow:rgba(232,130,26,0.3);" onclick="crearBackup()">Crear registro</button>
         </div>
 
         <div class="action-card" style="--card-accent:#2d89ef;--icon-bg:rgba(45,137,239,0.1);">
-            <div class="action-icon">⬇️</div>
             <h3>Exportar base de datos</h3>
             <p>Descarga un archivo JSON con todos los datos actuales del sistema.</p>
             <button class="action-btn" style="--btn-color:#2d89ef;--btn-shadow:rgba(45,137,239,0.3);" onclick="exportarBackup()">Exportar JSON</button>
         </div>
 
         <div class="action-card" style="--card-accent:#9b59b6;--icon-bg:rgba(155,89,182,0.1);">
-            <div class="action-icon">⬆️</div>
             <h3>Restaurar desde archivo</h3>
             <p>Carga un backup JSON previo para restaurar datos en la base de datos.</p>
             <button class="action-btn" style="--btn-color:#9b59b6;--btn-shadow:rgba(155,89,182,0.3);" onclick="document.getElementById('fileInput').click()">Importar y restaurar</button>
@@ -223,7 +221,7 @@ requerirAdmin();
     </div>
 
     <div class="section-header">
-        <h3>📋 Historial de copias</h3>
+        <h3> Historial de copias</h3>
     </div>
 
     <table class="historial-table" id="tablaHistorial">
@@ -291,10 +289,10 @@ function mostrarToast(texto, tipo = 'ok') {
 
 function tipoBadge(nombre) {
     if (nombre === 'EXPORTACION_COMPLETA')
-        return '<span class="tipo-badge tipo-export">⬇️ Exportación</span>';
+        return '<span class="tipo-badge tipo-export">⬇ Exportación</span>';
     if (nombre === 'RESTAURACION')
-        return '<span class="tipo-badge tipo-restore">⬆️ Restauración</span>';
-    return `<span class="tipo-badge tipo-manual">📸 ${nombre}</span>`;
+        return '<span class="tipo-badge tipo-restore">⬆ Restauración</span>';
+    return `<span class="tipo-badge tipo-manual"> ${nombre}</span>`;
 }
 
 async function cargarHistorial() {
@@ -332,7 +330,7 @@ async function crearBackup() {
             body: JSON.stringify({ tabla: 'TODAS' })
         });
         const data = await res.json();
-        if (data.success) { mostrarToast('✅ Registro de copia guardado.'); cargarHistorial(); }
+        if (data.success) { mostrarToast(' Registro de copia guardado.'); cargarHistorial(); }
         else mostrarToast('Error: ' + (data.error || ''), 'err');
     } catch (e) { mostrarToast('Error de conexión.', 'err'); }
 }
@@ -349,7 +347,7 @@ async function exportarBackup() {
         a.download = `backup_burguersoft_${new Date().toISOString().slice(0,10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
-        mostrarToast('✅ Exportación completada. Revisa tus descargas.');
+        mostrarToast(' Exportación completada. Revisa tus descargas.');
         cargarHistorial();
     } catch (e) { mostrarToast('Error al exportar: ' + e.message, 'err'); }
 }
@@ -358,11 +356,11 @@ async function importarBackup(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    if (!confirm('⚠️ ¿Restaurar la base de datos desde este archivo?\n\nSe insertarán los registros del backup.')) {
+    if (!confirm(' ¿Restaurar la base de datos desde este archivo?\n\nSe insertarán los registros del backup.')) {
         event.target.value = ''; return;
     }
 
-    mostrarToast('⏳ Restaurando base de datos...');
+    mostrarToast(' Restaurando base de datos...');
     try {
         const texto  = await file.text();
         const backup = JSON.parse(texto);
@@ -373,7 +371,7 @@ async function importarBackup(event) {
             body: JSON.stringify(backup)
         });
         const data = await res.json();
-        if (data.success) { mostrarToast('✅ ' + (data.mensaje || 'Base de datos restaurada.')); cargarHistorial(); }
+        if (data.success) { mostrarToast(' ' + (data.mensaje || 'Base de datos restaurada.')); cargarHistorial(); }
         else mostrarToast('Error: ' + (data.error || ''), 'err');
     } catch (e) { mostrarToast('Error al leer el archivo: ' + e.message, 'err'); }
     event.target.value = '';

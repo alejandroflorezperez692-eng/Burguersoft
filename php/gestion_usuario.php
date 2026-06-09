@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/funciones.php';
 requerirAdmin();
+$navActivo = 'usuarios';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -255,24 +256,21 @@ requerirAdmin();
 
     <div class="page-header">
         <div>
-            <h1>Gestión de Usuarios</h1>
+            <h1 style="font-family: var(--font-sans);">Gestión de Usuarios</h1>
             <div class="subtitulo">Administra roles, estados y accesos del sistema</div>
         </div>
     </div>
 
     <div class="stat-grid" style="margin-bottom:28px;">
         <div class="stat-card" style="--accent:#E8821A;">
-            <div class="stat-icon">👥</div>
             <div class="stat-label">Total usuarios</div>
             <div class="stat-val" id="total-usuarios">—</div>
         </div>
         <div class="stat-card" style="--accent:#ffd700;">
-            <div class="stat-icon">🔑</div>
             <div class="stat-label">Administradores</div>
             <div class="stat-val" id="count-admin">—</div>
         </div>
         <div class="stat-card" style="--accent:#2ecc71;">
-            <div class="stat-icon">✅</div>
             <div class="stat-label">Activos</div>
             <div class="stat-val" id="count-activos">—</div>
         </div>
@@ -307,7 +305,7 @@ requerirAdmin();
 
 <div class="modal-overlay" id="modalEditar">
     <div class="modal-box">
-        <h3>✏️ Editar Usuario</h3>
+        <h3> Editar Usuario</h3>
         <input type="hidden" id="modal-id">
         <div class="modal-campo">
             <label>Rol del sistema</label>

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../includes/funciones.php';
 require_once __DIR__ . '/../includes/conexion.php';
 requerirLogin();
-$navActivo = '';
+$navActivo = 'config_cuenta';
 $msg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="page-header">
         <div>
-            <h1>Configuración de Cuenta</h1>
+            <h1 style="font-family: var(--font-sans);">Configuración de Cuenta</h1>
             <div class="subtitulo">Gestiona tu información personal y seguridad</div>
         </div>
     </div>

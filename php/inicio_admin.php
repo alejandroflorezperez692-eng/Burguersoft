@@ -99,6 +99,8 @@ $navActivo = 'inicio';
         }
 
         .quick-stats {
+            align-items: center !important;
+            justify-content: center !important;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(190px,1fr));
             gap: 18px;
@@ -238,37 +240,6 @@ $navActivo = 'inicio';
                 <h2>Bienvenido, <br>Administrador</h2>
             </div>
             <img src="../estilos/img/usuario.png" alt="Admin" class="welcome-img">
-        </div>
-
-        <div class="quick-stats">
-            <div class="stat-card" style="--accent:#E8821A;--icon-bg:rgba(232,130,26,0.12);">
-                <div class="stat-body">
-                    <div class="stat-label">Ventas hoy</div>
-                    <div class="stat-val" id="stat-ventas">—</div>
-                    <div class="stat-sub">Transacciones del día</div>
-                </div>
-            </div>
-            <div class="stat-card" style="--accent:#2ecc71;--icon-bg:rgba(46,204,113,0.12);">
-                <div class="stat-body">
-                    <div class="stat-label">Usuarios</div>
-                    <div class="stat-val" id="stat-usuarios">—</div>
-                    <div class="stat-sub">Registrados en sistema</div>
-                </div>
-            </div>
-            <div class="stat-card" style="--accent:#2d89ef;--icon-bg:rgba(45,137,239,0.12);">
-                <div class="stat-body">
-                    <div class="stat-label">Marcas</div>
-                    <div class="stat-val" id="stat-marcas">—</div>
-                    <div class="stat-sub">Proveedores activos</div>
-                </div>
-            </div>
-            <div class="stat-card" style="--accent:#9b59b6;--icon-bg:rgba(155,89,182,0.12);">
-                <div class="stat-body">
-                    <div class="stat-label">Insumos</div>
-                    <div class="stat-val" id="stat-insumos">—</div>
-                    <div class="stat-sub">Materia prima en stock</div>
-                </div>
-            </div>
         </div>
 
     </div>

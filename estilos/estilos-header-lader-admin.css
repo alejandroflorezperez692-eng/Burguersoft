@@ -3,6 +3,7 @@
 :root {
     --brand:           #E8821A;
     --brand-deep:      #cf6e12;
+    --brand-suave:     #E67E22;
     --brand-glow:      rgba(232,130,26,0.18);
     --sidebar-bg:      #16090200;
     --sidebar-start:   #1a0a02;
@@ -114,7 +115,8 @@ a { text-decoration:none; color:inherit; }
 }
 
 .sidebar-footer {
-    justify-content: center;
+    margin-top: 30px;
+    justify-content:flex;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -127,13 +129,13 @@ a { text-decoration:none; color:inherit; }
 .sidebar-footer::-webkit-scrollbar-thumb { background: rgba(232,130,26,0.3); border-radius: 2px; }
 
 .sidebar-item {
-    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
     transition: all 0.22s var(--ease);
     position: relative;
 }
 
-.sidebar-item:hover { border-left-color: var(--brand); background: rgba(232,130,26,0.08); }
-.sidebar-item.active { border-left-color: var(--brand); background: rgba(232,130,26,0.14); }
+.sidebar-item:hover { border-right-color: var(--surface-3); background: rgba(232,130,26,0.08); }
+.sidebar-item.active { border-right-color: var(--surface-3); background: rgba(232,130,26,0.14); }
 
 .sidebar-item a {
     display: flex;

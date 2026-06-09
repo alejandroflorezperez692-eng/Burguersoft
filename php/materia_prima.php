@@ -246,31 +246,27 @@ $navActivo = 'materia';
 
     <div class="page-header">
         <div>
-            <h1>Materia Prima</h1>
+            <h1 style="font-family: var(--font-sans);">Materia Prima</h1>
             <div class="subtitulo">Inventario de insumos y materiales</div>
         </div>
     </div>
 
     <div class="stat-grid" style="margin-bottom:28px;">
         <div class="stat-card" style="--accent:#E8821A;">
-            <div class="stat-icon">📦</div>
-            <div class="stat-label">Total insumos</div>
+            <div class="stat-label">Total Materia Prima</div>
             <div class="stat-val" id="kpi-total">—</div>
         </div>
         <div class="stat-card" style="--accent:#2ecc71;">
-            <div class="stat-icon">✅</div>
             <div class="stat-label">Disponibles</div>
             <div class="stat-val" id="kpi-disponibles">—</div>
         </div>
         <div class="stat-card" style="--accent:#E8821A;">
-            <div class="stat-icon">💲</div>
             <div class="stat-label">Valor promedio</div>
             <div class="stat-val" id="kpi-promedio">—</div>
         </div>
     </div>
 
     <div class="form-panel">
-        <div class="form-panel-title" id="form-mp-title">➕ Agregar insumo</div>
         <div class="form-grid">
             <div class="field">
                 <label>Nombre *</label>
@@ -298,7 +294,7 @@ $navActivo = 'materia';
             </div>
         </div>
         <div class="form-actions">
-            <button class="btn-guardar-mp" id="btn-guardar" onclick="guardar()">Guardar insumo</button>
+            <button class="btn-guardar-mp" id="btn-guardar" onclick="guardar()">Guardar</button>
             <button class="btn-limpiar-mp" onclick="limpiar()">Limpiar</button>
         </div>
     </div>
