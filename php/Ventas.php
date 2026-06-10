@@ -298,7 +298,7 @@ $navActivo = 'ventas';
         <div class="form-row-grid">
             <div class="field-group">
                 <label>Cliente</label>
-                <input type="text" id="cliente" placeholder="Nombre del cliente">
+                <input type="text" id="cliente" onkeypress="sololetras(event)" placeholder="Nombre del cliente">
             </div>
             <div class="field-group">
                 <label>Producto</label>
@@ -317,11 +317,11 @@ $navActivo = 'ventas';
             </div>
             <div class="field-group">
                 <label>Cantidad</label>
-                <input type="number" id="cantidad" placeholder="1" min="1" value="1">
+                <input type="number" id="cantidad" onkeypress="solonumeros(event)" placeholder="1" min="1" value="1">
             </div>
             <div class="field-group">
                 <label>Precio unitario</label>
-                <input type="number" id="precio" placeholder="0" step="500" min="1">
+                <input type="number" id="precio" onkeypress="solonumeros(event)" placeholder="0" step="500" min="1">
             </div>
             <div class="field-group">
                 <label>Fecha y hora</label>
@@ -609,6 +609,17 @@ document.getElementById('buscar').addEventListener('input', e => {
         (v.metodo_pago || '').toLowerCase().includes(txt)
     ));
 });
+
+function sololetras(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[a-zA-Z\s]+$/.test(char)) e.preventDefault();
+}
+
+function solonumeros(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[0-9.]$/.test(char)) e.preventDefault();
+}
+
 </script>
 </body>
 </html>

@@ -1,6 +1,9 @@
-<?php // includes/accesibilidad.php ?>
+<?php
+
+?>
+
 <div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title"> Accesibilidad</div>
+    <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">
         <div class="acc-row-label">Tema</div>
         <div class="acc-row-btns">
@@ -9,7 +12,7 @@
         </div>
     </div>
     <div class="acc-row">
-        <div class="acc-row-label">Tamano de letra</div>
+        <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="cambiarFuente(-1)">A-</button>
             <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
@@ -25,4 +28,10 @@
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
 
-<button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img
+        style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"
+        src="../estilos/img/accesibilidad.png"
+        alt="Accesibilidad"
+    >
+</button>

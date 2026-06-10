@@ -1,6 +1,6 @@
-/* Configuración General */
+
 body {
-    background-color: #FDF5E6; /* Crema del fondo de la imagen 2 */
+    background-color: #FDF5E6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
@@ -9,19 +9,17 @@ body {
     margin: 0;
 }
 
-/* Tarjeta Principal */
 .card-verificacion {
-    background-color: #f5edd8; /* Beige de la tarjeta de login */
+    background-color: #f5edd8;
     width: 420px;
-    border: 2px solid #2D1B14; /* Borde marrón oscuro */
+    border: 2px solid #2D1B14; 
     border-radius: 5px;
     box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-/* Encabezado Naranja */
 .header-naranja {
-    background-color: #E8821A; /* Naranja BurgerSoft */
+    background-color: #E8821A;
     padding: 25px;
     text-align: center;
     border-bottom: 2px solid #2D1B14;
@@ -35,7 +33,6 @@ body {
     font-weight: 900;
 }
 
-/* Cuerpo de la Tarjeta */
 .cuerpo-tarjeta {
     padding: 35px 25px;
     text-align: center;
@@ -48,7 +45,7 @@ body {
     margin-bottom: 25px;
 }
 
-/* Contenedor de los 6 cuadros */
+
 .contenedor-codigo {
     display: flex;
     justify-content: space-between;
@@ -58,25 +55,25 @@ body {
 .input-codigo {
     width: 48px;
     height: 55px;
-    background-color: #3D1C11; /* Marrón oscuro de los inputs del login */
+    background-color: #3D1C11; 
     border: 2px solid #000;
     border-radius: 4px;
-    color: #E8821A; /* El número será naranja al escribir */
+    color: #E8821A; 
     font-size: 24px;
     font-weight: bold;
     text-align: center;
     outline: none;
 }
 
-/* Efecto al seleccionar un cuadro */
+
 .input-codigo:focus {
     border-color: #E8821A;
     box-shadow: 0 0 8px rgba(243, 146, 55, 0.5);
 }
 .boton-regresar {
-    position: fixed;  /* fijo respecto a la ventana */
-    top: 20px;        /* distancia desde arriba */
-    right: 20px;      /* distancia desde la derecha */
+    position: fixed;  
+    top: 20px;        
+    right: 20px;      
     width: 150px; 
     padding: 12px;
     background: #E8821A; 
@@ -97,7 +94,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* Botón Estilo BurgerSoft */
+
 .btn-Entrar {
     background-color: #E8821A;
     color: #000;

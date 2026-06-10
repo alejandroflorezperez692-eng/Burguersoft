@@ -8,13 +8,10 @@ if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 4
 $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
 $id     = (int)($_GET['id'] ?? 0);
-
-// ── GET ───────────────────────────────────────────────────────────────────────
 if ($method === 'GET') {
     if ($id) {
-        // Detalle de una venta: productos normales + promociones
         $s = $pdo->prepare("
-            SELECT dv.*, p.nombre AS nombre_producto
+            SELECT dv.*, p.nombre AS nombre
             FROM detalle_venta dv
             JOIN producto p ON p.id = dv.producto_id
             WHERE dv.venta_id = ?
@@ -35,7 +32,6 @@ if ($method === 'GET') {
         jsonResponse(['items' => $items, 'promociones' => $promos]);
     }
 
-    // Lista todas las ventas con nombre de usuario
     jsonResponse($pdo->query("
         SELECT v.*, u.nombre AS nombre_usuario, u.apellido AS apellido_usuario
         FROM venta v
@@ -44,7 +40,6 @@ if ($method === 'GET') {
     ")->fetchAll());
 }
 
-// ── POST (crear venta) ────────────────────────────────────────────────────────
 if ($method === 'POST') {
     $body       = json_decode(file_get_contents('php://input'), true) ?? [];
     $metodo     = limpiar($body['metodo_pago']  ?? '');
@@ -57,7 +52,6 @@ if ($method === 'POST') {
 
     $total = 0;
 
-    // Sumar productos individuales
     foreach ($items as $item) {
         $total += (float)($item['precio_unitario'] ?? 0) * (int)($item['cantidad'] ?? 1);
     }
@@ -68,12 +62,10 @@ if ($method === 'POST') {
 
     $pdo->beginTransaction();
     try {
-        // 1) Insertar cabecera de venta
         $pdo->prepare("INSERT INTO venta (valor_total, metodo_pago, usuario_id) VALUES (?,?,?)")
             ->execute([$total, $metodo, $usuario_id]);
         $venta_id = (int)$pdo->lastInsertId();
 
-        // 2) Insertar detalle_venta para productos individuales
         $insDetalle = $pdo->prepare("
             INSERT INTO detalle_venta (venta_id, producto_id, cantidad, precio_unitario, subtotal, estado)
             VALUES (?,?,?,?,?,?)
@@ -85,23 +77,17 @@ if ($method === 'POST') {
             $subtotal = $cant * $pu;
             if (!$prod_id) continue;
             $insDetalle->execute([$venta_id, $prod_id, $cant, $pu, $subtotal, 'En proceso']);
-
-            // Descontar stock del producto
             $pdo->prepare("
                 UPDATE producto
                 SET catidad = GREATEST(0, CAST(catidad AS SIGNED) - ?)
                 WHERE id = ?
             ")->execute([$cant, $prod_id]);
         }
-
-        // 3) Insertar venta_promocion y descontar stock de cada producto de la promoción
         $insPromo = $pdo->prepare("INSERT INTO venta_promocion (venta_id, promocion_id) VALUES (?,?)");
         foreach ($promos as $promo) {
             $promo_id = (int)($promo['promocion_id'] ?? 0);
             if (!$promo_id) continue;
             $insPromo->execute([$venta_id, $promo_id]);
-
-            // Obtener los productos de esta promoción y descontar 1 unidad de cada uno
             $sp = $pdo->prepare("
                 SELECT producto_id FROM promocion_producto WHERE promocion_id = ?
             ");
@@ -109,13 +95,10 @@ if ($method === 'POST') {
             $prod_promo = $sp->fetchAll(PDO::FETCH_COLUMN);
 
             foreach ($prod_promo as $pid) {
-                // Insertar en detalle_venta como si fuera venta individual (precio 0, ya pagado en promo)
                 $pdo->prepare("
                     INSERT INTO detalle_venta (venta_id, producto_id, cantidad, precio_unitario, subtotal, estado)
                     VALUES (?,?,?,?,?,?)
                 ")->execute([$venta_id, (int)$pid, 1, 0, 0, 'En proceso']);
-
-                // Descontar stock
                 $pdo->prepare("
                     UPDATE producto
                     SET catidad = GREATEST(0, CAST(catidad AS SIGNED) - 1)
@@ -132,7 +115,6 @@ if ($method === 'POST') {
     }
 }
 
-// ── PUT (actualizar estado de detalle) ────────────────────────────────────────
 if ($method === 'PUT') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     $body   = json_decode(file_get_contents('php://input'), true) ?? [];
@@ -143,10 +125,8 @@ if ($method === 'PUT') {
     jsonResponse(['success' => true]);
 }
 
-// ── DELETE ────────────────────────────────────────────────────────────────────
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
-    // detalle_venta y venta_promocion se eliminan en cascada por FK
     $pdo->prepare("DELETE FROM venta WHERE id=?")->execute([$id]);
     jsonResponse(['success' => true]);
 }

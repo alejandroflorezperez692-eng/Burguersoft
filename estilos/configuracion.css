@@ -1,12 +1,12 @@
-/*  Variables CSS para consistencia */
+
 :root {
     --color-fondo: #fdf8f0;
     --color-principal: #E8821A;
     --color-secundario: #d4b86a;
     --color-peligro: #D94F35;
     --color-texto: #2c1810;
-    --color-input-bg: #f3f1ee;        /* ← blanco limpio */
-    --color-input-text: #2c1810;      /* ← texto oscuro legible */
+    --color-input-bg: #f3f1ee;      
+    --color-input-text: #2c1810;     
     --border-radius: 8px;
     --font-family: Georgia, 'Times New Roman', Times, serif;
     --transition-speed: 0.3s;
@@ -39,7 +39,7 @@ h2 {
     text-align: center;
 }
 
-/* Container principal */
+
 .container {
     background: var(--color-fondo);
     margin: 100px auto;
@@ -50,7 +50,7 @@ h2 {
     border: 1px solid var(--color-principal);
 }
 
-/* Formularios */
+
 .campo {
     display: flex;
     flex-direction: column;
@@ -88,9 +88,7 @@ select option {
     color: var(--color-input-text);
 }
 
-/* ==============================
-   Botones
-============================== */
+
 button {
     font-family: var(--font-family);
     cursor: pointer;
@@ -144,7 +142,7 @@ button {
     background-color: var(--color-principal);
     color: #fff;
     width: auto;
-    padding: 14px 60px; /* ← más alto (14px) y más ancho (60px) */
+    padding: 14px 60px; 
 }
 
 
@@ -161,7 +159,7 @@ button {
     background-color: #e3aba5;
 }
 
-/* Botón regresar fijo */
+
 .btn-regresar {
     position: fixed;
     top: 20px;
@@ -180,9 +178,6 @@ button {
     background-color: var(--color-secundario);
 }
 
-/* ==============================
-   Media Queries
-============================== */
 @media(max-width: 768px) {
     .container {
         width: 90%;

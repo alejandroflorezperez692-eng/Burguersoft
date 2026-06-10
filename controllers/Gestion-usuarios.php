@@ -14,7 +14,6 @@ header('Access-Control-Allow-Headers: Content-Type');
 $pdo = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Obtener el ID de la URL si existe: api_usuarios.php?id=5
 $id = isset($_GET['id']) ? intval($_GET['id']) : null;
 
 if ($method === 'GET' && !$id) {
@@ -39,8 +38,6 @@ if ($method === 'GET' && !$id) {
 
 if ($method === 'PUT' && $id) {
     $body = json_decode(file_get_contents('php://input'), true);
-
-    // Obtener id del nuevo rol
     if (isset($body['rol'])) {
         $stmtRol = $pdo->prepare("SELECT id FROM rol WHERE nombre = ?");
         $stmtRol->execute([$body['rol']]);

@@ -7,33 +7,27 @@ if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 4
 
 $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
-// Soporte para _method override: permite enviar PUT/DELETE desde formularios/fetch
 if ($method === 'POST' && !empty($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
     $method = strtoupper($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
 }
 $accion = $_GET['accion'] ?? '';
 $id     = (int)($_GET['id'] ?? 0);
 
-// ── ENUM de categorías (sacado directo de la BD) ─────────────────────────────
-// Coincide exactamente con el ENUM definido en la tabla producto
 $categorias_enum = [
     'Hamburguesa','Perros Caliente','Salchipapa','Fritos',
     'Arepas','Picada','Bebidas Frias','Bebidas Calientes','Pizza'
 ];
 
-// ── Helper: calcula estado según cantidad ────────────────────────────────────
 function calcularEstado(int $cantidad): string {
     if ($cantidad === 0)   return 'Agotado';
     if ($cantidad <= 5)    return 'Por agotarse';
     return 'Disponible';
 }
 
-// ── GET categorías (devuelve el enum como lista) ─────────────────────────────
 if ($accion === 'categorias' && $method === 'GET') {
     jsonResponse(array_map(fn($c) => ['id' => $c, 'nombre' => $c], $categorias_enum));
 }
 
-// ── GET / POST / PUT / DELETE productos ─────────────────────────────────────
 if ($accion === 'productos') {
 
     if ($method === 'GET') {
@@ -133,7 +127,6 @@ if ($accion === 'productos') {
     }
 }
 
-// ── RECETA ───────────────────────────────────────────────────────────────────
 if ($accion === 'receta') {
 
     if ($method === 'GET') {
@@ -168,7 +161,6 @@ if ($accion === 'receta') {
     }
 }
 
-// ── MATERIAS PRIMAS (para el selector de ingredientes) ───────────────────────
 if ($accion === 'materias' && $method === 'GET') {
     jsonResponse($pdo->query(
         "SELECT id, nombre, cantidad, unidad_medida FROM materia_prima ORDER BY nombre"

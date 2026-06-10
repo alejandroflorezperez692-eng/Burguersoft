@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" action="config_cuenta.php">
 
                 <div class="form-section">
-                    <div class="form-section-title">Información Personal</div>
+                    <div class="form-section-title" style="font-family: var(--font-sans);">Información Personal</div>
 
                     <div class="form-row-2">
                         <div class="field">
@@ -338,7 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-section">
-                    <div class="form-section-title">Seguridad (opcional)</div>
+                    <div class="form-section-title" style="font-family: var(--font-sans);">Seguridad (opcional)</div>
 
                     <div class="field">
                         <label>Contraseña actual</label>

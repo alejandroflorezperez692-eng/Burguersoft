@@ -10,25 +10,25 @@ body {
         }
 
     .container {
-    width: 500px;                /* tu tamaño del cuadro */
-    background-color:  #fdf8f0;   /* tu color de fondo */
-    padding: 0 0 20px 0;         /* importante: arriba 0 para unirlo al header */
+    width: 500px;                
+    background-color:  #fdf8f0;   
+    padding: 0 0 20px 0;         
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(0,0,0,0.4);
     margin: auto;
     text-align: center;
-    margin-top: 80px; /* Ajusta según sea necesario */
+    margin-top: 80px; 
 }
 
 .header {
-    width: 100%;                 /* ocupa todo el ancho */
+    width: 100%;                 
     background-color: black;
-    padding: 25px 0;             /* solo vertical */
+    padding: 25px 0;             
     color: white;
     font-size: 25px;
     font-weight: bold;
-    border-radius: 15px 15px 0 0; /* esquinas superiores redondeadas */
-    margin: 0;                   /* quitar posibles márgenes */
+    border-radius: 15px 15px 0 0; 
+    margin: 0;                  
     box-sizing: border-box;
 }
 
@@ -110,13 +110,12 @@ body {
         }
 body {
     margin: 0;
-    padding: 0; /* Color crema */
+    padding: 0; 
     display: flex;
-    flex-direction: column;   /* Permite que el navbar quede arriba */
+    flex-direction: column;   
     height: 100vh;
 }      
 
-/* NAVBAR */
 .navbar {
     width: 100%;
     background-color: #fdf8f0;
@@ -142,15 +141,13 @@ body {
     cursor: pointer;
 }
 
-/* CENTRAR FORMULARIO */
 .contenedor-principal {
-    flex: 1; /* Ocupa todo el espacio restante debajo del navbar */
+    flex: 1; 
     display: flex;
     justify-content: center;
-    align-items: center; /* CENTRA VERTICALMENTE */
+    align-items: center; 
 }
 
-/* FORMULARIO */
 .container {
     width: 500px;
     background-color:  #fdf8f0;
@@ -207,15 +204,15 @@ a.boton {
     color: #2c1810;
 }
 
-.enlace-externo { /* espacio debajo del recuadro */
+.enlace-externo { 
     text-align: center;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size: 20px;
     color: #080707;
 }
-.enlace-externo { /* espacio debajo del recuadro */
-    margin-top: -100px;       /* ACERCA EL TEXTO AL CUADRO */
-    margin-bottom: 90px;     /* SEPARA UN POCO DEL FOOTER */
+.enlace-externo { 
+    margin-top: -100px;       
+    margin-bottom: 90px;     
 }
 
 .enlace-externo a {

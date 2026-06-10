@@ -1,15 +1,11 @@
-
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&display=swap');
 
-/* ── RESET ─────────────────────────────────────────────────── */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ── VARIABLES ──────────────────────────────────────────────── */
 :root {
     --color-primario:    #2c1810;
     --color-secundario:  #E8821A;
@@ -30,7 +26,6 @@
     --transicion:        0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── BASE ───────────────────────────────────────────────────── */
 html {
     scroll-behavior: smooth;
 }
@@ -43,9 +38,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   HEADER / NAVBAR
-══════════════════════════════════════════════════════════════ */
 header {
     display: flex;
     justify-content: space-between;
@@ -83,7 +75,7 @@ header {
     flex: 1;
 }
 
-/* Logo */
+
 .logo {
     width: 64px;
     height: 64px;
@@ -101,7 +93,7 @@ header {
     transform: scale(1.06);
 }
 
-/* Separador vertical */
+
 header hr {
     width: 1px;
     height: 36px;
@@ -110,7 +102,6 @@ header hr {
     flex-shrink: 0;
 }
 
-/* Nombre del local */
 .nom-local {
     color: var(--color-acento);
     font-family: var(--font-display);
@@ -127,7 +118,7 @@ header hr {
     color: #fff;
 }
 
-/* Nav links */
+
 .header-center a {
     font-family: var(--font-cuerpo);
     font-size: 14px;
@@ -164,7 +155,7 @@ header hr {
     width: 60%;
 }
 
-/* Botón iniciar sesión */
+
 .btn-sesion {
     background: var(--color-secundario);
     border: 2px solid transparent;
@@ -194,9 +185,7 @@ header hr {
     transform: translateY(-2px);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   HERO / CARRUSEL
-══════════════════════════════════════════════════════════════ */
+
 .hero {
     position: relative;
     height: 78vh;
@@ -204,7 +193,7 @@ header hr {
     overflow: hidden;
 }
 
-/* Gradiente sobre el carrusel para profundidad */
+
 .hero::after {
     content: '';
     position: absolute;
@@ -240,7 +229,7 @@ header hr {
     transform: scale(1);
 }
 
-/* Controles del carrusel */
+
 .carousel-prev,
 .carousel-next {
     position: absolute;
@@ -272,7 +261,7 @@ header hr {
     transform: translateY(-50%) scale(1.08);
 }
 
-/* Indicadores (puntos) */
+
 .carousel-indicators {
     position: absolute;
     bottom: 28px;
@@ -301,9 +290,7 @@ header hr {
     box-shadow: 0 0 10px rgba(232, 130, 26, 0.7);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   SECCIÓN PROMOCIONES / INICIO
-══════════════════════════════════════════════════════════════ */
+
 .promociones {
     padding: 70px 5% 80px;
     background: var(--color-fondo);
@@ -339,7 +326,7 @@ header hr {
     max-width: 600px;
 }
 
-/* Grid de productos */
+
 .productos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
@@ -347,7 +334,7 @@ header hr {
     margin-top: 8px;
 }
 
-/* Tarjeta de producto */
+
 .product-card {
     position: relative;
     background: #fff;
@@ -423,7 +410,7 @@ header hr {
     font-family: var(--font-cuerpo);
 }
 
-/* Badge de oferta */
+
 .sale-badge {
     position: absolute;
     top: 14px;
@@ -440,9 +427,7 @@ header hr {
     z-index: 1;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   SECCIÓN NOSOTROS
-══════════════════════════════════════════════════════════════ */
+
 .nosotros-section {
     display: flex;
     align-items: stretch;
@@ -523,9 +508,7 @@ header hr {
     box-shadow: 0 24px 60px rgba(44, 24, 16, 0.3);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   SECCIÓN UBICACIÓN
-══════════════════════════════════════════════════════════════ */
+
 .nosotros-ubicacion {
     display: flex;
     flex-direction: column;
@@ -560,9 +543,7 @@ header hr {
     margin-top: 4px;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   MAPA
-══════════════════════════════════════════════════════════════ */
+
 .map-content {
     background: var(--color-fondo-alt);
     padding: 60px 5%;
@@ -587,17 +568,13 @@ header hr {
     box-shadow: var(--sombra-fuerte);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   SECCIÓN MENÚ
-══════════════════════════════════════════════════════════════ */
+
 .menu-section {
     padding: 70px 5% 80px;
     background: var(--color-fondo);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   SECCIÓN CONTACTO
-══════════════════════════════════════════════════════════════ */
+
 .contact-section {
     padding: 80px 5% 100px;
     background: var(--color-fondo);
@@ -684,9 +661,7 @@ header hr {
     word-break: break-word;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   FOOTER
-══════════════════════════════════════════════════════════════ */
+
 footer {
     background: var(--color-primario);
     position: relative;
@@ -717,9 +692,7 @@ footer::before {
     color: rgba(253, 248, 240, 0.6);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════════════════════════════ */
+
 @media (max-width: 900px) {
     .nosotros-section {
         flex-direction: column;

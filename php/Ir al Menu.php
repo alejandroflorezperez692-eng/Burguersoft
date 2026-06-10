@@ -10,6 +10,7 @@ session_start();
     <link rel="icon" href="../img/icono.png" type="image/x-icon">
     <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css">
     <link rel="stylesheet" href="../estilos/factura-estilos.css">
+    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <script src="../js/Hero-Carrusel.js" defer></script>
     <style>
         :root {
@@ -21,7 +22,7 @@ session_start();
 
         body { background: var(--fondo); min-height: 100vh; }
 
-        /* ── TÍTULO SECCIÓN ── */
+
         .titulo-seccion {
             text-align: center;
             font-size: 32px;
@@ -31,14 +32,13 @@ session_start();
             letter-spacing: 1px;
 }
 
-        /* ── CONTENEDOR MENÚ ── */
+     
         #productos-container {
             padding: 10px 30px 60px;
             max-width: 1300px;
             margin: 0 auto;
         }
 
-        /* ── TÍTULO DE CATEGORÍA ── */
         .cat-titulo {
             font-family: 'Lucida Sans', sans-serif;
             font-size: 24px;
@@ -61,14 +61,14 @@ session_start();
             flex-shrink: 0;
         }
 
-        /* ── GRID DE PRODUCTOS ── */
+       
         .productos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
 
-        /* ── CARTA DE PRODUCTO ── */
+        
         .prod-card {
             background: #fff;
             border-radius: 14px;
@@ -140,10 +140,10 @@ session_start();
 
         .btn-cerrar-inv { background: #464646; color: #fff; }
 
-        /* ── CARGANDO ── */
+        
         .cargando { text-align: center; padding: 60px; color: #888; font-size: 15px; }
 
-        /* ── MODAL PEDIDO ── */
+       
         #pedido-modal {
             display: none; position: fixed; inset: 0;
             align-items: center; justify-content: center;
@@ -161,7 +161,7 @@ session_start();
         .btn-local    { background: #444; color: #fff; }
         .btn-cerrar-modal { background: transparent; color: #555; border: 1px solid #ccc !important; margin-top: 10px; padding: 8px 12px; border-radius: 6px; cursor: pointer; width: 100%; }
 
-        /* ── MODAL MESA ── */
+        
         #mesa-modal {
             display: none; position: fixed; inset: 0;
             align-items: center; justify-content: center;
@@ -183,7 +183,6 @@ session_start();
         .btn-confirmar-mesa { background: var(--secundario); color: #fff; }
         .btn-cancelar-mesa  { background: #555; color: #fff; }
 
-        /* ── OVERLAY FACTURA ── */
         #invoice-overlay {
             display: none; position: fixed; inset: 0;
             align-items: center; justify-content: center;
@@ -198,7 +197,8 @@ session_start();
         .invoice-actions button { padding: 8px 16px; border: 0; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .btn-imprimir { background: #ff6600; color: #fff; }
         .btn-cerrar-inv { background: #464646; color: #fff; }
-    </style>
+     
+   </style>
 </head>
 <body>
 
@@ -214,7 +214,6 @@ session_start();
     </div>
 </div>
 
-<!-- Modal mesa -->
 <div id="mesa-modal" role="dialog" aria-modal="true" aria-label="Número de mesa">
     <div class="mesa-box">
         <h3>Número de mesa</h3>
@@ -227,7 +226,6 @@ session_start();
     </div>
 </div>
 
-<!-- Overlay factura -->
 <div id="invoice-overlay" role="dialog" aria-hidden="true">
     <div id="invoice-box">
         <div id="invoice-content"></div>
@@ -238,11 +236,9 @@ session_start();
     </div>
 </div>
 
-<!-- MENÚ -->
 <h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
 <div id="productos-container"><div class="cargando"> Cargando menú…</div></div>
 
-<!-- ACCESIBILIDAD -->
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">
@@ -279,7 +275,6 @@ session_start();
     let carrito = [];
     let pedidoRealizado = false;
 
-    // Cargar menú completo
     async function cargarMenu() {
         const contenedor = document.getElementById('productos-container');
         try {
@@ -299,25 +294,21 @@ session_start();
                 return;
             }
 
-            // Agrupar productos por categoría
             const grupos = {};
             categorias.forEach(c => { grupos[c.id_categoria] = { cat: c, items: [] }; });
             productos.forEach(p => {
                 if (grupos[p.id_categoria]) grupos[p.id_categoria].items.push(p);
             });
 
-            // Generar sección por cada categoría
             categorias.forEach(c => {
                 const g = grupos[c.id_categoria];
                 if (!g || g.items.length === 0) return;
 
-                // Título de categoría
                 const titulo = document.createElement('h3');
                 titulo.className = 'cat-titulo';
                 titulo.textContent = c.nombre_categoria;
                 contenedor.appendChild(titulo);
 
-                // Grid de productos
                 const grid = document.createElement('div');
                 grid.className = 'productos-grid';
 

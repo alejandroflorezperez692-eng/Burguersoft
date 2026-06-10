@@ -10,6 +10,107 @@ session_start();
     <link rel="icon" href="../estilos/img\icono.png" type="image/x-icon">
     <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css">
     <script src="../js/Hero-Carrusel.js" defer></script>
+    <style>
+     
+        #grid-promociones {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 22px;
+            padding: 10px 0;
+        }
+
+        .promo-card-pub {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+            transition: transform 0.25s, box-shadow 0.25s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .promo-card-pub:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .promo-img-pub {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: #f5edd8;
+        }
+
+        .promo-img-pub img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .promo-card-pub:hover .promo-img-pub img { transform: scale(1.06); }
+
+        .promo-badge-pub {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #e8821a;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .promo-info-pub {
+            padding: 18px 20px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .promo-info-pub h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1e0a00;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .promo-info-pub p {
+            font-size: 13px;
+            color: #888;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .promo-tags-pub {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .promo-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            background: rgba(232,130,26,0.12);
+            border: 1px solid rgba(232,130,26,0.3);
+            border-radius: 20px;
+            color: #8a4a10;
+        }
+
+        .promo-precio-pub {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #e8821a;
+            margin-top: auto;
+            padding-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,7 +131,42 @@ session_start();
         </div>
         <br><br>
     </section>
-
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const grid = document.getElementById('grid-promociones');
+    try {
+        const res   = await fetch('../controllers/promociones.php');
+        const promos = await res.json();
+        if (!promos.length) { grid.innerHTML = '<p style="padding:20px;color:#888;">No hay promociones activas.</p>'; return; }
+        grid.innerHTML = promos.map(p => `
+            <div class="product-card">
+                <div style="position:relative;">
+                    <img class="product-image" src="${p.imagen || '../estilos/img/promocion.png'}"
+                         alt="${p.nombre_promocion}"
+                         onerror="this.src='../estilos/img/promocion.png'">
+                    <span style="position:absolute;top:10px;right:10px;background:#F18921;color:#fff;font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:3px 10px;border-radius:20px;">PROMO</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">${p.nombre_promocion}</div>
+                    <p style="font-size:13px;color:#888;margin:0;">${p.descripcion || ''}</p>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;">
+                        <span class="product-price">$${Number(p.precio).toLocaleString('es-CO')}</span>
+                        <button style="background:none;border:none;cursor:pointer;padding:4px;" title="Agregar al carrito">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+                                 fill="none" stroke="#F18921" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>`).join('');
+    } catch(e) {
+        grid.innerHTML = '<p style="padding:20px;color:#888;">No se pudieron cargar las promociones.</p>';
+    }
+});
+</script>
     
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
@@ -62,6 +198,47 @@ session_start();
 </button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
+
+<script>
+(async function cargarPromociones() {
+    const grid = document.getElementById('grid-promociones');
+    try {
+        const res   = await fetch('../controllers/promociones.php');
+        const promos = await res.json();
+
+        if (!promos.length) {
+            grid.innerHTML = '<p style="padding:20px;color:#888;">No hay promociones disponibles por el momento.</p>';
+            return;
+        }
+
+        grid.innerHTML = promos.map(p => {
+            const imgSrc  = p.imagen || '../estilos/img/promocion.png';
+            const prods   = p.productos || [];
+            const tagsHtml = prods.length
+                ? prods.map(pr => `<span class="promo-tag">${pr.nombre}</span>`).join('')
+                : '';
+
+            return `
+            <div class="promo-card-pub">
+                <div class="promo-img-pub">
+                    <img src="${imgSrc}" alt="${p.nombre}"
+                         onerror="this.src='../estilos/img/promocion.png'">
+                    <span class="promo-badge-pub">PROMO</span>
+                </div>
+                <div class="promo-info-pub">
+                    <h3>${p.nombre}</h3>
+                    ${p.descripcion ? `<p>${p.descripcion}</p>` : ''}
+                    ${tagsHtml ? `<div class="promo-tags-pub">${tagsHtml}</div>` : ''}
+                    <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch (e) {
+        grid.innerHTML = '<p style="padding:20px;color:#888;">No se pudo cargar las promociones.</p>';
+    }
+})();
+</script>
 
   <footer>
     <div class="footer-container">

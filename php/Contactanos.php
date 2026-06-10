@@ -29,14 +29,18 @@ session_start();
         <h1>¡Contáctanos!</h1>
         <br>
         <p class="descripcion">
-            Si quieres obtener más información y saber más de nosotros síguenos,<br>
-            llámanos y mándanos correos en todas nuestras plataformas.
+            ¿Tienes alguna pregunta, quieres hacer un pedido especial
+            o simplemente quieres saludarnos? Estamos disponibles
+            en todas nuestras plataformas. ¡Con gusto te atendemos!
+            <br><br>
+
+            ⏰ Atendemos mensajes de Lunes a Domingo · 3:00 PM – 10:00 PM
         </p>
-        <br><br>
+        
 
         <div class="icons-container">
 
-            <!-- WHATSAPP CON MENÚ DE DOS NÚMEROS -->
+           
             <div class="icon-box">
                 <button class="icon-button" onclick="
                     var menu = document.getElementById('wsp-menu');

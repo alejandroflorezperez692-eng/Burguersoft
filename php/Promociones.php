@@ -398,7 +398,7 @@ $navActivo = 'promociones';
 
         <div class="form-group">
             <label>Nombre *</label>
-            <input type="text" id="nombre" placeholder="Ej: Combo Burger Deluxe">
+            <input type="text" id="nombre" onkeypress="sololetras(event)"  placeholder="Ej: Combo Burger Deluxe">
         </div>
 
         <div class="form-group">
@@ -408,18 +408,29 @@ $navActivo = 'promociones';
 
         <div class="form-group">
             <label>Precio *</label>
-            <input type="number" id="precio" placeholder="Ej: 15000" step="100" min="0">
+            <input type="number" id="precio" onkeypress="solonumeros(event)" placeholder="Ej: 15000" step="100" min="0">
         </div>
 
-        <div class="form-group">
+       <div class="form-group">
             <label>Fecha de inicio *</label>
-            <input type="date" id="fecha_inicio">
+            <input type="date" id="fecha_inicio" name="fecha_inicio">
         </div>
 
         <div class="form-group">
             <label>Fecha de fin *</label>
-            <input type="date" id="fecha_fin">
+            <input type="date" id="fecha_fin" name="fecha_fin">
         </div>
+
+        <script>
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha_inicio').min = hoy;
+            document.getElementById('fecha_fin').min = hoy;
+
+            // Ademas, cuando cambie fecha_inicio, fecha_fin no puede ser menor
+            document.getElementById('fecha_inicio').addEventListener('change', function() {
+                document.getElementById('fecha_fin').min = this.value;
+            });
+        </script>
 
         <div class="form-group">
             <label>Productos del combo</label>
@@ -435,6 +446,9 @@ $navActivo = 'promociones';
         <div class="form-group">
             <label>Imagen</label>
             <input type="file" id="imagen" accept="image/*">
+            <span id="imagen-hint" style="font-size:12px;color:var(--text-400);display:none;">
+                Si no eliges una nueva imagen se conserva la actual.
+            </span>
             <img id="preview" class="preview-img">
         </div>
 
@@ -508,7 +522,7 @@ function renderPromos() {
     const lista    = document.getElementById('listaPromos');
     const busqueda = document.getElementById('buscar').value.toLowerCase().trim();
     const filtradas = promociones.filter(p =>
-        (p.nombre_promocion || '').toLowerCase().includes(busqueda)
+        (p.nombre || '').toLowerCase().includes(busqueda)
     );
 
     document.getElementById('contador-promos').textContent =
@@ -529,12 +543,12 @@ function renderPromos() {
         return `
         <div class="promo-card">
             <div class="promo-img-wrap">
-                <img src="${imgSrc}" alt="${p.nombre_promocion}"
+                <img src="${imgSrc}" alt="${p.nombre}"
                      onerror="this.onerror=null;this.src='../estilos/img/promocion.png'">
                 <span class="promo-badge">Promo</span>
             </div>
             <div class="promo-body">
-                <div class="promo-nombre">${p.nombre_promocion}</div>
+                <div class="promo-nombre">${p.nombre}</div>
                 ${p.descripcion ? `<div class="promo-desc">${p.descripcion}</div>` : ''}
                 <div class="promo-tags">${tagsHtml}</div>
             </div>
@@ -595,6 +609,7 @@ function abrirModal() {
     renderListaProductos(todosProductos);
     actualizarChips();
     document.getElementById('formulario').classList.add('show');
+    document.getElementById('imagen-hint').style.display = 'none';
 }
 
 function cerrarModal() { document.getElementById('formulario').classList.remove('show'); editandoId = null; seleccionados.clear(); }
@@ -615,7 +630,12 @@ async function editarPromo(id) {
     document.getElementById('imagen').value      = '';
     document.getElementById('prod-buscar').value = '';
     const prev = document.getElementById('preview');
-    if (promo.imagen) { prev.src = promo.imagen; prev.classList.add('show'); } else prev.classList.remove('show');
+    if (promo.imagen) {
+        prev.src = promo.imagen;
+        prev.classList.add('show');
+    } else {
+        prev.classList.remove('show');
+    }
     renderListaProductos(todosProductos); actualizarChips();
     document.getElementById('formulario').classList.add('show');
 }
@@ -633,16 +653,29 @@ async function guardarPromo() {
     const nombre      = document.getElementById('nombre').value.trim();
     const descripcion = document.getElementById('descripcion').value.trim();
     const precio      = document.getElementById('precio').value;
+    const fecha_inicio = document.getElementById('fecha_inicio').value;
+    const fecha_fin    = document.getElementById('fecha_fin').value;
     const imagenFile  = document.getElementById('imagen').files[0];
+
     if (!nombre || !precio) { alert('Nombre y precio son obligatorios'); return; }
+
     const fd = new FormData();
     fd.append('nombre', nombre);
     fd.append('descripcion', descripcion);
     fd.append('precio', precio);
+    fd.append('estado', 'Activa');
+    fd.append('fecha_inicio', fecha_inicio);
+    fd.append('fecha_fin', fecha_fin);
     fd.append('productos_ids', JSON.stringify([...seleccionados]));
     if (imagenFile) fd.append('imagen', imagenFile);
+
+    if (editandoId) {
+        fd.append('_method', 'PUT');
+    }
+
     const url    = editandoId ? `${CTRL}?id=${editandoId}` : CTRL;
-    const method = editandoId ? 'PUT' : 'POST';
+    const method = 'POST';
+
     try {
         const res  = await fetch(url, { method, body: fd });
         const data = await res.json();
@@ -658,29 +691,18 @@ document.getElementById('imagen').addEventListener('change', e => {
     reader.readAsDataURL(file);
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-        // Obtener fecha actual
-        const hoy = new Date();
-        const yyyy = hoy.getFullYear();
-        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
-        const dd = String(hoy.getDate()).padStart(2, '0');
-        const fechaActual = `${yyyy}-${mm}-${dd}`;
-
-        // Asignar fecha mínima
-        const inputFecha = document.getElementById('fecha-inicio');
-        inputFecha.min = fechaActual;
-
-        // Validar también si el usuario escribe manualmente
-        inputFecha.addEventListener('input', function () {
-            if (this.value < fechaActual) {
-                alert("No puedes seleccionar una fecha anterior a hoy.");
-                this.value = fechaActual;
-            }
-        });
-    });
-
 document.getElementById('buscar').addEventListener('input', renderPromos);
 document.addEventListener('DOMContentLoaded', init);
+
+function sololetras(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[a-zA-Z\s]+$/.test(char)) e.preventDefault();
+}
+
+function solonumeros(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[0-9.]$/.test(char)) e.preventDefault();
+}
 </script>
 </body>
 </html>

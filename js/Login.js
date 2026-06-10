@@ -1,12 +1,3 @@
-// ============================================================
-//  js/Login.js  — VERSIÓN PHP
-//
-//  El formulario de login ahora es un <form method="POST">,
-//  así que este archivo ya NO necesita hacer fetch().
-//
-//  Solo mantenemos validación visual antes de enviar.
-// ============================================================
-
 document.addEventListener('DOMContentLoaded', () => {
 
     const loginForm = document.getElementById('loginForm');
@@ -22,8 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // El formulario se envía normalmente a login.php (POST)
-            // PHP valida las credenciales con password_verify() y redirecciona.
+       
         });
     }
 });

@@ -1,4 +1,3 @@
-
 body {
     font-family: Arial, sans-serif;
     background-color: #fdf8f0;
@@ -22,7 +21,7 @@ body {
 
 
 .header-bar {
-    /* ahora se ubica encima de la tarjeta y queda pegada a ella */
+    
     width: 780px;
     max-width: 95%;
     background: #E8821A;
@@ -32,54 +31,54 @@ body {
     font-weight: bold;
     font-size: 28px;
     border: 1px solid #000000;
-    border-bottom: none; /* se unirá visualmente con la tarjeta */
-    border-radius: 10px 10px 0 0; /* solo las esquinas superiores redondeadas */
+    border-bottom: none; 
+    border-radius: 10px 10px 0 0; 
     margin: 0 auto;
-    box-shadow: 0 0 12px rgba(0,0,0,0.4); /* sin espacio arriba/abajo: pegado a la tarjeta */
+    box-shadow: 0 0 12px rgba(0,0,0,0.4); 
 }
-/* Tarjeta */
+
 .card {
-    width: 700px; /* igualamos la anchura al header para que queden alineados */
-    max-width: 95%; /* quita separación superior para que quede pegada al header */
+    width: 700px;
+    max-width: 95%; 
     background: #f5edd8;
     padding: 40px;
     border-left: 1px solid #000000;
     border-right: 1px solid #000000;
-    border-top: none; /* se une al header */
-    border-bottom: none; /* se une al footer */
-    border-radius: 0; /* sin redondeos en la tarjeta para continuidad */
+    border-top: none; 
+    border-bottom: none; 
+    border-radius: 0; 
     text-align: center;
     color: rgb(255, 255, 255);
     box-shadow: 0 0 12px rgba(0,0,0,0.4);
 }
 
 
-/* Icono */
+
 .icono img {
     width: 140px;
 }
 
-/* Título */
+
 .card h2 {
     margin-top: 8px;
     margin-bottom: 18px;
     color: rgb(3, 3, 3);
-    font-size: 40px; /* título secundario más grande */
+    font-size: 40px; 
 }
 
-/* Descripción */
+
 .descripcion {
     font-size: 18px;
     color: #000000;
     margin-bottom: 20px;
-     /* Pequeña descripción explicativa debajo del título */
+     
 }
 
-/* Input */
+
 .input {
     width: 95%;
     padding: 14px;
-    font-size: 16px; /* input con texto más grande */
+    font-size: 16px; 
     border-radius: 6px;
     background: #2c1810;
     color: rgb(255, 255, 255);
@@ -87,19 +86,19 @@ body {
    
 }
 
-/* Botón principal */
+
 .btn-primario {
     width: 100%;
     background: #E8821A;
     padding: 14px;
-    font-size: 18px; /* botón principal más grande */
+    font-size: 18px; 
     border-radius: 6px;
     border: none;
     font-weight: bold;
     color: rgb(0, 0, 0);
     cursor: pointer;
     margin-bottom: 15px;
-     /* Botón principal de acción (Enviar enlace) — ocupa ancho completo */
+     
 }
 .btn-primario:hover {
     background: #d4b86a;
@@ -107,12 +106,11 @@ body {
     cursor: pointer;
 }
 
-/* Enlace */
+
 .link {
     color: #6c6156;
     font-size: 20px;
     text-decoration: none;
-     /* Enlace secundario con estilo link (color y sin subrayado) */
 }
 .link:hover {
     text-decoration: underline;
@@ -124,7 +122,6 @@ body {
     align-items: center;
     justify-content: center;
     margin: 20px 0;
-     /* Línea separadora con texto 'o' en el medio para separar acciones */
 }
 
 .linea {
@@ -138,7 +135,6 @@ body {
     color: #030303;
 }
 
-/* Botón secundario */
 .btn-secundario {
     color: rgb(42, 31, 31);
     font-weight: bold;
@@ -152,19 +148,19 @@ body {
 
 .footer-btn {
     display: block;
-    width: 742px; /* más ancho, coincide con header y card para un aspecto uniforme */
+    width: 742px; 
     max-width: 95%;
     background: #E8821A;
     border: 1px solid #000000;
-    border-top: none; /* se une con la tarjeta */
-    border-left: 1px solid #000000; /* iguala los laterales para continuidad */
-    border-right: 1px solid #000000; /* iguala los laterales para continuidad */
-    padding: 20px;   /* botón más alto */
-    font-size: 23px; /* texto del botón más grande */
+    border-top: none; 
+    border-left: 1px solid #000000; 
+    border-right: 1px solid #000000; 
+    padding: 20px;   
+    font-size: 23px; 
     text-align: center;
     color: rgb(255, 255, 255);
     font-weight: bold;
-    border-radius: 0 0 10px 10px; /* solo esquinas inferiores redondeadas */
+    border-radius: 0 0 10px 10px; 
     text-decoration: none;
     margin: 0 auto;
     box-shadow: 0 0 12px rgba(0,0,0,0.4);
@@ -175,9 +171,9 @@ body {
     cursor: pointer;
 }
 
-/* Ajustes responsive para pantallas pequeñas */
+
 @media (max-width: 700px) {
-    /* eliminar referencia .hf-row y asegurar elementos apilados */
+  
 
     .header-bar, .card, .footer-btn {
         width: 95%;
@@ -185,7 +181,7 @@ body {
         padding-right: 16px;
     }
 
-    /* en pantallas pequeñas, también dejar algo de separación entre card y footer */
+    
     .footer-btn { margin-top: 18px; }
     
 
@@ -200,17 +196,16 @@ body {
     .header-bar { font-size: 20px; }
 }
 
-/* Alineación general: centra elementos hijos horizontalmente */
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* centra verticalmente */
-    min-height: 100vh;      /* ocupa altura completa de la ventana */
-    gap: 0;               /* eliminar separación vertical para que queden pegados */
+    justify-content: center; 
+    min-height: 100vh;      
+    gap: 0;               
 }
 
-/* Botón Regresar */
+
 .btn-regresar {
     position: fixed;
     top: 20px;
@@ -232,7 +227,7 @@ body {
     background: #d4b86a;
 }
 
-/* Footer */
+
 footer {
     width: 80%;
     background: #fdf8f0;

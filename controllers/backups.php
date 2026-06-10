@@ -5,7 +5,6 @@ require_once __DIR__ . '/../includes/funciones.php';
 iniciarSesionSegura();
 if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
 
-// Solo administradores pueden gestionar backups
 if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador') {
     jsonResponse(['error' => 'Acceso denegado'], 403);
 }
@@ -15,7 +14,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 $id     = (int)($_GET['id'] ?? 0);
 $accion = $_GET['accion'] ?? '';
 
-// Tablas que se incluyen en el backup (todas las del sistema)
 $TABLAS = [
     'categoria', 'marca', 'materia_prima', 'producto',
     'promocion', 'promocion_producto', 'receta',
@@ -23,9 +21,6 @@ $TABLAS = [
     'venta_promocion', 'compra', 'detalle_compra', 'copia_seguridad'
 ];
 
-// ── GET /backups.php ──────────────────────────────────────────────────────────
-// GET /backups.php?accion=historial  → lista de copias registradas
-// GET /backups.php?accion=exportar&id=X → descarga datos de una copia en JSON
 if ($method === 'GET') {
 
     if ($accion === 'historial') {
@@ -40,7 +35,6 @@ if ($method === 'GET') {
     }
 
     if ($accion === 'exportar') {
-        // Genera un snapshot JSON de todas las tablas y devuelve el JSON
         $snapshot = [];
         foreach ($TABLAS as $tabla) {
             try {
@@ -50,7 +44,6 @@ if ($method === 'GET') {
             }
         }
 
-        // Registrar en copia_seguridad
         $pdo->prepare("
             INSERT INTO copia_seguridad (nombre_tabla, usuario_id)
             VALUES (?, ?)
@@ -69,8 +62,6 @@ if ($method === 'GET') {
     jsonResponse(['error' => 'Acción no reconocida'], 404);
 }
 
-// ── POST /backups.php?accion=crear ────────────────────────────────────────────
-// Registra una copia de seguridad manual (snapshot en BD)
 if ($method === 'POST' && $accion === 'crear') {
     $tabla_objetivo = limpiar(
         json_decode(file_get_contents('php://input'), true)['tabla'] ?? 'TODAS'
@@ -84,13 +75,10 @@ if ($method === 'POST' && $accion === 'crear') {
     jsonResponse(['success' => true, 'id' => (int)$pdo->lastInsertId()]);
 }
 
-// ── POST /backups.php?accion=restaurar ────────────────────────────────────────
-// Recibe un JSON de backup y restaura las tablas (INSERT ignorando duplicados)
 if ($method === 'POST' && $accion === 'restaurar') {
     $body = json_decode(file_get_contents('php://input'), true);
     if (empty($body['tablas'])) jsonResponse(['error' => 'Datos inválidos'], 400);
 
-    // Orden seguro para respetar FKs
     $orden_restauracion = [
         'rol', 'usuario', 'categoria', 'marca', 'materia_prima',
         'producto', 'promocion', 'promocion_producto', 'receta',
@@ -132,7 +120,6 @@ if ($method === 'POST' && $accion === 'restaurar') {
     }
 }
 
-// ── DELETE /backups.php?id=X ──────────────────────────────────────────────────
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     $pdo->prepare("DELETE FROM copia_seguridad WHERE id=?")->execute([$id]);

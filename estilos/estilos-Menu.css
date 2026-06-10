@@ -224,31 +224,30 @@ body {
 
 @media (max-width: 768px) {
 
-    /* Títulos */
+    
     .titulo-seccion {
         font-size: 26px;
         margin-top: 80px;
     }
 
-    /* Contenedor */
     .contenedor {
         gap: 20px;
         padding: 10px;
     }
 
-    /* Cards */
+    
     .card {
         max-width: 100%;
     }
 
-    /* Carrito */
+    
     .carrito {
         position: static;
         width: 100%;
         margin: 20px auto;
     }
 
-    /* Submenús */
+    
     .submenu {
         padding: 10px;
     }
@@ -257,7 +256,7 @@ body {
         font-size: 14px;
     }
 
-    /* Ingredientes */
+    
     .ingredientes-box {
         font-size: 13px;
     }

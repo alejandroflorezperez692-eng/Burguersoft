@@ -7,7 +7,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    flex-direction: column; /* Apila los elementos verticalmente */
+    flex-direction: column; 
 }
 
 .encabezado {
@@ -36,7 +36,6 @@ body {
     color: #000000;
 }
 
-/* ======= Logo ======= */
 .logon {
     position: fixed;
     top: 10px;
@@ -51,8 +50,6 @@ body {
     z-index: 1000;
 }
 
-
-/* ======= Contenedor con fondo rojo elegante ======= */
 .contenedor {
     background: #f5edd8;
     width: 820px;
@@ -63,7 +60,6 @@ body {
     box-shadow: 0 0 12px rgba(0,0,0,0.4);
 }
 
-/* Animación suave de aparición */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -75,7 +71,6 @@ body {
     }
 }
 
-/* ======= Filas y campos ======= */
 .fila {
     display: flex;
     gap: 20px;
@@ -88,12 +83,11 @@ body {
     flex-direction: column;
 }
 
-/* Estilo para los campos INPUT y SELECT */
 .campo input,
 .campo select {
     width: 100%;
     padding: 12px;
-    background-color: #2c1810;   /* El mismo café oscuro de los otros campos */
+    background-color: #2c1810;   
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -101,13 +95,11 @@ body {
     box-sizing: border-box;
 }
 
-/* Opciones del selector */
 .campo select option {
     background-color: #2c1810;
     color: white;
 }
 
-/* Icono del select blanco */
 .campo select::-webkit-calendar-picker-indicator,
 .campo select::-ms-expand {
     filter: invert(1);
@@ -144,8 +136,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(94%) sepia(7%) saturate(320%) hue-rotate(14deg) brightness(103%) contrast(96%);
 }
 
-
-/* ======= Género ======= */
 .opcion-genero {
     padding: 10px 20px;
     background: #E8821A;
@@ -163,7 +153,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transform: translateY(-3px);
 }
 
-/* ======= Botón ======= */
 .boton {
     width: 100%;
     padding: 14px;
@@ -182,15 +171,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transform: translateY(-3px);
 }
 
-/* ======= Enlace ======= */
 .enlace-externo {
-    margin-top: 20px; /* espacio debajo del recuadro */
+    margin-top: 20px; 
     text-align: center;
     font-size: 15px;
     color: #080707;
 }
 .enlace-externo {
-    margin-top: 20px; /* espacio debajo del recuadro */
+    margin-top: 20px; 
     text-align: center;
     font-size: 20px;
 }
@@ -205,7 +193,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
 }
 
-/* ======= Responsive ======= */
 @media (max-width: 768px) {
     .contenedor {
         width: 90%;
@@ -222,22 +209,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
 }
 
-/* ... código anterior (body, .encabezado, .logo, .contenedor, .fila, etc.) ... */
-
-/* ======= Botón REGRESAR (Añadido/Corregido) ======= */
-
-/* ======= Botón REGRESAR (Posición Ajustada) ======= */
-
 .boton-regresar {
-    /* Posicionamiento: Fijo para que siempre esté visible en la esquina inferior izquierda */
     position: fixed;
-    /* Antes estaba en 20px, ahora lo subimos a 80px (más arriba que el footer) */
     bottom: 880px; 
     right: 20px;
     width: 150px; 
     padding: 12px;
-    
-    /* Estilos del botón */
     background: #E8821A; 
     border: none;
     border-radius: 8px;
@@ -254,13 +231,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: #d4b86a; 
     transform: translateY(-2px);
 }
-*/
+
 .footer-content {
-    width: 100%;             /* ocupa todo el ancho de la ventana */
+    width: 100%;             
     padding: 30px 20px;
     border-radius: 15px 15px 0 0;
     text-align: center;
-    box-sizing: border-box;  /* asegura que el padding no aumente el ancho total */
-    margin: 0;               /* eliminar márgenes negativos */
-    position: relative;      /* opcional, si quieres posicionarlo con respecto a la página */
+    box-sizing: border-box;  
+    margin: 0;               
+    position: relative;      
 }

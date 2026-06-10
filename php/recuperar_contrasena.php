@@ -2,7 +2,6 @@
 
 session_start();
 
-// Si viene con un mensaje de estado (éxito o error) lo mostramos
 $mensaje = $_SESSION['mensaje'] ?? '';
 $tipo    = $_SESSION['tipo_mensaje'] ?? '';
 unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
@@ -23,7 +22,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
-        <a href="login.php" class="btn-regresar">Regresar</a>
+        <a href="login.php" class="btn-regresar">[ Regresar ]</a>
     </div>
 
     <div class="header-bar">¿TIENES PROBLEMAS?</div>
@@ -59,7 +58,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
             <div class="linea"></div>
         </div>
 
-        <a href="../burguersoft/php/registro.php" class="btn-secundario">Crear cuenta nueva</a>
+        <a href="/burguersoft/php/registro.php" class="btn-secundario">Crear cuenta nueva</a>
     </div>
 
 <div class="acc-panel" id="accPanel">

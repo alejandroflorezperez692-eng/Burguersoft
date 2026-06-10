@@ -1,18 +1,10 @@
-/* ═══════════════════════════════════════════
-   PROMOCIONES.CSS — Burguersoft
-   Modo claro: paleta #fdf8f0 / #E8821A
-   Modo oscuro: body.dark-mode (accesibilidad.css)
-═══════════════════════════════════════════ */
-
-/* ── CONTENEDOR PRINCIPAL ── */
 .container-promos {
     margin: 0 auto 60px;
-    padding-top: calc(72px + 36px); /* alto-header + espaciado */
+    padding-top: calc(72px + 36px); 
     max-width: 1100px;
     width: 94%;
 }
 
-/* ── CABECERA ── */
 .promos-header {
     margin-bottom: 28px;
     display: flex;
@@ -40,7 +32,6 @@
     font-family: 'Lato', 'Segoe UI', sans-serif;
 }
 
-/* ── BARRA DE BÚSQUEDA + BOTÓN ── */
 .top-bar {
     display: flex;
     gap: 12px;
@@ -93,7 +84,6 @@
     box-shadow: 0 6px 18px rgba(232,130,26,0.42);
 }
 
-/* ── META / CONTADOR ── */
 .promo-meta {
     display: flex;
     align-items: center;
@@ -117,14 +107,12 @@
     background: rgba(30,16,10,0.1);
 }
 
-/* ── GRID TARJETAS ── */
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 22px;
 }
 
-/* ── TARJETA ── */
 .card {
     background: #ffffff;
     border: 1px solid rgba(232,130,26,0.2);
@@ -238,7 +226,6 @@
 .btn-editar  { background: #2d89ef; color: #fff; }
 .btn-eliminar { background: #C8382A; color: #fff; }
 
-/* ── MENSAJE VACÍO ── */
 .empty-message {
     grid-column: 1 / -1;
     text-align: center;
@@ -248,7 +235,6 @@
     font-family: 'Lato', 'Segoe UI', sans-serif;
 }
 
-/* ── MODAL ── */
 .modal {
     display: none;
     position: fixed;
@@ -410,10 +396,6 @@ body.dark-mode .btn-cancelar:hover { background: rgba(255,255,255,0.05) !importa
 
 body.dark-mode .empty-message { color: #a89888 !important; }
 
-/* ══════════════════════════════════════════
-   SELECTOR DE PRODUCTOS EN MODAL
-══════════════════════════════════════════ */
-
 .prod-search-wrap {
     margin-bottom: 8px;
 }
@@ -434,7 +416,6 @@ body.dark-mode .empty-message { color: #a89888 !important; }
 .prod-search-wrap input:focus { border-color: #E8821A; }
 .prod-search-wrap input::placeholder { color: #a08060; }
 
-/* Lista desplegable de productos */
 .prod-lista {
     max-height: 200px;
     overflow-y: auto;
@@ -510,7 +491,6 @@ body.dark-mode .empty-message { color: #a89888 !important; }
     font-family: 'Lato', 'Segoe UI', sans-serif;
 }
 
-/* Chips de seleccionados */
 .prod-seleccionados {
     display: flex;
     flex-wrap: wrap;
@@ -554,7 +534,6 @@ body.dark-mode .empty-message { color: #a89888 !important; }
 }
 .chip button:hover { color: #C8382A; }
 
-/* Tags de productos en las tarjetas */
 .card-productos {
     display: flex;
     flex-wrap: wrap;
@@ -581,10 +560,8 @@ body.dark-mode .empty-message { color: #a89888 !important; }
     font-style: italic;
 }
 
-/* ── Modo oscuro ── */
 body.dark-mode .prod-search-wrap input,
 body.dark-mode .prod-lista { background: #2a2a2a !important; border-color: rgba(232,130,26,0.18) !important; }
-
 body.dark-mode .prod-search-wrap input { color: #f0ebe3 !important; }
 body.dark-mode .prod-item:hover   { background: rgba(232,130,26,0.1) !important; }
 body.dark-mode .prod-item.selected { background: rgba(232,130,26,0.15) !important; }

@@ -1,9 +1,8 @@
 const STORAGE_KEY = "miBackup";
 
-// Guardar en LocalStorage
 function guardarBackup() {
     const data = document.getElementById("dataInput").value;
-    
+
     if (data.trim() === "") {
         alert("No hay datos para guardar.");
         return;
@@ -13,7 +12,7 @@ function guardarBackup() {
     alert("Backup guardado correctamente.");
 }
 
-// Restaurar desde LocalStorage
+
 function restaurarBackup() {
     const data = localStorage.getItem(STORAGE_KEY);
 
@@ -26,7 +25,7 @@ function restaurarBackup() {
     alert("Backup restaurado.");
 }
 
-// Exportar a archivo JSON
+
 function exportarBackup() {
     const data = localStorage.getItem(STORAGE_KEY);
 
@@ -46,7 +45,7 @@ function exportarBackup() {
     URL.revokeObjectURL(url);
 }
 
-// Restaurar desde archivo JSON
+
 function restaurarDesdeArchivo(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -63,16 +62,16 @@ function restaurarDesdeArchivo(event) {
     reader.readAsText(file);
 }
 
-// Eliminar backup
+
 function eliminarBackup() {
     localStorage.removeItem(STORAGE_KEY);
     document.getElementById("dataInput").value = "";
     alert("Backup eliminado.");
 }
 
-// Activar input file
+
 document.getElementById("fileInput").addEventListener("change", restaurarDesdeArchivo);
 
-// Agregar botón para cargar archivo dinámicamente
+
 document.querySelector(".buttons").innerHTML += 
     '<button onclick="document.getElementById(\'fileInput\').click()">Importar Backup</button>';

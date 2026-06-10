@@ -9,10 +9,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 $id     = (int)($_GET['id'] ?? 0);
 $accion = $_GET['accion'] ?? '';
 
-// ── GET ──────────────────────────────────────────────────────────────────────
 if ($method === 'GET') {
 
-    // Lista de productos para el selector del modal
     if ($accion === 'productos') {
         $rows = $pdo->query(
             "SELECT id, nombre, valor, img FROM producto ORDER BY nombre"
@@ -20,7 +18,6 @@ if ($method === 'GET') {
         jsonResponse($rows);
     }
 
-    // IDs de productos vinculados a una promoción concreta
     if ($accion === 'productos_promo' && $id) {
         $s = $pdo->prepare(
             "SELECT producto_id FROM promocion_producto WHERE promocion_id = ?"
@@ -29,9 +26,8 @@ if ($method === 'GET') {
         jsonResponse($s->fetchAll(PDO::FETCH_COLUMN));
     }
 
-    // Todas las promociones con sus productos embebidos
     $promos = $pdo->query(
-        "SELECT id, nombre_promocion, descripcion, precio, imagen, estado,
+        "SELECT id, nombre, descripcion, precio, imagen, estado,
                 fecha_inicio, fecha_fin
          FROM promocion ORDER BY id DESC"
     )->fetchAll();
@@ -51,17 +47,15 @@ if ($method === 'GET') {
     jsonResponse($promos);
 }
 
-// A partir de aquí se requiere sesión
 if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
 
-// ── POST ─────────────────────────────────────────────────────────────────────
-if ($method === 'POST') {
-    $nombre        = limpiar($_POST['nombre'] ?? '');
-    $descripcion   = limpiar($_POST['descripcion']      ?? '');
-    $precio        = (float)($_POST['precio']           ?? 0);
-    $estado        = limpiar($_POST['estado']           ?? 'Activa');
-    $fecha_inicio  = limpiar($_POST['fecha_inicio']     ?? '');
-    $fecha_fin     = limpiar($_POST['fecha_fin']        ?? '');
+if ($method === 'POST' && ($_POST['_method'] ?? '') !== 'PUT') {
+    $nombre        = limpiar($_POST['nombre']       ?? '');
+    $descripcion   = limpiar($_POST['descripcion']  ?? '');
+    $precio        = (float)($_POST['precio']       ?? 0);
+    $estado        = limpiar($_POST['estado']       ?? 'Activa');
+    $fecha_inicio  = limpiar($_POST['fecha_inicio'] ?? '');
+    $fecha_fin     = limpiar($_POST['fecha_fin']    ?? '');
     $productos_ids = json_decode($_POST['productos_ids'] ?? '[]', true) ?: [];
 
     if (!$nombre || $precio <= 0) jsonResponse(['error' => 'Nombre y precio requeridos'], 400);
@@ -79,18 +73,20 @@ if ($method === 'POST') {
     $pdo->beginTransaction();
     try {
         $pdo->prepare(
-            "INSERT INTO promocion (nombre_promocion, descripcion, precio, imagen, estado, fecha_inicio, fecha_fin)
+            "INSERT INTO promocion (nombre, descripcion, precio, imagen, estado, fecha_inicio, fecha_fin)
              VALUES (?, ?, ?, ?, ?, ?, ?)"
         )->execute([$nombre, $descripcion, $precio, $imagen, $estado,
                     $fecha_inicio ?: null, $fecha_fin ?: null]);
         $promo_id = (int)$pdo->lastInsertId();
 
-        $ins = $pdo->prepare(
-            "INSERT INTO promocion_producto (promocion_id, producto_id) VALUES (?, ?)"
-        );
+        $ins   = $pdo->prepare("INSERT INTO promocion_producto (promocion_id, producto_id) VALUES (?, ?)");
+        $check = $pdo->prepare("SELECT id FROM producto WHERE id = ?");
         foreach ($productos_ids as $pid) {
             $pid = (int)$pid;
-            if ($pid > 0) $ins->execute([$promo_id, $pid]);
+            if ($pid > 0) {
+                $check->execute([$pid]);
+                if ($check->fetchColumn()) $ins->execute([$promo_id, $pid]);
+            }
         }
 
         $pdo->commit();
@@ -101,16 +97,15 @@ if ($method === 'POST') {
     }
 }
 
-// ── PUT (enviado como POST con ?id=X) ────────────────────────────────────────
-if ($method === 'PUT') {
+if ($method === 'PUT' || ($method === 'POST' && ($_POST['_method'] ?? '') === 'PUT')) {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
 
-    $nombre        = limpiar($_POST['nombre'] ?? '');
-    $descripcion   = limpiar($_POST['descripcion']      ?? '');
-    $precio        = (float)($_POST['precio']           ?? 0);
-    $estado        = limpiar($_POST['estado']           ?? 'Activa');
-    $fecha_inicio  = limpiar($_POST['fecha_inicio']     ?? '');
-    $fecha_fin     = limpiar($_POST['fecha_fin']        ?? '');
+    $nombre        = limpiar($_POST['nombre']       ?? '');
+    $descripcion   = limpiar($_POST['descripcion']  ?? '');
+    $precio        = (float)($_POST['precio']       ?? 0);
+    $estado        = limpiar($_POST['estado']       ?? 'Activa');
+    $fecha_inicio  = limpiar($_POST['fecha_inicio'] ?? '');
+    $fecha_fin     = limpiar($_POST['fecha_fin']    ?? '');
     $productos_ids = json_decode($_POST['productos_ids'] ?? '[]', true) ?: [];
 
     if (!$nombre || $precio <= 0) jsonResponse(['error' => 'Nombre y precio requeridos'], 400);
@@ -132,19 +127,22 @@ if ($method === 'PUT') {
     try {
         $pdo->prepare(
             "UPDATE promocion
-             SET nombre_promocion=?, descripcion=?, precio=?, imagen=?,
+             SET nombre=?, descripcion=?, precio=?, imagen=?,
                  estado=?, fecha_inicio=?, fecha_fin=?
              WHERE id=?"
         )->execute([$nombre, $descripcion, $precio, $imagen, $estado,
                     $fecha_inicio ?: null, $fecha_fin ?: null, $id]);
 
         $pdo->prepare("DELETE FROM promocion_producto WHERE promocion_id = ?")->execute([$id]);
-        $ins = $pdo->prepare(
-            "INSERT INTO promocion_producto (promocion_id, producto_id) VALUES (?, ?)"
-        );
+
+        $ins   = $pdo->prepare("INSERT INTO promocion_producto (promocion_id, producto_id) VALUES (?, ?)");
+        $check = $pdo->prepare("SELECT id FROM producto WHERE id = ?");
         foreach ($productos_ids as $pid) {
             $pid = (int)$pid;
-            if ($pid > 0) $ins->execute([$id, $pid]);
+            if ($pid > 0) {
+                $check->execute([$pid]);
+                if ($check->fetchColumn()) $ins->execute([$id, $pid]);
+            }
         }
 
         $pdo->commit();
@@ -155,7 +153,6 @@ if ($method === 'PUT') {
     }
 }
 
-// ── DELETE ───────────────────────────────────────────────────────────────────
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     $pdo->beginTransaction();

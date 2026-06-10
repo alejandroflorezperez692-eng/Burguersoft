@@ -2,7 +2,6 @@
 session_start();
 require_once 'includes/funciones.php';
 
-// Seguridad: solo entra si pasó por verificar_codigo.php
 if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificado'])) {
     redirigir('recuperar_contrasena.php');
 }

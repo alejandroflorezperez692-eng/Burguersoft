@@ -73,7 +73,45 @@ $navActivo = 'marca';
             overflow: hidden;
             position: relative;
             transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s;
-            cursor: default;
+            cursor: pointer;
+        }
+
+        .marca-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(22,8,0,0.55);
+            opacity: 0;
+            transition: opacity 0.25s;
+            z-index: 4;
+            border-radius: var(--r-lg);
+        }
+
+        .marca-card::after {
+            content: 'Haga clic para ver la información';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s, transform 0.25s;
+            z-index: 5;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+        }
+
+        .marca-card:hover::before {
+            opacity: 1;
+        }
+
+        .marca-card:hover::after {
+            opacity: 1;
+            transform: translate(-50%, -50%);
         }
 
         .marca-card:hover {
@@ -133,70 +171,6 @@ $navActivo = 'marca';
         .dot-activo    { background: #d5f5e3; color: #1a7a42; }
         .dot-inactivo  { background: #fde8e8; color: #922; }
         .dot-suspendido{ background: #fef3cd; color: #8a6200; }
-
-        .marca-hover {
-            position: absolute;
-            inset: 0;
-            background: rgba(22,8,0,0.88);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 22px;
-            opacity: 0;
-            transition: opacity 0.28s var(--ease);
-            border-radius: var(--r-lg);
-        }
-
-        .marca-card:hover .marca-hover { opacity: 1; }
-
-        .marca-hover-info {
-            text-align: center;
-        }
-
-        .marca-hover-info p {
-            font-size: 12.5px;
-            color: rgba(240,235,227,0.75);
-            line-height: 1.6;
-            margin: 2px 0;
-            word-break: break-all;
-        }
-
-        .marca-hover-info p strong { color: #fff; font-weight: 700; }
-
-        .hover-actions { display: flex; gap: 10px; margin-top: 10px; }
-
-        .btn-editar-m {
-            flex: 1;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            font-family: var(--font-sans);
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            background: var(--info);
-            color: #fff;
-            transition: filter 0.2s, transform 0.15s;
-        }
-
-        .btn-eliminar-m {
-            flex: 1;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            font-family: var(--font-sans);
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            background: var(--danger);
-            color: #fff;
-            transition: filter 0.2s, transform 0.15s;
-        }
-
-        .btn-editar-m:hover,
-        .btn-eliminar-m:hover { filter: brightness(0.85); transform: translateY(-1px); }
 
         .empty-state {
             grid-column: 1 / -1;
@@ -328,9 +302,185 @@ $navActivo = 'marca';
 
         .btn-save-m:hover { background: var(--brand-deep); transform: translateY(-1px); }
 
+        .detalle-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.82);
+            backdrop-filter: blur(6px);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .detalle-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .detalle-box {
+            position: relative;
+            width: 540px;
+            max-width: 93vw;
+            min-height: 200px;
+            border-radius: 20px;
+            padding: 38px 44px 34px;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+            transform: scale(0.1) translateY(40px);
+            opacity: 0;
+            transition: transform 0.42s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+        }
+
+        .detalle-overlay.show .detalle-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .detalle-overlay.closing .detalle-box {
+            transform: scale(0.1) translateY(40px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.25s ease;
+        }
+
+        .detalle-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-600);
+            font-size: 18px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
+            z-index: 2;
+        }
+
+        .detalle-close:hover { background: var(--border); color: var(--text-900); }
+
+        .detalle-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 2;
+            max-width: 58%;
+        }
+
+        .detalle-nombre {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-900);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: var(--font-sans);
+        }
+
+        .detalle-info {
+            font-size: 13px;
+            color: var(--text-600);
+            line-height: 1.8;
+            font-family: var(--font-sans, sans-serif);
+            margin-top: 4px;
+        }
+
+        .detalle-info strong { color: var(--text-900); }
+
+        .detalle-estado {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            width: fit-content;
+        }
+
+        .detalle-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-det-editar, .btn-det-eliminar {
+            padding: 9px 22px;
+            border: none;
+            border-radius: 20px;
+            font-family: var(--font-sans, sans-serif);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.2s, transform 0.15s;
+            color: #fff;
+        }
+
+        .btn-det-editar   { background: var(--info, #2d89ef); }
+        .btn-det-eliminar { background: var(--danger, #C8382A); }
+
+        .btn-det-editar:hover,
+        .btn-det-eliminar:hover { filter: brightness(0.85); transform: translateY(-1px); }
+
+        .detalle-logo-bg {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%) scale(0) rotate(-20deg);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--surface-3);
+            transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.15s;
+            z-index: 2;
+        }
+
+        .detalle-overlay.show .detalle-logo-bg {
+            transform: translateY(-50%) scale(1) rotate(0deg);
+        }
+
+        .detalle-overlay.closing .detalle-logo-bg {
+            transform: translateY(-50%) scale(0) rotate(20deg);
+            transition: transform 0.25s ease;
+        }
+
+        .detalle-logo-flotante {
+            position: absolute;
+            right: -24px;
+            top: 50%;
+            transform: translateY(-50%) scale(0) rotate(-20deg);
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 28px rgba(0,0,0,0.25));
+            transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.18s;
+            z-index: 3;
+        }
+
+        .detalle-overlay.show .detalle-logo-flotante {
+            transform: translateY(-50%) scale(1) rotate(0deg);
+        }
+
+        .detalle-overlay.closing .detalle-logo-flotante {
+            transform: translateY(-50%) scale(0) rotate(20deg);
+            transition: transform 0.25s ease;
+        }
+
         body.dark-mode .marca-card { background: var(--surface); }
         body.dark-mode .marca-img-wrap { background: var(--surface-2); }
         body.dark-mode .modal-box { background: var(--surface); }
+        body.dark-mode .detalle-box { background: var(--surface); }
         body.dark-mode .form-group input,
         body.dark-mode .form-group select { background: var(--surface-2); color: var(--text-900); }
         body.dark-mode .topbar input { background: var(--surface); color: var(--text-900); }
@@ -369,12 +519,12 @@ $navActivo = 'marca';
 
         <div class="form-group">
             <label>Nombre *</label>
-            <input type="text" id="m-nombre" placeholder="Nombre de la marca">
+            <input type="text" id="m-nombre" onkeypress="sololetras(event)" placeholder="Nombre de la marca">
         </div>
 
         <div class="form-group">
             <label>NIT *</label>
-            <input type="text" id="m-nit" placeholder="Número de identificación">
+            <input type="text" id="m-nit" onkeypress="solonumeros(event)" placeholder="Número de identificación">
         </div>
 
         <div class="form-group">
@@ -398,7 +548,7 @@ $navActivo = 'marca';
 
         <div class="form-group">
             <label>Teléfono*</label>
-            <input type="text" id="m-telefono" placeholder="Número de contacto">
+            <input type="text" id="m-telefono" onkeypress="solonumeros(event)" placeholder="Número de contacto">
         </div>
 
         <div class="form-group">
@@ -410,6 +560,23 @@ $navActivo = 'marca';
             <button type="button" class="btn-cancel-m" onclick="cerrarModal()">Cancelar</button>
             <button type="button" id="btn-guardar-marca" class="btn-save-m" onclick="guardarMarca()">Guardar</button>
         </div>
+    </div>
+</div>
+
+<div class="detalle-overlay" id="detalleOverlay" onclick="cerrarDetalle(event)">
+    <div class="detalle-box" id="detalleBox">
+        <button class="detalle-close" onclick="cerrarDetalleBtn()">✕</button>
+        <div class="detalle-content">
+            <div class="detalle-nombre" id="det-nombre"></div>
+            <div class="detalle-info" id="det-info"></div>
+            <div class="detalle-estado" id="det-estado"></div>
+            <div class="detalle-actions">
+                <button class="btn-det-editar"   id="det-btn-editar">Editar</button>
+                <button class="btn-det-eliminar" id="det-btn-eliminar">Eliminar</button>
+            </div>
+        </div>
+        <div class="detalle-logo-bg" id="det-logo-bg"></div>
+        <img class="detalle-logo-flotante" id="det-logo" src="" alt="">
     </div>
 </div>
 
@@ -452,8 +619,8 @@ let editIdMarca = null;
 function togglePanel() { document.getElementById('accPanel').classList.toggle('open'); }
 
 function estadoClass(e) {
-    if (e === 'Activo')    return 'dot-activo';
-    if (e === 'Inactivo')  return 'dot-inactivo';
+    if (e === 'Activo')   return 'dot-activo';
+    if (e === 'Inactivo') return 'dot-inactivo';
     return 'dot-suspendido';
 }
 
@@ -463,30 +630,18 @@ function renderMarcas(lista) {
     ctr.textContent = lista.length === 1 ? '1 marca' : `${lista.length} marcas`;
 
     if (!lista.length) {
-        cont.innerHTML = '<div class="empty-state">No hay marcas registradas. ¡Agrega la primera!</div>';
+        cont.innerHTML = '<div class="empty-state">No hay marcas registradas. Agrega la primera.</div>';
         return;
     }
 
     cont.innerHTML = lista.map(m => `
-        <div class="marca-card">
+        <div class="marca-card" onclick="abrirDetalle(${m.id})">
             <div class="marca-img-wrap">
                 <img src="${m.img}" alt="${m.nombre}" onerror="this.src='../estilos/img/default.jpg'">
             </div>
             <div class="marca-body">
                 <div class="marca-nombre">${m.nombre}</div>
                 <span class="estado-dot ${estadoClass(m.estado)}">${m.estado}</span>
-            </div>
-            <div class="marca-hover">
-                <div class="marca-hover-info">
-                    <p><strong>${m.nombre}</strong></p>
-                    <p>NIT: ${m.nit || '—'}</p>
-                    <p>Tel: ${m.telefono || '—'}</p>
-                    <p>Email: ${m.correo || '—'}</p>
-                </div>
-                <div class="hover-actions">
-                    <button class="btn-editar-m" onclick="prepararEdicion(${m.id},'${encodeURIComponent(m.nombre)}','${encodeURIComponent(m.img)}','${encodeURIComponent(m.telefono||'')}','${encodeURIComponent(m.correo||'')}','${encodeURIComponent(m.nit||'')}','${encodeURIComponent(m.estado||'')}')">Editar</button>
-                    <button class="btn-eliminar-m" onclick="eliminarMarca(${m.id})">Eliminar</button>
-                </div>
             </div>
         </div>
     `).join('');
@@ -505,6 +660,56 @@ function filtrarMarcas() {
     const q = document.getElementById('buscarMarca').value.toLowerCase().trim();
     renderMarcas(allMarcas.filter(m => m.nombre.toLowerCase().includes(q)));
 }
+
+function abrirDetalle(id) {
+    const m = allMarcas.find(x => x.id === id);
+    if (!m) return;
+
+    document.getElementById('det-nombre').textContent = m.nombre;
+    document.getElementById('det-info').innerHTML =
+        `<strong>NIT:</strong> ${m.nit || '—'}<br>
+         <strong>Tel:</strong> ${m.telefono || '—'}<br>
+         <strong>Email:</strong> ${m.correo || '—'}`;
+
+    const estadoEl = document.getElementById('det-estado');
+    estadoEl.textContent = m.estado;
+    estadoEl.className   = 'detalle-estado estado-dot ' + estadoClass(m.estado);
+
+    const logo = document.getElementById('det-logo');
+    logo.src = m.img;
+    logo.onerror = function(){ this.src='../estilos/img/default.jpg'; };
+
+    document.getElementById('det-btn-editar').onclick = () => {
+        cerrarDetalleBtn();
+        setTimeout(() => prepararEdicion(m.id,
+            encodeURIComponent(m.nombre), encodeURIComponent(m.img),
+            encodeURIComponent(m.telefono||''), encodeURIComponent(m.correo||''),
+            encodeURIComponent(m.nit||''), encodeURIComponent(m.estado||'')), 350);
+    };
+
+    document.getElementById('det-btn-eliminar').onclick = () => {
+        cerrarDetalleBtn();
+        setTimeout(() => eliminarMarca(m.id), 350);
+    };
+
+    const overlay = document.getElementById('detalleOverlay');
+    overlay.classList.remove('closing');
+    overlay.classList.add('show');
+}
+
+function cerrarDetalle(e) {
+    if (e.target === document.getElementById('detalleOverlay')) cerrarDetalleBtn();
+}
+
+function cerrarDetalleBtn() {
+    const overlay = document.getElementById('detalleOverlay');
+    overlay.classList.add('closing');
+    setTimeout(() => overlay.classList.remove('show', 'closing'), 380);
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cerrarDetalleBtn();
+});
 
 function abrirModal() {
     editIdMarca = null;

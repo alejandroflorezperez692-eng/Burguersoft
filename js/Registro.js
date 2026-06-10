@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    // ── Nombre ──────────────────────────────────────────────
+   
     const inputNombre = document.getElementById('nombre');
     if (inputNombre) {
         inputNombre.addEventListener('input', function() {
@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ── Apellido ─────────────────────────────────────────────
     const inputApellido = document.getElementById('apellido');
     if (inputApellido) {
         inputApellido.addEventListener('input', function() {
@@ -24,13 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ── Contraseña ───────────────────────────────────────────
     const passwordInput = document.getElementById("password");
     if (passwordInput) {
         passwordInput.addEventListener("input", (e) => evaluarPassword(e.target.value));
     }
 
-    // ── Submit ───────────────────────────────────────────────
     const form = document.getElementById("registroForm");
     if (form) {
         form.addEventListener("submit", function(e) {
@@ -44,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const password         = document.getElementById("password").value.trim();
             const confirmar        = document.getElementById("confirmar-password").value.trim();
 
-            // Validaciones
             if (!nombre || !apellido || !correo || !tipoDocumento || !numeroDocumento || !password || !confirmar) {
                 alert("Por favor completa todos los campos.");
                 return;
@@ -72,13 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Verificar fortaleza mínima de contraseña
             if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
                 alert("La contraseña no cumple los requisitos mínimos de seguridad.");
                 return;
             }
 
-            // Enviar al backend PHP
             const formData = new FormData();
             formData.append('nombre',           nombre);
             formData.append('apellido',         apellido);
@@ -105,7 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ── Evaluar fortaleza de contraseña ─────────────────────────
 function evaluarPassword(val) {
     const checks = {
         longitud:  val.length >= 8,
@@ -137,7 +130,6 @@ function evaluarPassword(val) {
     verificarCoincidencia();
 }
 
-// ── Mostrar / ocultar contraseña ─────────────────────────────
 function togglePassword(id, btn) {
     const input = document.getElementById(id);
     if (!input) return;
@@ -146,7 +138,6 @@ function togglePassword(id, btn) {
     btn.textContent = oculto ? 'Ocultar' : 'Mostrar';
 }
 
-// ── Verificar que las contraseñas coincidan ──────────────────
 function verificarCoincidencia() {
     const pass = document.getElementById('password');
     const conf = document.getElementById('confirmar-password');

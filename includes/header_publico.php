@@ -25,7 +25,6 @@ if ($logueado) {
             if (!$nombre || !$apellido) {
               $modalError = 'Nombre y apellido son obligatorios.';
             } elseif (!$Tdocumento) {
-               $    
               $modalError = 'Debes seleccionar un tipo de documento.';
             } elseif (!$Ndocumento) {
               $modalError = 'El número de documento es obligatorio.';
@@ -102,13 +101,13 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
         <a href="/burguersoft/php/Burguersoft.php"  <?= $paginaActiva==='inicio'  ?'class="activo"':'' ?>>Inicio</a>
         <a href="/burguersoft/php/el_oriente.php"   <?= $paginaActiva==='oriente' ?'class="activo"':'' ?>>El Oriente</a>
         <a href="/burguersoft/php/Ir al Menu.php"   <?= $paginaActiva==='menu'    ?'class="activo"':'' ?>>Menú</a>
-        <a href="/burguersoft/php/contactanos.php"  <?= $paginaActiva==='contacto'?'class="activo"':'' ?>>Contacto</a>
+        <a href="/burguersoft/php/contactanos.php"  <?= $paginaActiva==='contacto'?'class="activo"':'' ?>>Contactanos</a>
     </nav>
 
     <div class="header-right">
 
     <?php if ($logueado): ?>
-        <!-- Carrito -->
+        
         <button class="btn-icono" id="toggleCart" title="Carrito">
             <div class="icono-circulo">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
@@ -121,10 +120,10 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
             </div>
         </button>
 
-        <!-- Panel carrito -->
+        
         <div class="cart-panel" id="cartPanel">
             <div class="cart-header-title">
-                <span>🛒 MI CARRITO</span>
+                <span> MI CARRITO</span>
                 <button class="close-cart" id="closeCart">&times;</button>
             </div>
             <div class="cart-items" id="cartItems">
@@ -233,7 +232,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
             <div class="mp-alert mp-alert-ok">✓ <?= hv($modalSuccess) ?></div>
         <?php endif; ?>
 
-        <!-- TABS -->
+        
         <div class="mp-tabs-container">
             <button class="mp-tab mp-tab-active" id="mpTabDatos" onclick="mpSwitchTab('datos')">
                 <img class="mp-tab-icon" src="/burguersoft/estilos/img/avatar-de-usuario.png" alt="">
@@ -249,7 +248,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
             </button>
         </div>
 
-        <!-- TAB DATOS -->
+        
         <div class="mp-tab-panel" id="mp-panel-datos">
             <form method="POST" action="">
                 <input type="hidden" name="accion_perfil" value="datos"/>
@@ -313,16 +312,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                 </div>
             </form>
         </div>
-                    <div class="mp-field mp-full" style="margin-top:12px">
-                <label class="mp-label">Confirmar con contraseña <span class="mp-req">*</span></label>
-                <div class="mp-pw">
-                    <input type="password" name="password_confirm" id="pwConfirmDatos"
-                        placeholder="Ingresa tu contraseña para guardar" required/>
-                    <button type="button" class="mp-pw-toggle" onclick="mpTogglePW('pwConfirmDatos',this)">Mostrar</button>
-                </div>
-            </div>
-
-            <div class="mp-actions">
 
         <div class="mp-tab-panel mp-hidden" id="mp-panel-pwd">
             <form method="POST" action="" onsubmit="return validarFormPassword()">
@@ -335,8 +324,14 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                             <input type="password" name="actual" id="mpPw1"
                                 placeholder="••••••••" required
                                 oninput="limpiarErrorActual()"/>
-                            <button type="button" class="mp-pw-toggle"
-                                onclick="mpTogglePW('mpPw1',this)">Mostrar</button>
+                        <button type="button" onclick="togglePw('mpPw1', this)"
+                            onmouseover="this.style.color='#000000'"
+                            onmouseout="this.style.color='#E8821A'"
+                            style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                background:none; border:none; cursor:pointer; font-size:13px;
+                                font-weight:700; color:#E8821A;">
+                            Mostrar
+                        </button>
                         </div>
                         <p id="msg-actual" style="font-size:12px;margin-top:5px;min-height:16px;font-family:inherit;"></p>
                     </div>
@@ -347,7 +342,14 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                             <input type="password" name="nueva" id="mpPw2"
                                 placeholder="Mínimo 8 caracteres" required
                                 oninput="mpCheckRules(this.value); verificarCoincidencia();"/>
-                            <button type="button" class="mp-pw-toggle" onclick="mpTogglePW('mpPw2',this)">Mostrar</button>
+                            <button type="button" id="btnToggle" onclick="togglePassword()"
+                                    onmouseover="this.style.color='#000000'"
+                                    onmouseout="this.style.color='#E8821A'"
+                                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                        background:none; border:none; cursor:pointer; font-size:13px;
+                                        font-weight:700; color:#E8821A;">
+                                    Mostrar
+                            </button>
                         </div>
                         <div id="contenedor-barra" style="height:6px;width:100%;background:#e0e0e0;margin-top:10px;border-radius:4px;overflow:hidden;">
                             <div id="progreso" style="height:100%;width:0%;transition:0.3s;"></div>
@@ -366,7 +368,14 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                             <input type="password" name="confirmar" id="mpPw3"
                                 placeholder="Repite la contraseña" required
                                 oninput="verificarCoincidencia()"/>
-                            <button type="button" class="mp-pw-toggle" onclick="mpTogglePW('mpPw3',this)">Mostrar</button>
+                            <button type="button" id="btnToggle" onclick="togglePassword()"
+                                    onmouseover="this.style.color='#000000'"
+                                    onmouseout="this.style.color='#E8821A'"
+                                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                        background:none; border:none; cursor:pointer; font-size:13px;
+                                        font-weight:700; color:#E8821A;">
+                                    Mostrar
+                            </button>
                         </div>
                         <p id="msg-confirmar" style="font-size:12px;margin-top:5px;min-height:16px;font-family:inherit;"></p>
                     </div>
@@ -573,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
         configurarDocumento(false);
     }
 
-    /* Carrito */
+    
     const btnCart   = document.getElementById('toggleCart');
     const btnClose  = document.getElementById('closeCart');
     const cartPanel = document.getElementById('cartPanel');

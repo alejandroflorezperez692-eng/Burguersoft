@@ -7,20 +7,18 @@ require_once __DIR__ . '/../includes/funciones.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
 
-    $nombre          = limpiar($_POST['nombre']          ?? '');
-    $apellido        = limpiar($_POST['apellido']        ?? '');
-    $correo          = limpiar($_POST['correo']          ?? '');
-    $tipo_documento  = limpiar($_POST['Tdocumento']  ?? '');
-    $numero_documento= limpiar($_POST['numero_documento']?? '');
-    $password        = $_POST['password'] ?? '';
+    $nombre           = limpiar($_POST['nombre']           ?? '');
+    $apellido         = limpiar($_POST['apellido']         ?? '');
+    $correo           = limpiar($_POST['correo']           ?? '');
+    $tipo_documento   = limpiar($_POST['Tdocumento']       ?? '');
+    $numero_documento = limpiar($_POST['numero_documento'] ?? '');
+    $password         = $_POST['password'] ?? '';
 
-    // Validar campos obligatorios
     if (!$nombre || !$apellido || !$correo || !$tipo_documento || !$numero_documento || !$password) {
         echo json_encode(['error' => 'Todos los campos son obligatorios']);
         exit;
     }
 
-    // Validar que el número de documento sea numérico
     if (!ctype_digit($numero_documento)) {
         echo json_encode(['error' => 'El número de documento solo puede contener dígitos']);
         exit;
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $pdo = getPDO();
 
-    // Verificar si el correo ya existe
     $stmt = $pdo->prepare("SELECT id FROM usuario WHERE correo = ?");
     $stmt->execute([$correo]);
     if ($stmt->fetch()) {
@@ -36,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Verificar si el número de documento ya existe
     $stmt = $pdo->prepare("SELECT id FROM usuario WHERE Ndocumento = ?");
     $stmt->execute([$numero_documento]);
     if ($stmt->fetch()) {
@@ -44,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Obtener id del rol 'Mesero' (rol por defecto para nuevos registros)
     $stmtRol = $pdo->prepare("SELECT id FROM rol WHERE nombre = ?");
     $stmtRol->execute(['Cliente']);
     $rol = $stmtRol->fetch();
@@ -77,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Crear cuenta</title>
     <link rel="stylesheet" href="../estilos/estilos-registro.css">
-    <LINK REL="stylesheet" HREF="../estilos/estilos-login.css">
+    <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <script src="../js/Registro.js" defer></script>
 </head>
@@ -85,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logon">
-        <button class="boton-regresar" onclick="history.back()">Regresar</button>
+        <button class="boton-regresar" onclick="history.back()">[ Regresar ]</button>
     </div>
 
     <form id="registroForm">
@@ -102,20 +97,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="fila">
                 <div class="campo">
                     <label>NOMBRE*</label>
-                    <input type="text" id="nombre" placeholder="Digite su nombre"
+                    <input type="text" id="nombre" name="nombre" placeholder="Digite su nombre"
                         pattern="[A-Za-z0-9]+"
                         maxlength="15"
-                        oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]/g, ''); 
-                        this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1).toLowerCase();"
+                        oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]/g, '');
+                        this.value = this.value.toLowerCase().replace(/^./, c => c.toUpperCase());"
                         required>
                 </div>
                 <div class="campo">
                     <label>APELLIDO*</label>
-                    <input type="text" id="apellido" placeholder="Digite su apellido"
+                    <input type="text" id="apellido" name="apellido" placeholder="Digite su apellido"
                         pattern="[A-Za-záéíóúÁÉÍÓÚñÑ]+"
                         maxlength="15"
-                        oninput="this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ ]/g, '');
-                        this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1).toLowerCase();"
+                        oninput="this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ ]/g, ''); this.value = this.value.toLowerCase().replace(/^./, function(c){ return c.toUpperCase(); });"
                         required>
                 </div>
             </div>
@@ -123,7 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="fila">
                 <div class="campo">
                     <label>Tipo Documento*</label>
-                    <select id="tipo-documento" required>
+                    <select id="Tdocumento" name="Tdocumento"
+                            onchange="configurarDocumento(true)" required>
                         <option value="">Seleccione...</option>
                         <option value="Cédula de Ciudadanía">Cédula de Ciudadanía</option>
                         <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
@@ -133,12 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="campo">
-                    <label for="numero-documento">Número Documento*</label>
-                    <input type="text" id="numero-documento" placeholder="Digite su número de documento"
-                        pattern="\d{6,15}"
-                        maxlength="10"
-                        oninput="this.value = this.value.replace(/\D/g, '');"
-                        required>
+                    <label for="Ndocumento">Número Documento*</label>
+                    <input type="text" id="Ndocumento" name="numero_documento"
+                           placeholder="Digite su número de documento" required>
                 </div>
             </div>
 
@@ -155,14 +147,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="campo">
                 <label for="password">CONTRASEÑA*</label>
                 <div style="position:relative;">
-                    <input type="password" id="password" required
+                    <input type="password" id="password" name="password" required
                         placeholder="Mínimo 8 caracteres"
                         oninput="evaluarPassword(this.value); verificarCoincidencia();"
                         style="padding-right:80px; width:100%;">
                     <button type="button" onclick="togglePassword('password', this)"
+                        onmouseover="this.style.color='#000000'"
+                        onmouseout="this.style.color='#E8821A'"
                         style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                               background:none; border:none; cursor:pointer; font-size:13px;
-                               font-weight:700; color:#E8821A;">
+                            background:none; border:none; cursor:pointer; font-size:13px;
+                            font-weight:700; color:#E8821A;">
                         Mostrar
                     </button>
                 </div>
@@ -186,9 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         oninput="verificarCoincidencia()"
                         style="padding-right:80px; width:100%;">
                     <button type="button" onclick="togglePassword('confirmar-password', this)"
+                        onmouseover="this.style.color='#000000'"
+                        onmouseout="this.style.color='#E8821A'"
                         style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                               background:none; border:none; cursor:pointer; font-size:13px;
-                               font-weight:700; color:#E8821A;">
+                            background:none; border:none; cursor:pointer; font-size:13px;
+                            font-weight:700; color:#E8821A;">
                         Mostrar
                     </button>
                 </div>
@@ -200,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
 <div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title"> Accesibilidad</div>
+    <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">
         <div class="acc-row-label">Tema</div>
         <div class="acc-row-btns">
@@ -209,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <div class="acc-row">
-        <div class="acc-row-label">Tamano de letra</div>
+        <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="cambiarFuente(-1)">A-</button>
             <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
@@ -225,15 +221,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
 
-<button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"
+         src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
+</button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
 
-   <footer>
+<script>
+function configurarDocumento(limpiar) {
+    const tipoDoc = document.getElementById('Tdocumento');
+    const numDoc  = document.getElementById('Ndocumento');
+    if (!tipoDoc || !numDoc) return;
+    const tipo = tipoDoc.value;
+    if (limpiar) numDoc.value = '';
+    if (tipo === 'Cédula de Ciudadanía' || tipo === 'Cédula de Extranjería') {
+        numDoc.setAttribute('inputmode', 'numeric');
+        numDoc.setAttribute('maxlength', '10');
+        numDoc.setAttribute('minlength', '6');
+        numDoc.oninput = function () { this.value = this.value.replace(/[^0-9]/g, ''); };
+    } else if (tipo === 'Tarjeta de Identidad') {
+        numDoc.setAttribute('inputmode', 'numeric');
+        numDoc.setAttribute('maxlength', '11');
+        numDoc.setAttribute('minlength', '10');
+        numDoc.oninput = function () { this.value = this.value.replace(/[^0-9]/g, ''); };
+    } else if (tipo === 'Pasaporte') {
+        numDoc.setAttribute('inputmode', 'text');
+        numDoc.setAttribute('maxlength', '9');
+        numDoc.setAttribute('minlength', '6');
+        numDoc.oninput = function () { this.value = this.value.replace(/[^a-zA-Z0-9]/g, ''); };
+    } else {
+        numDoc.setAttribute('maxlength', '12');
+        numDoc.oninput = function () {};
+    }
+}
+</script>
+
+<footer>
     <div class="footer-container">
         <div class="footer-brand">
             <div class="footer-brand-text">
-                <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
+                <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
                     <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>

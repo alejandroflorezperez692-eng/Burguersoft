@@ -32,7 +32,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ── NAVBAR FIJO ─────────────────────────────────────────────── */
+
 .navbar {
     position: fixed;
     top: 0;
@@ -92,7 +92,7 @@ body {
     transform: none;
 }
 
-/* ── CONTENEDOR PRINCIPAL ────────────────────────────────────── */
+
 .contenedor {
     margin-top: 0px;
     background: var(--color-fondo-card);
@@ -107,7 +107,6 @@ body {
     margin-bottom: 48px;
 }
 
-/* ── ENCABEZADO ──────────────────────────────────────────────── */
 .encabezado {
     background: var(--color-oscuro);
     width: 100%;
@@ -144,7 +143,7 @@ body {
     font-weight: 300;
 }
 
-/* ── CUERPO DEL FORM ─────────────────────────────────────────── */
+
 .contenedor > *:not(.encabezado) {
     padding-left: 64px;
     padding-right: 64px;
@@ -166,7 +165,7 @@ body {
     text-align: center !important;
 }
 
-/* ── FILAS ───────────────────────────────────────────────────── */
+
 .fila {
     display: flex;
     gap: 24px;
@@ -181,7 +180,7 @@ body {
     min-width: 0;
 }
 
-/* ── ETIQUETAS ───────────────────────────────────────────────── */
+
 label {
     font-weight: 800;
     font-size: 12px;
@@ -193,7 +192,7 @@ label {
     display: block;
 }
 
-/* ── INPUTS ──────────────────────────────────────────────────── */
+
 input,
 .campo input,
 .campo select {
@@ -224,13 +223,13 @@ input:focus,
     background: #fff !important;
 }
 
-/* input de tipo fecha — ícono */
+
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(45%) sepia(80%) saturate(400%) hue-rotate(10deg);
     cursor: pointer;
 }
 
-/* ── SELECT ──────────────────────────────────────────────────── */
+
 .campo select {
     appearance: none;
     cursor: pointer;
@@ -245,7 +244,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: var(--color-oscuro);
 }
 
-/* ── BOTÓN PRINCIPAL ─────────────────────────────────────────── */
+
 .boton {
     width: 320px;
     max-width: 100%;
@@ -278,7 +277,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transform: translateY(0);
 }
 
-/* ── ENLACE EXTERNO ──────────────────────────────────────────── */
+
 .enlace-externo {
     margin-top: 22px;
     text-align: center;
@@ -300,7 +299,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     text-decoration: underline;
 }
 
-/* ── FOOTER ──────────────────────────────────────────────────── */
+
 .footer-content {
     margin-top: auto;
     width: 100%;
@@ -321,7 +320,7 @@ footer {
     align-self: stretch;
 }
 
-/* ── RESPONSIVE ──────────────────────────────────────────────── */
+
 @media (max-width: 768px) {
     .contenedor {
         width: 100%;
@@ -335,9 +334,7 @@ footer {
     .encabezado h2 { font-size: 22px; }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   MODO OSCURO ACCESIBLE
-══════════════════════════════════════════════════════════════ */
+
 body.modo-oscuro-accesible {
     background: #141414 !important;
     background-image: none !important;

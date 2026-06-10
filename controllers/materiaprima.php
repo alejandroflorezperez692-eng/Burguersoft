@@ -11,7 +11,6 @@ $id     = (int)($_GET['id'] ?? 0);
 
 if ($method === 'GET') {
     try {
-        // Traemos los que no estén marcados como inactivos
         $datos = $pdo->query("
             SELECT mp.*, m.nombre AS nombre_marca
             FROM materia_prima mp
@@ -34,7 +33,6 @@ if ($method === 'POST') {
     $unidad   = limpiar($body['unidad_medida'] ?? '');
     $marca_id = !empty($body['marca_id']) ? (int)$body['marca_id'] : null;
     
-    // Forzamos uno de los estados válidos de tu ENUM
     $estado   = 'Disponible'; 
 
     if (!$nombre || !$tipo || !$unidad) jsonResponse(['error' => 'Faltan campos'], 400);
@@ -70,7 +68,6 @@ if ($method === 'PUT') {
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     try {
-        // En lugar de borrar la fila, cambiamos el ENUM a 'Inactivo'
         $pdo->prepare("UPDATE materia_prima SET estado = 'Inactivo' WHERE id=?")->execute([$id]);
         jsonResponse(['success' => true]);
     } catch (PDOException $e) {

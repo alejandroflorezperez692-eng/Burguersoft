@@ -270,27 +270,28 @@ $navActivo = 'materia';
         <div class="form-grid">
             <div class="field">
                 <label>Nombre *</label>
-                <input type="text" id="nombre" placeholder="Ej: Harina de trigo">
+                <input type="text" id="nombre" onkeypress="sololetras(event)" placeholder="Ej: Harina de trigo"
+                required>
             </div>
             <div class="field">
                 <label>Tipo *</label>
-                <input type="text" id="tipo" placeholder="Ej: Cereal">
-            </div>
+                <input type="text" id="tipo" onkeypress="sololetras(event)" placeholder="Ej: Cereal">
+            </div >
             <div class="field">
                 <label>Unidad de medida *</label>
-                <input type="text" id="unidad_medida" placeholder="Ej: Kg, L, Unidades">
+                <input type="text" id="unidad_medida" onkeypress="sololetras(event)" placeholder="Ej: Kg, L, Unidades">
             </div>
             <div class="field">
                 <label>Valor</label>
-                <input type="number" id="valor" placeholder="0">
+                <input type="number" id="valor" onkeypress="solonumeros(event)" placeholder="0">
             </div>
             <div class="field">
                 <label>Cantidad *</label>
-                <input type="number" id="cantidad" placeholder="0">
+                <input type="number" id="cantidad" onkeypress="solonumeros(event)" placeholder="0">
             </div>
             <div class="field">
                 <label>ID de marca</label>
-                <input type="text" id="marca" placeholder="Número">
+                <input type="text" id="marca" onkeypress="solonumeros(event)" placeholder="Número">
             </div>
         </div>
         <div class="form-actions">
@@ -471,6 +472,17 @@ function limpiar() {
     document.getElementById('form-mp-title').textContent = '➕ Agregar insumo';
     document.getElementById('btn-guardar').textContent = 'Guardar insumo';
 }
+
+function sololetras(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[a-zA-Z\s]+$/.test(char)) e.preventDefault();
+}
+
+function solonumeros(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[0-9.]$/.test(char)) e.preventDefault();
+}
+
 </script>
 </body>
 </html>

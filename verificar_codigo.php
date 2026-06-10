@@ -4,7 +4,6 @@ session_start();
 require_once 'includes/conexion.php';
 require_once 'includes/funciones.php';
 
-// Si no hay correo en sesión, mandar de vuelta al inicio
 if (empty($_SESSION['correo_recuperacion'])) {
     redirigir('recuperar_contrasena.php');
 }
@@ -14,7 +13,6 @@ $error  = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Unir los 6 inputs en un solo código
     $codigo = '';
     for ($i = 1; $i <= 6; $i++) {
         $codigo .= preg_replace('/\D/', '', $_POST['d' . $i] ?? '');
@@ -23,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen($codigo) !== 6) {
         $error = 'Ingresa los 6 dígitos del código.';
     } else {
-        // Verificar que el código exista y no haya expirado
         $stmt = $conn->prepare(
             "SELECT id FROM usuario
              WHERE correo     = ?
@@ -37,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->num_rows === 0) {
             $error = 'Código incorrecto o expirado. Solicita uno nuevo.';
         } else {
-            // Código válido → guardar en sesión y pasar al siguiente paso
             $_SESSION['codigo_verificado'] = true;
             $stmt->close();
             redirigir('restablecer_contrasena.php');

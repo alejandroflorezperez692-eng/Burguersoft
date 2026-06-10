@@ -626,6 +626,7 @@ $cat_icons = [
         body.dark-mode .ing-row input,
         body.dark-mode .ing-row select { background: var(--surface-2); color: var(--text-900); }
         body.dark-mode .search-input { background: var(--surface); color: var(--text-900); }
+        body.dark-mode .btn-pick-img{ background: #8b8683 }
     </style>
 </head>
 <body>
@@ -637,11 +638,13 @@ $cat_icons = [
 
     <div class="page-header">
         <div>
-            <h1 style = "font-family: var(--font-sans) !important;">Gestión del Menú</h1>
-            <div class="subtitulo">Productos disponibles en el menú</div></div></div>
+            <h1 style="font-family: var(--font-sans) !important;">Gestión del Menú</h1>
+            <div class="subtitulo">Productos disponibles en el menú</div>
+        </div>
+    </div>
 
     <!--  FORMULARIO HORIZONTAL ARRIBA  -->
-    <div class="form-panel">
+    <div class="form-panel" id="form-panel">
 
         <form id="formProducto" novalidate>
             <input type="hidden" id="editId">
@@ -653,27 +656,34 @@ $cat_icons = [
                 <div class="form-main-row">
                     <div class="field">
                         <label>Nombre *</label>
-                        <input type="text" id="nombre" placeholder="Ej: Hamburguesa Especial" required></div>
+                        <input type="text" id="nombre" onkeypress="sololetras(event)" placeholder="Ej: Hamburguesa Especial" required>
+                    </div>
                     <div class="field">
                         <label>Precio *</label>
-                        <input type="number" id="precio" placeholder="12000" min="0" required></div>
+                        <input type="number" id="precio"  onkeypress="solonumeros(event)" placeholder="12000" min="0" required>
+                    </div>
                     <div class="field">
                         <label>Cantidad</label>
-                        <input type="text" id="catidad" placeholder="Ej: 10" oninput="actualizarEstado(this.value)"></div>
+                        <input type="text" id="catidad" onkeypress="solonumeros(event)" placeholder="Ej: 10" oninput="actualizarEstado(this.value)">
+                    </div>
                     <div class="field">
                         <label>Categoría *</label>
                         <select id="categoria" required>
                             <option value="">Selecciona...</option>
                             <?php foreach ($categorias_enum as $cat): ?>
                             <option value="<?= htmlspecialchars($cat) ?>"><?= htmlspecialchars($cat) ?></option>
-                            <?php endforeach; ?></select></div>
-                    <input type="hidden" id="estado" value="Disponible"></div>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <input type="hidden" id="estado" value="Disponible">
+                </div>
 
                 <!-- Fila 2: descripción + imagen + ingredientes -->
                 <div class="form-secondary-row">
                     <div class="field">
                         <label>Descripción</label>
-                        <textarea id="descripcion" placeholder="Ej: Carne 150g, queso, tocineta…"></textarea></div>
+                        <textarea id="descripcion" placeholder="Ej: Carne 150g, queso, tocineta…"></textarea>
+                    </div>
 
                     <div class="field">
                         <label>Imagen del producto</label>
@@ -687,9 +697,12 @@ $cat_icons = [
                                 <button type="button" class="btn-pick-img"
                                         onclick="event.stopPropagation();document.getElementById('prodImagenFile').click()">
                                     Seleccionar
-                                </button></div></div>
+                                </button>
+                            </div>
+                        </div>
                         <input type="file" id="prodImagenFile" accept="image/*"
-                               style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"></div>
+                               style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;">
+                    </div>
 
                     <div class="field">
                         <label>Ingredientes</label>
@@ -697,33 +710,50 @@ $cat_icons = [
                             <div class="ing-body">
                                 <div class="ing-row">
                                     <select id="ing-select-mp">
-                                        <option value="">Seleccionar materia prima…</option></select>
-                                    <input type="number" id="ing-cantidad" placeholder="Cant." min="0.01" step="0.01">
-                                    <button type="button" class="btn-add-ing" onclick="agregarIngrediente()">+</button></div>
+                                        <option value="">Seleccionar materia prima…</option>
+                                    </select>
+                                    <input type="number" id="ing-cantidad"  onkeypress="solonumeros(event)" placeholder="Cant." min="0.01" step="0.01">
+                                    <button type="button" class="btn-add-ing" onclick="agregarIngrediente()">+</button>
+                                </div>
                                 <ul id="lista-receta">
-                                    <li class="receta-empty">Sin ingredientes asignados.</li></ul></div></div></div></div></div>
+                                    <li class="receta-empty">Sin ingredientes asignados.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="form-panel-footer">
                 <button type="submit" class="btn-submit-form" id="btn-submit">Guardar Producto</button>
-                <button type="button" class="btn-cancel-form" id="btn-cancelar" onclick="cancelarEdicion()">Cancelar edición</button></div></form></div>
+                <button type="button" class="btn-cancel-form" id="btn-cancelar" onclick="cancelarEdicion()">Cancelar edición</button>
+            </div>
+        </form>
+    </div>
 
     <!--  BUSCADOR + CATÁLOGO  -->
     <div class="catalog-toolbar">
         <div class="search-wrap">
-            <input type="text" id="buscar" class="search-input" placeholder="Buscar por nombre o categoría..."></div></div>
+            <input type="text" id="buscar" class="search-input" placeholder="Buscar por nombre o categoría...">
+        </div>
+    </div>
 
     <div class="menu-container" id="menu-container">
-        <div style="text-align:center;padding:60px;color:var(--text-400);">Cargando menú...</div></div></div>
+        <div style="text-align:center;padding:60px;color:var(--text-400);">Cargando menú...</div>
+    </div>
+
+</div>
 </div>
 
 <!-- Modal confirmar eliminar -->
 <div class="modal-overlay" id="modal-eliminar">
     <div class="modal-box">
-        
         <p id="modal-texto">¿Eliminar este producto?</p>
         <div class="modal-actions">
             <button class="btn-cancel-del" onclick="cerrarModal()">Cancelar</button>
-            <button class="btn-confirm-del" id="btn-confirmar-ok">Sí, eliminar</button></div></div>
+            <button class="btn-confirm-del" id="btn-confirmar-ok">Sí, eliminar</button>
+        </div>
+    </div>
 </div>
 
 <div class="acc-panel" id="accPanel">
@@ -732,17 +762,23 @@ $cat_icons = [
         <div class="acc-row-label">Tema</div>
         <div class="acc-row-btns">
             <button class="acc_tema" onclick="setTema('claro')">Claro</button>
-            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button></div></div>
+            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
+        </div>
+    </div>
     <div class="acc-row">
         <div class="acc-row-label">Tamaño de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
-            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button></div></div>
+            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
+        </div>
+    </div>
     <div class="acc-row">
         <div class="acc-row-label">Tipo de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
-            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button></div></div>
+            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
+        </div>
+    </div>
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
 <button class="acc-fab" id="accFab" onclick="togglePanel()">
@@ -834,10 +870,13 @@ function crearTarjeta(p) {
             <div class="product-desc">${p.descripcion || ''}</div>
             <div class="product-meta">
                 <div class="product-price">$${Number(p.valor).toLocaleString('es-CO')}</div>
-                <span class="product-estado ${estadoCls}">${p.estado}</span></div></div>
+                <span class="product-estado ${estadoCls}">${p.estado}</span>
+            </div>
+        </div>
         <div class="product-actions">
             <button class="btn-edit-p" onclick="prepararEdicion(${p.id})">Editar</button>
-            <button class="btn-del-p"  onclick="confirmarEliminar(${p.id}, '${p.nombre.replace(/'/g,"\\'")}')">Eliminar</button></div>`;
+            <button class="btn-del-p"  onclick="confirmarEliminar(${p.id}, '${p.nombre.replace(/'/g,"\\'")}')">Eliminar</button>
+        </div>`;
     return card;
 }
 
@@ -906,25 +945,24 @@ document.getElementById('formProducto').addEventListener('submit', async e => {
     fd.append('categoria',   categoria);
     fd.append('estado',      estado);
     fd.append('catidad',     catidad || '0');
-    
+
     if (file) fd.append('imagen', file);
 
-    const url    = id ? `${CTRL}?accion=productos&id=${id}` : `${CTRL}?accion=productos`;
+    const url          = id ? `${CTRL}?accion=productos&id=${id}` : `${CTRL}?accion=productos`;
     const fetchOptions = { method: 'POST', body: fd };
     if (id) fetchOptions.headers = { 'X-HTTP-Method-Override': 'PUT' };
 
     try {
-        const res  = await fetch(url, fetchOptions);
-        
-        // Validar si el servidor respondió con un error (400, 500, etc)
+        const res = await fetch(url, fetchOptions);
+
         if (!res.ok) {
             const textoError = await res.text();
             console.error("Respuesta del servidor:", textoError);
             toast(`Error del servidor (${res.status})`, 'err');
             return;
         }
-        
-       const data = await res.json();
+
+        const data = await res.json();
         if (data.success || data.id) {
             const nuevoId = data.id;
             if (nuevoId && ingredientesNuevos.length > 0) {
@@ -949,6 +987,7 @@ document.getElementById('formProducto').addEventListener('submit', async e => {
 function prepararEdicion(id) {
     const p = productos.find(x => x.id === id);
     if (!p) return;
+
     document.getElementById('editId').value      = p.id;
     document.getElementById('nombre').value      = p.nombre;
     document.getElementById('precio').value      = p.valor;
@@ -958,6 +997,7 @@ function prepararEdicion(id) {
     document.getElementById('catidad').value     = p.catidad || '0';
     actualizarEstado(p.catidad || '0');
     document.getElementById('prodImagenActual').value = p.img || '';
+
     if (p.img) {
         const prev = document.getElementById('prodPreview');
         prev.src = p.img;
@@ -967,18 +1007,20 @@ function prepararEdicion(id) {
         document.getElementById('prodImagenNombre').textContent = 'Imagen actual cargada';
     }
 
-    document.getElementById('btn-submit').textContent      = 'Guardar cambios';
-    document.getElementById('btn-cancelar').style.display  = 'inline-flex';
+    document.getElementById('btn-submit').textContent     = 'Guardar cambios';
+    document.getElementById('btn-cancelar').style.display = 'inline-flex';
     cargarReceta(p.id);
 
-    document.querySelector('.form-panel').scrollIntoView({ behavior: 'smooth' });
+    const panel = document.getElementById('form-panel');
+    const y = panel.getBoundingClientRect().top + window.scrollY - 20;
+    window.scrollTo({ top: y, behavior: 'smooth' });
 }
 
 function cancelarEdicion() {
     document.getElementById('formProducto').reset();
-    document.getElementById('editId').value              = '';
-    document.getElementById('prodImagenActual').value    = '';
-    document.getElementById('btn-submit').textContent    = 'Guardar Producto';
+    document.getElementById('editId').value               = '';
+    document.getElementById('prodImagenActual').value     = '';
+    document.getElementById('btn-submit').textContent     = 'Guardar Producto';
     document.getElementById('btn-cancelar').style.display = 'none';
     ingredientesNuevos = [];
     document.getElementById('lista-receta').innerHTML = '<li class="receta-empty">Sin ingredientes asignados.</li>';
@@ -1026,7 +1068,7 @@ async function agregarIngrediente() {
     const producto_id = document.getElementById('editId').value;
     const materia_id  = document.getElementById('ing-select-mp').value;
     const cantidad    = parseFloat(document.getElementById('ing-cantidad').value);
-    if (!materia_id)               { toast('Selecciona una materia prima', 'err'); return; }
+    if (!materia_id)                { toast('Selecciona una materia prima', 'err'); return; }
     if (!cantidad || cantidad <= 0) { toast('Ingresa una cantidad válida', 'err'); return; }
 
     if (producto_id) {
@@ -1103,6 +1145,16 @@ document.getElementById('buscar').addEventListener('input', e => renderMenu(e.ta
     await cargarProductos();
     await cargarMateriasPrimas();
 })();
+
+function sololetras(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[a-zA-Z\s]+$/.test(char)) e.preventDefault();
+}
+
+function solonumeros(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[0-9.]$/.test(char)) e.preventDefault();
+}
 </script>
 </body>
 </html>

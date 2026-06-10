@@ -68,29 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding-right: 90px;
         }
 
-        .btn-toggle-password {
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--color-primario);
-            font-size: 12px;
-            font-weight: 800;
-            font-family: var(--font-cuerpo);
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            padding: 4px 2px;
-            transition: color 0.25s;
-            white-space: nowrap;
-        }
-
-        .btn-toggle-password:hover {
-            color: var(--color-oscuro);
-        }
-
         body.modo-oscuro-accesible .btn-toggle-password {
             color: var(--color-acento);
         }
@@ -102,10 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
-        <a href="../php/Burguersoft.php" class="btn-regresar">Regresar</a>
+        <a href="../php/Burguersoft.php" class="btn-regresar"> [ Regresar ]</a>
     </div>
 
-    <div class="header-bar">INICIAR SESIÓN</div>
+    <div class="header-bar"> INICIAR SESIÓN </div>
 
     <div class="card">
         <?php if ($error): ?>
@@ -114,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form id="loginForm" method="POST" action="login.php">
 
-            <h2>CORREO</h2>
+            <h2>CORREO*</h2>
             <input type="email" name="correo" id="email" class="input"
                    placeholder="ejemplo@gmail.com" required
                    value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>">
@@ -123,8 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="input-password-wrapper">
                 <input type="password" name="contrasena" id="password" class="input"
                        placeholder="Ingresa tu contraseña" required>
-                <button type="button" class="btn-toggle-password" id="btnToggle"
-                        onclick="togglePassword()" tabindex="-1" aria-label="Mostrar u ocultar contraseña">
+                <button type="button" id="btnToggle" onclick="togglePassword()"
+                    onmouseover="this.style.color='#000000'"
+                    onmouseout="this.style.color='#E8821A'"
+                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                        background:none; border:none; cursor:pointer; font-size:13px;
+                        font-weight:700; color:#E8821A;">
                     Mostrar
                 </button>
             </div>

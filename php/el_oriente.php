@@ -21,16 +21,18 @@ $paginaActiva = 'oriente';
 <section class="nosotros-section">
     <div class="nosotros-content">
         <h2>Sobre Nosotros</h2><br>
-        <p>En Comidas Rápidas El Oriente llevamos 14 años compartiendo sabor y tradición con Sogamoso. Desde nuestro inicio, hemos trabajado con pasión para ofrecer platos deliciosos, preparados con ingredientes frescos y un toque único que nos ha convertido en un referente de las comidas rápidas en la ciudad.</p>
-        <p>Somos un lugar donde la buena atención, las porciones generosas y el ambiente familiar hacen que cada visita sea especial.</p>
+        <p>En Comidas Rápidas El Oriente llevamos 14 años compartiendo sabor y tradición con Sogamoso. Desde nuestro inicio, hemos trabajado con pasión para ofrecer hamburguesas, salchipapas y mucho más, preparados con ingredientes frescos y un toque único que nos ha convertido en el favorito de las comidas rápidas en la ciudad.</p>
+        <p>Somos un lugar donde la buena atención, las porciones generosas y el ambiente familiar hacen que cada visita sea una experiencia que vale la pena repetir.</p>
+        <p>14 años de sabor y tradición. Calidad en cada plato, calidez en cada visita.</p>
     </div>
     <div class="nosotros-img"><img src="../estilos/img/Local.png" alt="Nuestro Local" class="nosotros-img"></div>
 </section>
 <section class="nosotros-ubicacion">
-    <h2 class="section-title">¿DÓNDE NOS ENCONTRAMOS?</h2><br>
+    <h2 class="section-title">¿Dónde nos encontramos?</h2><br>
     <p class="section-text">Encuéntranos en el corazón de Sogamoso. Ven y disfruta de nuestros deliciosos platos en un ambiente acogedor y familiar.</p><br>
-    <p class="section-text">Calle 9a #1a-47</p>
-    <p class="section-text">Barrio el Oriente</p>
+    <p class="section-text">Calle 9a #1a-47, Barrio El Oriente</p>
+    <p class="section-text">Sogamoso, Boyacá</p><br>
+    <p class="section-text">¡Te esperamos con el mejor sabor de la ciudad!</p>
 </section>
 <section class="map-content">
     <iframe class="nosotros-map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d997.0558698401526!2d-72.92006585457908!3d5.708015928459993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1ses-419!2sco!4v1764791648761!5m2!1ses-419!2sco" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
