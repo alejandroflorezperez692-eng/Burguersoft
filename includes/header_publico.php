@@ -144,22 +144,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <strong id="cartTotal">$0</strong>
                 </div>
 
-                <div class="cart-actions-grid">
-                    <button type="button" class="btn-cart-action btn-factura" id="btnVerFactura" onclick="verFactura()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        Ver Factura
-                    </button>
-                    
-                    <button type="button" class="btn-cart-action btn-vaciar" id="btnVaciarCarrito" onclick="vaciarCarrito()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                        Vaciar Carrito
-                    </button>
-
-                    <button type="button" class="btn-cart-action btn-pago" id="btnMetodoPago" onclick="seleccionarMetodoPago()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-                        Método de Pago
-                    </button>
-                </div>
 
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
                     Finalizar Compra
