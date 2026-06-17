@@ -11,7 +11,6 @@ $esAdmin     = $rolAdmin === 'Administrador';
         <hr class="sidebar-divider">
         <span class="nom-local">El Oriente</span>
     </div>
-
     <div class="sidebar-footer">
         <div class="sidebar-item <?= $navActivo === 'inicio' ? 'active' : '' ?>">
             <a href="../php/inicio_admin.php">
