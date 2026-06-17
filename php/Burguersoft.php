@@ -14,6 +14,7 @@ $stmtPromo = $pdo->prepare(
 );
 $stmtPromo->execute([$hoy, $hoy]);
 $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
+
 function formatCOP($valor) {
     return '$' . number_format((float)$valor, 0, ',', '.');
 }
