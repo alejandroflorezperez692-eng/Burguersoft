@@ -3,7 +3,6 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 iniciarSesionSegura();
-if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
 
 $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
@@ -19,8 +18,8 @@ $categorias_enum = [
 ];
 
 function calcularEstado(int $cantidad): string {
-    if ($cantidad === 0)   return 'Agotado';
-    if ($cantidad <= 5)    return 'Por agotarse';
+    if ($cantidad === 0)  return 'Agotado';
+    if ($cantidad <= 5)   return 'Por agotarse';
     return 'Disponible';
 }
 
@@ -34,27 +33,29 @@ if ($accion === 'productos') {
         $categoria = $_GET['categoria'] ?? '';
         if ($categoria) {
             $s = $pdo->prepare(
-                "SELECT id, nombre, valor, descripcion, img, catidad, categoria, estado
+                "SELECT id, nombre, valor, descripcion, img, cantidad, categoria, estado
                  FROM producto WHERE categoria = ? ORDER BY nombre"
             );
             $s->execute([$categoria]);
             jsonResponse($s->fetchAll());
         } else {
             jsonResponse($pdo->query(
-                "SELECT id, nombre, valor, descripcion, img, catidad, categoria, estado
+                "SELECT id, nombre, valor, descripcion, img, cantidad, categoria, estado
                  FROM producto ORDER BY categoria, nombre"
             )->fetchAll());
         }
     }
 
-   if ($method === 'POST') {
+    if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
+
+    if ($method === 'POST') {
         $nombre      = limpiar($_POST['nombre']      ?? '');
         $valor       = (float)($_POST['valor']       ?? 0);
         $descripcion = limpiar($_POST['descripcion'] ?? '');
         $categoria   = limpiar($_POST['categoria']   ?? '');
-        $catidad     = limpiar($_POST['catidad']      ?? '0');
-        $catidad_int = (int)$catidad;
-        $estado      = calcularEstado($catidad_int);
+        $cantidad    = limpiar($_POST['cantidad']    ?? '0');
+        $cantidad_int = (int)$cantidad;
+        $estado      = calcularEstado($cantidad_int);
 
         if (!$nombre || $valor <= 0 || !$categoria)
             jsonResponse(['error' => 'Nombre, precio y categoría son obligatorios'], 400);
@@ -73,9 +74,9 @@ if ($accion === 'productos') {
         $img = '../uploads/productos/' . $file;
 
         $pdo->prepare(
-            "INSERT INTO producto (nombre, valor, descripcion, img, catidad, categoria, estado)
+            "INSERT INTO producto (nombre, valor, descripcion, img, cantidad, categoria, estado)
              VALUES (?, ?, ?, ?, ?, ?, ?)"
-        )->execute([$nombre, $valor, $descripcion, $img, $catidad, $categoria, $estado]);
+        )->execute([$nombre, $valor, $descripcion, $img, $cantidad, $categoria, $estado]);
 
         jsonResponse(['success' => true, 'id' => (int)$pdo->lastInsertId()]);
     }
@@ -87,12 +88,12 @@ if ($accion === 'productos') {
         $valor       = (float)($_POST['valor']       ?? 0);
         $descripcion = limpiar($_POST['descripcion'] ?? '');
         $categoria   = limpiar($_POST['categoria']   ?? '');
-        $catidad     = limpiar($_POST['catidad']      ?? '0');
-        $catidad_int = (int)$catidad;
-        $estado      = calcularEstado($catidad_int);
+        $cantidad    = limpiar($_POST['cantidad']    ?? '0');
+        $cantidad_int = (int)$cantidad;
+        $estado      = calcularEstado($cantidad_int);
 
-        if ( $valor <= 0 || !$categoria || $catidad <= 0)
-            jsonResponse(['error' => 'Precio, categoría y cantidad mayor a 0 son obligatorios'], 400);
+        if ($valor <= 0 || !$categoria || (int)$cantidad < 0)
+            jsonResponse(['error' => 'Precio y categoría son obligatorios'], 400);
 
         if (!empty($_FILES['imagen']['tmp_name'])) {
             $dir = __DIR__ . '/../uploads/productos/';
@@ -108,9 +109,9 @@ if ($accion === 'productos') {
         }
 
         $pdo->prepare(
-            "UPDATE producto SET nombre=?, valor=?, descripcion=?, img=?, catidad=?, categoria=?, estado=?
+            "UPDATE producto SET nombre=?, valor=?, descripcion=?, img=?, cantidad=?, categoria=?, estado=?
              WHERE id=?"
-        )->execute([$nombre, $valor, $descripcion, $img, $catidad, $categoria, $estado, $id]);
+        )->execute([$nombre, $valor, $descripcion, $img, $cantidad, $categoria, $estado, $id]);
 
         jsonResponse(['success' => true]);
     }
@@ -141,6 +142,8 @@ if ($accion === 'receta') {
         jsonResponse($s->fetchAll());
     }
 
+    if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
+
     if ($method === 'POST') {
         $body        = json_decode(file_get_contents('php://input'), true);
         $producto_id = (int)($body['producto_id']    ?? 0);
@@ -149,12 +152,14 @@ if ($accion === 'receta') {
         if (!$producto_id || !$materia_id || $cantidad <= 0)
             jsonResponse(['error' => 'Datos inválidos'], 400);
         $pdo->prepare(
-            "INSERT INTO receta (producto_id, materia_id, cantidad_usada, descripcion) VALUES (?,?,?,'')"
+            "INSERT INTO receta (producto_id, materia_id,
+             cantidad_usada, descripcion) VALUES (?,?,?,'')"
         )->execute([$producto_id, $materia_id, $cantidad]);
         jsonResponse(['success' => true, 'id' => (int)$pdo->lastInsertId()]);
     }
 
     if ($method === 'DELETE') {
+        if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
         if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
         $pdo->prepare("DELETE FROM receta WHERE id = ?")->execute([$id]);
         jsonResponse(['success' => true]);
@@ -163,9 +168,9 @@ if ($accion === 'receta') {
 
 if ($accion === 'materias' && $method === 'GET') {
     jsonResponse($pdo->query(
-        "SELECT id, nombre, cantidad, unidad_medida FROM materia_prima ORDER BY nombre"
+        "SELECT id, nombre, cantidad, unidad_medida FROM materia_prima
+         WHERE estado != 'Inactivo' ORDER BY nombre"
     )->fetchAll());
-}
-
+}    
 jsonResponse(['error' => 'Acción no reconocida'], 404);
 ?>

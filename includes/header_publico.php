@@ -85,7 +85,9 @@ $tipos_doc = [
     'Cédula de Extranjería' => 'Cédula de Extranjería',
 ];
 
-function hv($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
+if (!function_exists('hv')) {
+    function hv($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
+}
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 ?>
@@ -141,6 +143,24 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <span>Total a pagar:</span>
                     <strong id="cartTotal">$0</strong>
                 </div>
+
+                <div class="cart-actions-grid">
+                    <button type="button" class="btn-cart-action btn-factura" id="btnVerFactura" onclick="verFactura()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Ver Factura
+                    </button>
+                    
+                    <button type="button" class="btn-cart-action btn-vaciar" id="btnVaciarCarrito" onclick="vaciarCarrito()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        Vaciar Carrito
+                    </button>
+
+                    <button type="button" class="btn-cart-action btn-pago" id="btnMetodoPago" onclick="seleccionarMetodoPago()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                        Método de Pago
+                    </button>
+                </div>
+
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
                     Finalizar Compra
                 </button>
@@ -148,7 +168,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
         </div>
 
         <div class="perfil-dropdown">
-            <button class="btn-perfil" title="Mi perfil">
+            <button class="btn-perfil" title="Mi perfil" id="btnPerfilDropdown">
                 <div class="icono-circulo-perfil">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                          fill="none" stroke="currentColor" stroke-width="2"
@@ -160,7 +180,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                 <span class="perfil-nombre"><?= hv($_SESSION['nombre'] ?? 'Usuario') ?></span>
             </button>
 
-            <div class="dropdown-menu">
+            <div class="dropdown-menu" id="perfilDropdownMenu">
                 <a href="#" onclick="abrirModalPerfil(); return false;">
                     <img class="dropdown-icon" src="/burguersoft/estilos/img/avatar-de-usuario.png" alt="">
                     Mi perfil
@@ -176,6 +196,25 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
             </div>
         </div>
 
+        <script>
+            // Lógica para abrir/cerrar el dropdown del perfil de usuario
+            document.addEventListener('DOMContentLoaded', function() {
+                const btnDropdown = document.getElementById('btnPerfilDropdown');
+                const menuDropdown = document.getElementById('perfilDropdownMenu');
+
+                if (btnDropdown && menuDropdown) {
+                    btnDropdown.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        menuDropdown.classList.toggle('abierto');
+                    });
+
+                    document.addEventListener('click', function() {
+                        menuDropdown.classList.remove('abierto');
+                    });
+                }
+            });
+        </script>
+
     <?php else: ?>
         <a href="/burguersoft/php/login.php" class="link-sesion">
             <button class="btn-sesion">
@@ -188,9 +227,12 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 </header>
 
 <?php if ($logueado && !empty($uModal)): ?>
-<div class="mp-overlay" id="mpOverlay" onclick="cerrarModalPerfil()"></div>
+<?php 
+$claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perfil'])) ? 'mp-show' : ''; 
+?>
+<div class="mp-overlay <?= $claseShow ?>" id="mpOverlay" onclick="cerrarModalPerfil()"></div>
 
-<div class="mp-panel" id="mpPanel" role="dialog" aria-modal="true" aria-label="Mi perfil">
+<div class="mp-panel <?= $claseShow ?>" id="mpPanel" role="dialog" aria-modal="true" aria-label="Mi perfil">
     <div class="mp-head">
         <div class="mp-head-left">
             <div class="mp-ava"><?= hv($iniciales ?: 'U') ?></div>
@@ -275,7 +317,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <div class="mp-field">
                         <label class="mp-label">Tipo de documento</label>
                         <div class="mp-select-wrap">
-                            <select name="Tdocumento" id="Tdocumento" required>
+                            <select name="Tdocumento" id="Tdocumento" required onchange="configurarDocumento(true)">
                                 <option value="">Seleccione...</option>
                                 <?php foreach ($tipos_doc as $val => $lbl): ?>
                                     <option value="<?= hv($val) ?>" <?= ($uModal['Tdocumento'] === $val) ? 'selected' : '' ?>><?= hv($lbl) ?></option>
@@ -324,7 +366,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                             <input type="password" name="actual" id="mpPw1"
                                 placeholder="••••••••" required
                                 oninput="limpiarErrorActual()"/>
-                        <button type="button" onclick="togglePw('mpPw1', this)"
+                        <button type="button" onclick="mpTogglePW('mpPw1', this)"
                             onmouseover="this.style.color='#000000'"
                             onmouseout="this.style.color='#E8821A'"
                             style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
@@ -342,13 +384,13 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                             <input type="password" name="nueva" id="mpPw2"
                                 placeholder="Mínimo 8 caracteres" required
                                 oninput="mpCheckRules(this.value); verificarCoincidencia();"/>
-                            <button type="button" id="btnToggle" onclick="togglePassword()"
-                                    onmouseover="this.style.color='#000000'"
-                                    onmouseout="this.style.color='#E8821A'"
-                                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                                        background:none; border:none; cursor:pointer; font-size:13px;
-                                        font-weight:700; color:#E8821A;">
-                                    Mostrar
+                           <button type="button" onclick="mpTogglePW('mpPw2', this)"
+                                onmouseover="this.style.color='#000000'"
+                                onmouseout="this.style.color='#E8821A'"
+                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                    background:none; border:none; cursor:pointer; font-size:13px;
+                                    font-weight:700; color:#E8821A;">
+                                Mostrar
                             </button>
                         </div>
                         <div id="contenedor-barra" style="height:6px;width:100%;background:#e0e0e0;margin-top:10px;border-radius:4px;overflow:hidden;">
@@ -368,13 +410,13 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                             <input type="password" name="confirmar" id="mpPw3"
                                 placeholder="Repite la contraseña" required
                                 oninput="verificarCoincidencia()"/>
-                            <button type="button" id="btnToggle" onclick="togglePassword()"
-                                    onmouseover="this.style.color='#000000'"
-                                    onmouseout="this.style.color='#E8821A'"
-                                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                                        background:none; border:none; cursor:pointer; font-size:13px;
-                                        font-weight:700; color:#E8821A;">
-                                    Mostrar
+                            <button type="button" onclick="mpTogglePW('mpPw3', this)"
+                                onmouseover="this.style.color='#000000'"
+                                onmouseout="this.style.color='#E8821A'"
+                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                    background:none; border:none; cursor:pointer; font-size:13px;
+                                    font-weight:700; color:#E8821A;">
+                                Mostrar
                             </button>
                         </div>
                         <p id="msg-confirmar" style="font-size:12px;margin-top:5px;min-height:16px;font-family:inherit;"></p>
@@ -418,9 +460,22 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 
     </div>
 </div>
+
+<?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perfil'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mpSwitchTab('<?= $modalTab === 'pwd' ? 'pwd' : 'datos' ?>');
+    });
+</script>
+<?php endif; ?>
+
 <?php endif; ?>
 
 <style>
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
 
 .mp-tabs-container{display:flex;justify-content:space-around;margin-bottom:25px;border-bottom:1px solid #eee;padding-bottom:10px;}
 .mp-tab{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:10px 15px;border-radius:12px;transition:all 0.3s ease;color:#7A6855;font-weight:600;font-family:inherit;font-size:12px;}
@@ -433,8 +488,8 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 .icono-circulo{position:relative;color:white;display:flex;align-items:center;justify-content:center}
 .badge-carrito{position:absolute;top:-12px;right:-12px;background:#e63946;color:white;font-size:11px;font-weight:bold;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border:2px solid #1a090d}
 
-.cart-panel{position:fixed;top:0;right:-450px;width:400px;max-width:100%;height:100vh;background:white;box-shadow:-5px 0 25px rgba(0,0,0,.3);transition:right .3s ease-in-out;z-index:9999;display:flex;flex-direction:column}
-.cart-panel.active{right:0}
+.cart-panel{position:fixed;top:0;right:-450px;width:400px;max-width:100%;height:100vh;background:white;box-shadow:-5px 0 25px rgba(0,0,0,.3);transition:right .3s ease-in-out;z-index:9999;display:flex;flex-direction:column;visibility:hidden;}
+.cart-panel.active{right:0 !important;visibility:visible;}
 .cart-header-title{background:#1a090d;color:white;padding:20px;display:flex;justify-content:space-between;align-items:center;font-family:sans-serif;font-weight:bold;letter-spacing:1px}
 .close-cart{background:none;border:none;color:white;font-size:26px;cursor:pointer;line-height:1}
 .cart-items{flex:1;overflow-y:auto;padding:20px}
@@ -446,14 +501,65 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
 
-.mp-panel { opacity: 0 !important; pointer-events: none !important; }
-.mp-panel.mp-show { opacity: 1 !important; pointer-events: all !important; }
+/* ESTILOS NUEVOS PARA LOS BOTONES DEL CARRITO */
+.cart-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.btn-pago {
+    grid-column: 1 / -1;
+}
+.btn-cart-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #E0D5C5;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #F7F2EA;
+    color: #7A6855;
+    transition: all 0.2s ease;
+}
+.btn-cart-action:hover {
+    background-color: #E0D5C5;
+    color: #1C1410;
+    transform: translateY(-1px);
+}
+.btn-vaciar:hover {
+    background-color: #FFF0EE;
+    border-color: #F0A090;
+    color: #C0392B;
+}
+.btn-pago {
+    background-color: #fff;
+    border-color: #E0D5C5;
+    color: #BA7517;
+}
+.btn-pago:hover {
+    background-color: #FAEEDA;
+    border-color: #EF9F27;
+    color: #412402;
+}
+.btn-checkout {
+    margin-top: 5px;
+}
 
-.perfil-dropdown { position: relative; }
-.dropdown-menu { display: none; }
-.btn-perfil{display:flex;align-items:center;gap:10px;cursor:pointer;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);border-radius:50px;padding:4px 14px 4px 4px;transition:background .25s,transform .2s;margin-left:30px}
-.icono-circulo-perfil{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:white}
+.mp-panel { opacity: 0; pointer-events: none; }
+.mp-panel.mp-show { opacity: 1; pointer-events: all; }
+
+.header-right { display: flex; align-items: center; gap: 15px; }
+.perfil-dropdown { position: relative; display: inline-block; }
+.btn-perfil{display:flex;align-items:center;gap:10px;cursor:pointer;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);border-radius:50px;padding:5px 16px 5px 5px;transition:background .25s,transform .2s;margin-left:5px}
+.icono-circulo-perfil{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:white}
 .perfil-nombre{font-size:14px;font-weight:600;color:white;white-space:nowrap}
+
 .dropdown-menu{display:none;position:absolute;right:0;top:calc(100% + 10px);background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:180px;z-index:999;overflow:hidden;animation:fadeDown .2s ease}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .dropdown-menu a{display:flex;align-items:center;gap:10px;padding:11px 18px;color:#333;text-decoration:none;font-size:11px;font-weight:600;text-transform:uppercase;transition:background .2s}
@@ -515,159 +621,119 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 }
 </style>
 <style>
-.dropdown-menu { display: none !important; }
+.dropdown-menu { display: none; }
 .dropdown-menu.abierto { display: block !important; }
 </style>
 
 <script>
-function verificarCoincidencia() {
-    const nueva = document.getElementById('mpPw2').value;
-    const confirmar = document.getElementById('mpPw3').value;
-    const msg = document.getElementById('msg-confirmar');
-    if (!confirmar) { msg.textContent = ''; return; }
-    if (nueva === confirmar) {
-        msg.style.color = '#27500A';
-        msg.textContent = '✅ Las contraseñas coinciden';
-    } else {
-        msg.style.color = '#C0392B';
-        msg.textContent = '❌ Las contraseñas no coinciden';
-    }
-}
 
-function limpiarErrorActual() {
-    const el = document.getElementById('mpPw1');
-    if (el) { el.style.borderColor = ''; el.style.boxShadow = ''; }
-}
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleCartBtn = document.getElementById('toggleCart');
+    const closeCartBtn = document.getElementById('closeCart');
+    const cartPanel = document.getElementById('cartPanel');
 
-function configurarDocumento(limpiar) {
-    const tipoDoc = document.getElementById('Tdocumento');
-    const numDoc  = document.getElementById('Ndocumento');
-    if (!tipoDoc || !numDoc) return;
-    const tipo = tipoDoc.value;
-    if (limpiar) numDoc.value = '';
-    if (tipo === 'Cédula de Ciudadanía') {
-        numDoc.setAttribute('inputmode','numeric'); numDoc.setAttribute('maxlength','10'); numDoc.setAttribute('minlength','6');
-        numDoc.oninput = function(){ this.value = this.value.replace(/[^0-9]/g,''); };
-    } else if (tipo === 'Tarjeta de Identidad') {
-        numDoc.setAttribute('inputmode','numeric'); numDoc.setAttribute('maxlength','11'); numDoc.setAttribute('minlength','10');
-        numDoc.oninput = function(){ this.value = this.value.replace(/[^0-9]/g,''); };
-    } else if (tipo === 'Cédula de Extranjería') {
-        numDoc.setAttribute('inputmode','numeric'); numDoc.setAttribute('maxlength','10'); numDoc.setAttribute('minlength','6');
-        numDoc.oninput = function(){ this.value = this.value.replace(/[^0-9]/g,''); };
-    } else if (tipo === 'Pasaporte') {
-        numDoc.setAttribute('inputmode','text'); numDoc.setAttribute('maxlength','9'); numDoc.setAttribute('minlength','6');
-        numDoc.oninput = function(){ this.value = this.value.replace(/[^a-zA-Z0-9]/g,''); };
-    } else {
-        numDoc.setAttribute('maxlength','12');
-        numDoc.oninput = function(){};
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    const dd = document.querySelector('.perfil-dropdown');
-    const mn = document.querySelector('.dropdown-menu');
-    if (dd && mn) {
-        dd.querySelector('.btn-perfil').addEventListener('click', e => {
-            e.stopPropagation();
-            mn.classList.toggle('abierto');
+    
+    if (toggleCartBtn && cartPanel) {
+        toggleCartBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            cartPanel.classList.add('active');
         });
-        document.addEventListener('click', () => mn.classList.remove('abierto'));
-    }
-
-    /* Tipo de documento */
-    const tipoDoc = document.getElementById('Tdocumento');
-    if (tipoDoc) {
-        tipoDoc.addEventListener('change', () => configurarDocumento(true));
-        configurarDocumento(false);
     }
 
     
-    const btnCart   = document.getElementById('toggleCart');
-    const btnClose  = document.getElementById('closeCart');
-    const cartPanel = document.getElementById('cartPanel');
-    if (btnCart  && cartPanel) btnCart.addEventListener('click', e => { e.preventDefault(); cartPanel.classList.add('active'); });
-    if (btnClose && cartPanel) btnClose.addEventListener('click', () => cartPanel.classList.remove('active'));
+    if (closeCartBtn && cartPanel) {
+        closeCartBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            cartPanel.classList.remove('active');
+        });
+    }
 
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            cartPanel?.classList.remove('active');
-            cerrarModalPerfil();
+    
+    document.addEventListener('click', function(e) {
+        if (cartPanel && cartPanel.classList.contains('active')) {
+            if (!cartPanel.contains(e.target) && !toggleCartBtn.contains(e.target)) {
+                cartPanel.classList.remove('active');
+            }
         }
     });
-
-    <?php if (($modalError || $modalSuccess) && $_SERVER['REQUEST_METHOD'] === 'POST'): ?>
-    abrirModalPerfil();
-    mpSwitchTab('<?= $modalTab ?>');
-    <?php endif; ?>
 });
 
+
+function verFactura() {
+    console.log("Abriendo visualización de factura...");
+    alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
+}
+
+function vaciarCarrito() {
+    if (confirm("¿Estás seguro de que deseas vaciar por completo tu carrito de compras?")) {
+        console.log("Vaciando carrito...");
+        
+        const cartItems = document.getElementById('cartItems');
+        const emptyCart = document.getElementById('emptyCart');
+        const cartTotal = document.getElementById('cartTotal');
+        const badgeCarrito = document.getElementById('badge-carrito');
+        const btnCheckout = document.getElementById('btnCheckout');
+
+        if (cartItems && emptyCart) {
+            cartItems.innerHTML = '';
+            cartItems.appendChild(emptyCart);
+        }
+        if (cartTotal) cartTotal.textContent = '$0';
+        if (badgeCarrito) badgeCarrito.textContent = '0';
+        if (btnCheckout) btnCheckout.disabled = true;
+    }
+}
+
+function seleccionarMetodoPago() {
+    console.log("Abriendo opciones de método de pago...");
+    alert("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
+}
+
+
 function abrirModalPerfil() {
-    document.getElementById('mpOverlay')?.classList.add('mp-show');
-    document.getElementById('mpPanel')?.classList.add('mp-show');
-    document.body.style.overflow = 'hidden';
+    const overlay = document.getElementById('mpOverlay');
+    const panel = document.getElementById('mpPanel');
+    if(overlay && panel) {
+        overlay.classList.add('mp-show');
+        panel.classList.add('mp-show');
+    }
 }
 
 function cerrarModalPerfil() {
-    document.getElementById('mpOverlay')?.classList.remove('mp-show');
-    document.getElementById('mpPanel')?.classList.remove('mp-show');
-    document.body.style.overflow = '';
-    document.querySelectorAll('.mp-alert').forEach(a => a.remove());
-}
-
-function mpSwitchTab(id) {
-    ['datos','pwd','info'].forEach(k => {
-        document.getElementById('mp-panel-'+k)?.classList.add('mp-hidden');
-        const cap = k.charAt(0).toUpperCase()+k.slice(1);
-        document.getElementById('mpTab'+cap)?.classList.remove('mp-tab-active');
-    });
-    document.getElementById('mp-panel-'+id)?.classList.remove('mp-hidden');
-    const cap = id.charAt(0).toUpperCase()+id.slice(1);
-    document.getElementById('mpTab'+cap)?.classList.add('mp-tab-active');
-}
-
-function mpTogglePW(id, btn) {
-    const el = document.getElementById(id);
-    const show = el.type === 'password';
-    el.type = show ? 'text' : 'password';
-    btn.textContent = show ? 'Ocultar' : 'Mostrar';
-}
-
-function mpSetChip(id, s) {
-    const map = { 'mpc-len':'longitud','mpc-may':'mayuscula','mpc-num':'numero','mpc-sym':'especial' };
-    const labels = { 'mpc-len':'Mínimo 8 caracteres','mpc-may':'Al menos una mayúscula','mpc-num':'Al menos un número','mpc-sym':'Al menos un símbolo (@, #, $, etc.)' };
-    const el = document.getElementById(map[id]);
-    if (!el) return;
-    el.style.color = s==='ok'?'#27500A':s==='bad'?'#C0392B':'#999';
-    el.textContent = (s==='ok'?'✅ ':s==='bad'?'❌ ':'⏳ ') + labels[id];
-}
-
-function mpCheckRules(v) {
-    const f = v.length > 0;
-    const len = v.length >= 8, may = /[A-Z]/.test(v), num = /[0-9]/.test(v), sym = /[@#$%^&*()\-_=+!]/.test(v);
-    mpSetChip('mpc-len', !f?'':len?'ok':'bad');
-    mpSetChip('mpc-may', !f?'':may?'ok':'bad');
-    mpSetChip('mpc-num', !f?'':num?'ok':'bad');
-    mpSetChip('mpc-sym', !f?'':sym?'ok':'bad');
-    const score = [len,may,num,sym].filter(Boolean).length;
-    const progreso = document.getElementById('progreso');
-    if (progreso) {
-        progreso.style.width = (score*25)+'%';
-        progreso.style.background = ['#e63946','#ff9f1c','#2ec4b6','#27ae60'][score-1]||'#e0e0e0';
+    const overlay = document.getElementById('mpOverlay');
+    const panel = document.getElementById('mpPanel');
+    if(overlay && panel) {
+        overlay.classList.remove('mp-show');
+        panel.classList.remove('mp-show');
     }
 }
 
-function validarFormPassword() {
-    const nueva = document.getElementById('mpPw2').value;
-    const confirmar = document.getElementById('mpPw3').value;
-    if (nueva !== confirmar) {
-        const msg = document.getElementById('msg-confirmar');
-        msg.style.color = '#C0392B';
-        msg.textContent = '❌ Las contraseñas no coinciden';
-        document.getElementById('mpPw3').focus();
-        return false;
+function mpSwitchTab(tab) {
+    const panelDatos = document.getElementById('mp-panel-datos');
+    const panelPwd = document.getElementById('mp-panel-pwd');
+    const panelInfo = document.getElementById('mp-panel-info');
+    
+    const tabDatos = document.getElementById('mpTabDatos');
+    const tabPwd = document.getElementById('mpTabPwd');
+    const tabInfo = document.getElementById('mpTabInfo');
+
+    if(panelDatos) panelDatos.classList.add('mp-hidden');
+    if(panelPwd) panelPwd.classList.add('mp-hidden');
+    if(panelInfo) panelInfo.classList.add('mp-hidden');
+
+    if(tabDatos) tabDatos.classList.remove('mp-tab-active');
+    if(tabPwd) tabPwd.classList.remove('mp-tab-active');
+    if(tabInfo) tabInfo.classList.remove('mp-tab-active');
+
+    if (tab === 'datos') {
+        if(panelDatos) panelDatos.classList.remove('mp-hidden');
+        if(tabDatos) tabDatos.classList.add('mp-tab-active');
+    } else if (tab === 'pwd') {
+        if(panelPwd) panelPwd.classList.remove('mp-hidden');
+        if(tabPwd) tabPwd.classList.add('mp-tab-active');
+    } else if (tab === 'info') {
+        if(panelInfo) panelInfo.classList.remove('mp-hidden');
+        if(tabInfo) tabInfo.classList.add('mp-tab-active');
     }
-    if (nueva.length < 8) { alert('La contraseña debe tener al menos 8 caracteres.'); return false; }
-    return true;
 }
 </script>

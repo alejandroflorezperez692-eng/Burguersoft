@@ -51,6 +51,7 @@ foreach ($filas as $f) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Pedidos – Burguersoft</title>
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700;900&display=swap">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
@@ -60,8 +61,8 @@ foreach ($filas as $f) {
             --brand-d: #c96d12;
             --dark:    #f5f2f0;
             --mid:     #2e1f0a;
-            --text:    #f5ede0;
-            --muted:   #a89070;
+            --text:    #ecebe9;
+            --muted:   #353331;
             --card-bg: #241609;
             --border:  rgba(232,130,26,.18);
             --radius:  12px;
@@ -107,6 +108,13 @@ foreach ($filas as $f) {
             font-weight: 700;
             letter-spacing: 1px;
         }
+        .navbar-divider {
+    display: inline-block;
+    width: 2px;
+    height: 40px;
+    background-color: var(--brand);
+    margin: 0 10px;
+}
         .btn-regresar {
             padding: 8px 22px;
             border: 2px solid var(--brand);
@@ -147,7 +155,7 @@ foreach ($filas as $f) {
         .pedidos-header p {
             color: var(--muted);
             margin-top: 6px;
-            font-size: .95rem;
+            font-size: 1.04rem;
         }
 
         .pedidos-empty {
@@ -253,57 +261,6 @@ foreach ($filas as $f) {
             font-weight: 700;
         }
 
-        footer {
-            background: #0d0804;
-            border-top: 1px solid var(--border);
-            padding: 40px 32px 0;
-            margin-top: auto;
-        }
-        .footer-container {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
-            justify-content: space-between;
-            padding-bottom: 30px;
-        }
-        .footer-brand { display: flex; align-items: flex-start; gap: 14px; }
-        .footer-logo { width: 54px; height: 54px; object-fit: contain; }
-        .footer-brand-text h3 {
-            font-family: 'Playfair Display', serif;
-            color: var(--brand);
-            font-size: 1.1rem;
-            margin-bottom: 6px;
-        }
-        .footer-brand-text p { color: var(--muted); font-size: .85rem; max-width: 220px; line-height: 1.5; }
-
-        .footer-section h4 {
-            font-family: 'Playfair Display', serif;
-            color: var(--brand);
-            font-size: 1rem;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-        }
-        .footer-horarios { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-        .footer-horarios li {
-            display: flex;
-            justify-content: space-between;
-            gap: 24px;
-            font-size: .85rem;
-            color: var(--muted);
-        }
-        .footer-horarios li span:first-child { color: var(--text); font-weight: 700; }
-
-        .footer-bottom {
-            border-top: 1px solid var(--border);
-            text-align: center;
-            padding: 14px 0;
-            font-size: .78rem;
-            color: var(--muted);
-        }
-
         .acc-fab {
             position: fixed;
             bottom: 24px;
@@ -340,14 +297,8 @@ foreach ($filas as $f) {
     </style>
 </head>
 <body>
-
-<nav class="navbar">
-    <a class="navbar-brand" href="../index.php">
-        <img src="../estilos/img/icono.png" alt="Logo Burguersoft">
-        <span>El Oriente</span>
-    </a>
-    <a class="btn-regresar" href="javascript:history.back()">Regresar</a>
-</nav>
+<link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css">
+<?php include __DIR__ . '/../includes/header_publico.php'; ?>
 
 <div class="pedidos-page">
 
@@ -358,7 +309,7 @@ foreach ($filas as $f) {
 
     <?php if (empty($pedidos)): ?>
         <div class="pedidos-empty">
-            <div class="icon">🍔</div>
+            <div class="icon"></div>
             <p>Aún no tienes pedidos registrados.</p>
             <a href="/burguersoft/php/Ir al Menu.php">Ver el menú</a>
         </div>
@@ -423,18 +374,21 @@ foreach ($filas as $f) {
 <footer>
     <div class="footer-container">
         <div class="footer-brand">
-            <img src="../estilos/img/icono.png" alt="Logo El Oriente" class="footer-logo">
             <div class="footer-brand-text">
-                <h3>El Oriente</h3>
+                <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;margin-top:-30px;">
+                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <hr>
+                    <h3 style="margin:6px;">El Oriente</h3>
+                </div>
                 <p>El sabor auténtico de El Oriente. Calidad y servicio en cada mordida.</p>
             </div>
         </div>
         <div class="footer-section">
-            <h4>Horarios de Atención</h4>
+            <h4>Horarios de atención</h4>
             <ul class="footer-horarios">
-                <li><span>Lunes – Viernes:</span><span>3:30 PM – 10:00 PM</span></li>
-                <li><span>Sábado:</span><span>3:00 PM – 11:00 PM</span></li>
-                <li><span>Domingo:</span><span>3:00 PM – 10:00 PM</span></li>
+                <li><span>Lunes – Viernes:</span> <span>3:30 PM – 10:00 PM</span></li>
+                <li><span>Sábado:</span> <span>3:00 PM – 11:00 PM</span></li>
+                <li><span>Domingo:</span> <span>3:00 PM – 10:00 PM</span></li>
             </ul>
         </div>
     </div>

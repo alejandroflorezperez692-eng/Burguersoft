@@ -664,7 +664,7 @@ $cat_icons = [
                     </div>
                     <div class="field">
                         <label>Cantidad</label>
-                        <input type="text" id="catidad" onkeypress="solonumeros(event)" placeholder="Ej: 10" oninput="actualizarEstado(this.value)">
+                        <input type="text" id="cantidad" onkeypress="solonumeros(event)" placeholder="Ej: 10" oninput="actualizarEstado(this.value)">
                     </div>
                     <div class="field">
                         <label>Categoría *</label>
@@ -933,7 +933,7 @@ document.getElementById('formProducto').addEventListener('submit', async e => {
     const descripcion = document.getElementById('descripcion').value.trim();
     const categoria   = document.getElementById('categoria').value;
     const estado      = document.getElementById('estado').value;
-    const catidad     = document.getElementById('catidad').value.trim();
+    const cantidad    = document.getElementById('cantidad').value.trim();
     const file        = document.getElementById('prodImagenFile').files[0];
 
     if (!id && !file) { toast('La imagen es obligatoria para un producto nuevo', 'err'); return; }
@@ -944,7 +944,7 @@ document.getElementById('formProducto').addEventListener('submit', async e => {
     fd.append('descripcion', descripcion);
     fd.append('categoria',   categoria);
     fd.append('estado',      estado);
-    fd.append('catidad',     catidad || '0');
+    fd.append('cantidad',    cantidad || '0');
 
     if (file) fd.append('imagen', file);
 
@@ -994,8 +994,8 @@ function prepararEdicion(id) {
     document.getElementById('descripcion').value = p.descripcion || '';
     document.getElementById('categoria').value   = p.categoria;
     document.getElementById('estado').value      = p.estado;
-    document.getElementById('catidad').value     = p.catidad || '0';
-    actualizarEstado(p.catidad || '0');
+    document.getElementById('cantidad').value     = p.cantidad || '0';
+    actualizarEstado(p.cantidad || '0');
     document.getElementById('prodImagenActual').value = p.img || '';
 
     if (p.img) {

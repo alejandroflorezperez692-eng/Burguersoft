@@ -156,6 +156,13 @@ $navActivo = 'marca';
             text-overflow: ellipsis;
         }
 
+        .marca-id {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-400);
+            margin-top: 2px;
+        }
+
         .estado-dot {
             display: inline-flex;
             align-items: center;
@@ -370,7 +377,7 @@ $navActivo = 'marca';
             z-index: 2;
         }
 
-        .detalle-close:hover { background: var(--border); color: var(--text-900); }
+        .detalle-close:hover { color: var(--text-900); }
 
         .detalle-content {
             display: flex;
@@ -457,6 +464,7 @@ $navActivo = 'marca';
 
         .detalle-logo-flotante {
             position: absolute;
+            border-radius: 50px;
             right: -24px;
             top: 50%;
             transform: translateY(-50%) scale(0) rotate(-20deg);
@@ -640,7 +648,10 @@ function renderMarcas(lista) {
                 <img src="${m.img}" alt="${m.nombre}" onerror="this.src='../estilos/img/default.jpg'">
             </div>
             <div class="marca-body">
-                <div class="marca-nombre">${m.nombre}</div>
+                <div>
+                    <div class="marca-nombre">${m.nombre}</div>
+                    <div class="marca-id">#${m.id}</div>
+                </div>
                 <span class="estado-dot ${estadoClass(m.estado)}">${m.estado}</span>
             </div>
         </div>

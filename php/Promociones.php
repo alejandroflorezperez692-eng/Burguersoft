@@ -276,7 +276,7 @@ $navActivo = 'promociones';
             margin-bottom: 10px;
             scrollbar-width: thin;
         }
-
+        
         .prod-item {
             display: flex;
             align-items: center;

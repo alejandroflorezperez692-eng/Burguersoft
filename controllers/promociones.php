@@ -20,7 +20,7 @@ if ($method === 'GET') {
 
     if ($accion === 'productos_promo' && $id) {
         $s = $pdo->prepare(
-            "SELECT producto_id FROM promocion_producto WHERE promocion_id = ?"
+            "SELECT id_producto FROM promocion_producto WHERE id_promocion = ?"
         );
         $s->execute([$id]);
         jsonResponse($s->fetchAll(PDO::FETCH_COLUMN));
@@ -36,8 +36,8 @@ if ($method === 'GET') {
         $s = $pdo->prepare(
             "SELECT p.id, p.nombre, p.valor, p.img
              FROM promocion_producto pp
-             JOIN producto p ON p.id = pp.producto_id
-             WHERE pp.promocion_id = ?"
+             JOIN producto p ON p.id = pp.id_producto
+             WHERE pp.id_promocion = ?"
         );
         $s->execute([$promo['id']]);
         $promo['productos'] = $s->fetchAll();
@@ -79,7 +79,7 @@ if ($method === 'POST' && ($_POST['_method'] ?? '') !== 'PUT') {
                     $fecha_inicio ?: null, $fecha_fin ?: null]);
         $promo_id = (int)$pdo->lastInsertId();
 
-        $ins   = $pdo->prepare("INSERT INTO promocion_producto (promocion_id, producto_id) VALUES (?, ?)");
+        $ins   = $pdo->prepare("INSERT INTO promocion_producto (id_promocion, id_producto) VALUES (?, ?)");
         $check = $pdo->prepare("SELECT id FROM producto WHERE id = ?");
         foreach ($productos_ids as $pid) {
             $pid = (int)$pid;
@@ -133,9 +133,9 @@ if ($method === 'PUT' || ($method === 'POST' && ($_POST['_method'] ?? '') === 'P
         )->execute([$nombre, $descripcion, $precio, $imagen, $estado,
                     $fecha_inicio ?: null, $fecha_fin ?: null, $id]);
 
-        $pdo->prepare("DELETE FROM promocion_producto WHERE promocion_id = ?")->execute([$id]);
+        $pdo->prepare("DELETE FROM promocion_producto WHERE id_promocion = ?")->execute([$id]);
 
-        $ins   = $pdo->prepare("INSERT INTO promocion_producto (promocion_id, producto_id) VALUES (?, ?)");
+        $ins   = $pdo->prepare("INSERT INTO promocion_producto (id_promocion, id_producto) VALUES (?, ?)");
         $check = $pdo->prepare("SELECT id FROM producto WHERE id = ?");
         foreach ($productos_ids as $pid) {
             $pid = (int)$pid;
@@ -157,7 +157,7 @@ if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     $pdo->beginTransaction();
     try {
-        $pdo->prepare("DELETE FROM promocion_producto WHERE promocion_id = ?")->execute([$id]);
+        $pdo->prepare("DELETE FROM promocion_producto WHERE id_promocion = ?")->execute([$id]);
         $pdo->prepare("DELETE FROM promocion WHERE id = ?")->execute([$id]);
         $pdo->commit();
         jsonResponse(['success' => true]);

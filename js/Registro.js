@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const nombre           = document.getElementById("nombre").value.trim();
             const apellido         = document.getElementById("apellido").value.trim();
             const correo           = document.getElementById("correo").value.trim();
-            const tipoDocumento    = document.getElementById("tipo-documento").value.trim();
-            const numeroDocumento  = document.getElementById("numero-documento").value.trim();
+            const tipoDocumento    = document.getElementById("Tdocumento").value.trim();
+            const numeroDocumento  = document.getElementById("Ndocumento").value.trim();
             const password         = document.getElementById("password").value.trim();
             const confirmar        = document.getElementById("confirmar-password").value.trim();
 
