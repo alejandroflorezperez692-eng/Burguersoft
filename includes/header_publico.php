@@ -483,7 +483,7 @@ body {
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
 
-/* ESTILOS NUEVOS PARA LOS BOTONES DEL CARRITO */
+
 .cart-actions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
