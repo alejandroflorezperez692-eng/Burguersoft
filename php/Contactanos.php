@@ -35,7 +35,7 @@ $paginaActiva = 'contacto';
             en todas nuestras plataformas. ¡Con gusto te atendemos!
             <br><br>
 
-            ⏰ Atendemos mensajes de Lunes a Domingo · 3:00 PM – 10:00 PM
+            Atendemos mensajes de Lunes a Domingo · 3:00 PM – 10:00 PM
         </p>
         
 

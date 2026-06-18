@@ -148,7 +148,7 @@ foreach ($filas as $f) {
             animation: fadeDown .5s ease both;
         }
         .pedidos-header h1 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Lato', 'Segoe UI', sans-serif;
             font-size: clamp(1.8rem, 4vw, 2.6rem);
             color: var(--brand);
         }
