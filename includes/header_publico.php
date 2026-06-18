@@ -143,8 +143,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <span>Total a pagar:</span>
                     <strong id="cartTotal">$0</strong>
                 </div>
-
-
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
                     Finalizar Compra
                 </button>
