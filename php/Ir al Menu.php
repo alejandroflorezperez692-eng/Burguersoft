@@ -194,7 +194,6 @@ session_start();
 
 <?php include __DIR__ . '/../includes/header_publico.php'; ?>
 
-<<<<<<< HEAD
 <div id="pedido-modal" role="dialog" aria-modal="true" aria-label="Seleccionar método de pedido">
     <div class="modal-contenido">
         <h3>¿Cómo deseas realizar el pedido?</h3>
@@ -214,67 +213,6 @@ session_start();
         </div>
         <button type="button" class="btn-cerrar-modal" onclick="cerrarModal()">Cancelar</button>
     </div>
-=======
-    <section class="hero">
-        <div class="carousel-container">
-            <div class="carousel-slide active" style="background-image: url('https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/4e4293857c03d819e4ae51de1e86d66a.jpg');"></div>
-            <div class="carousel-slide" style="background-image: url('https://ranchera.com.co/wp-content/uploads/2022/11/perro-colombiano-1.jpg');"></div>
-            <div class="carousel-slide" style="background-image: url('https://chefstv.net/wp-content/uploads/2024/03/0045-empanadas-saltenas-fritas-wide-web.webp');"></div>
-            <div class="carousel-slide" style="background-image: url('https://www.elespectador.com/resizer/v2/4YMEEW2QBVGALOUC7LSPUFNKMU.jpg?auth=1913090d3e141e8a3ccce35509259201363e9dddf853024e2f30ac71ce6383a9&width=1110&height=739&smart=true&quality=60');"></div>
-        </div>
-    </section>
-
-<h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
-
-<div id="productos-container">
-
-    <?php if (empty($grupos)): ?>
-        <div class="menu-vacio">
-            El menú está vacío por ahora. ¡Vuelve pronto!
-        </div>
-
-    <?php else: ?>
-
-        <?php foreach ($grupos as $categoria => $items): ?>
-            <h3 class="cat-titulo"><?= hv($categoria) ?></h3>
-            <div class="productos-grid">
-                <?php foreach ($items as $p): ?>
-                <div class="prod-card">
-                    <img class="prod-card-img"
-                         src="<?= hv($p['img']) ?>"
-                         alt="<?= hv($p['nombre']) ?>"
-                         onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
-                    <div class="prod-card-body">
-                        <div class="prod-card-nombre"><?= hv($p['nombre']) ?></div>
-                        <div class="prod-card-desc"><?= hv($p['descripcion']) ?></div>
-                    </div>
-                    <div class="prod-card-footer">
-                        <span class="prod-card-precio"><?= formatCOP($p['valor']) ?></span>
-                        <?php if (isset($_SESSION['id_usuario'])): ?>
-                        <button type="button" class="btn-add" title="Agregar al carrito"
-                            onclick="agregarAlCarrito(
-                                <?= (int)$p['id'] ?>,
-                                '<?= hv($p['nombre']) ?>',
-                                <?= (float)$p['valor'] ?>,
-                                '<?= hv($p['img']) ?>',
-                                'producto'
-                            )">+</button>
-                        <?php else: ?>
-                        <a href="/burguersoft/php/login.php">
-                            <button type="button" class="btn-add" title="Inicia sesión para agregar">
-                                <img style="width:18px;height:18px;filter:invert(1);pointer-events:none;" src="../estilos/img/bloquear.png" alt="Login">
-                            </button>
-                        </a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endforeach; ?>
-
-    <?php endif; ?>
-
->>>>>>> d9d8ddf1aa6a892932dc0460027b7227c73522ee
 </div>
 
 <div id="mesa-modal" role="dialog" aria-modal="true" aria-label="Número de mesa">
@@ -289,7 +227,6 @@ session_start();
     </div>
 </div>
 
-<<<<<<< HEAD
 <div id="invoice-overlay" role="dialog" aria-hidden="true">
     <div id="invoice-box">
         <div id="invoice-content"></div>
@@ -302,9 +239,6 @@ session_start();
 
 <h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
 <div id="productos-container"><div class="cargando">⏳ Cargando menú…</div></div>
-=======
-<script src="/burguersoft/js/Menu.js"></script>
->>>>>>> d9d8ddf1aa6a892932dc0460027b7227c73522ee
 
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
