@@ -493,7 +493,7 @@ body {
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
 
-/* Estilos de los botones del carrito agregados */
+
 .cart-actions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -613,13 +613,13 @@ body {
 }
 </style>
 <style>
-/* Forzado de visualización del menú dropdown de perfil */
+
 .dropdown-menu { display: none; }
 .dropdown-menu.abierto { display: block !important; }
 </style>
 
 <script>
-// Scripts encargados de controlar los comportamientos del panel de carrito y perfil
+
 document.addEventListener('DOMContentLoaded', function() {
     const toggleCartBtn = document.getElementById('toggleCart');
     const closeCartBtn = document.getElementById('closeCart');
@@ -648,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Funcionalidades vinculadas a los nuevos botones de acción
+
 function verFactura() {
     console.log("Abriendo visualización de factura...");
     alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
