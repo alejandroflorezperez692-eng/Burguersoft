@@ -143,6 +143,19 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <span>Total a pagar:</span>
                     <strong id="cartTotal">$0</strong>
                 </div>
+
+                <div class="cart-actions-grid">
+                    <button type="button" class="btn-cart-action btn-vaciar" onclick="vaciarCarrito()">
+                        Vaciar Carrito
+                    </button>
+                    <button type="button" class="btn-cart-action" onclick="verFactura()">
+                        Ver Factura
+                    </button>
+                    <button type="button" class="btn-cart-action btn-pago" onclick="seleccionarMetodoPago()">
+                        Método de Pago
+                    </button>
+                </div>
+
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
                     Finalizar Compra
                 </button>
@@ -179,7 +192,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
         </div>
 
         <script>
-           
             document.addEventListener('DOMContentLoaded', function() {
                 const btnDropdown = document.getElementById('btnPerfilDropdown');
                 const menuDropdown = document.getElementById('perfilDropdownMenu');
@@ -256,7 +268,6 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
             <div class="mp-alert mp-alert-ok">✓ <?= hv($modalSuccess) ?></div>
         <?php endif; ?>
 
-        
         <div class="mp-tabs-container">
             <button class="mp-tab mp-tab-active" id="mpTabDatos" onclick="mpSwitchTab('datos')">
                 <img class="mp-tab-icon" src="/burguersoft/estilos/img/avatar-de-usuario.png" alt="">
@@ -272,7 +283,6 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
             </button>
         </div>
 
-        
         <div class="mp-tab-panel" id="mp-panel-datos">
             <form method="POST" action="">
                 <input type="hidden" name="accion_perfil" value="datos"/>
@@ -483,7 +493,7 @@ body {
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
 
-
+/* Estilos de los botones del carrito agregados */
 .cart-actions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -603,18 +613,18 @@ body {
 }
 </style>
 <style>
+/* Forzado de visualización del menú dropdown de perfil */
 .dropdown-menu { display: none; }
 .dropdown-menu.abierto { display: block !important; }
 </style>
 
 <script>
-
+// Scripts encargados de controlar los comportamientos del panel de carrito y perfil
 document.addEventListener('DOMContentLoaded', function() {
     const toggleCartBtn = document.getElementById('toggleCart');
     const closeCartBtn = document.getElementById('closeCart');
     const cartPanel = document.getElementById('cartPanel');
 
-    
     if (toggleCartBtn && cartPanel) {
         toggleCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -622,7 +632,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    
     if (closeCartBtn && cartPanel) {
         closeCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -630,7 +639,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    
     document.addEventListener('click', function(e) {
         if (cartPanel && cartPanel.classList.contains('active')) {
             if (!cartPanel.contains(e.target) && !toggleCartBtn.contains(e.target)) {
@@ -640,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
+// Funcionalidades vinculadas a los nuevos botones de acción
 function verFactura() {
     console.log("Abriendo visualización de factura...");
     alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
@@ -670,7 +678,6 @@ function seleccionarMetodoPago() {
     console.log("Abriendo opciones de método de pago...");
     alert("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
 }
-
 
 function abrirModalPerfil() {
     const overlay = document.getElementById('mpOverlay');
