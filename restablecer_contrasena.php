@@ -14,7 +14,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&display=swap">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva contraseña</title>
+    <title>BURGUERSOFT - Nueva contraseña</title>
     <link rel="stylesheet" href="estilos/estilos-login.css">
     <link rel="icon" href="estilos/img/icono.png" type="image/x-icon">
     <style>
@@ -52,9 +52,8 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 
         <form method="POST" action="guardar_nueva_contrasena.php" id="formNuevaPass">
 
-<<<<<<< HEAD
            <div class="campo">
-                <label for="password">CONTRASEÑA*</label>
+                <label for="password">NUEVACONTRASEÑA*</label>
                 <div style="position:relative;">
                     <input type="password" id="password" name="password" required
                         placeholder="Mínimo 8 caracteres"
@@ -99,29 +98,6 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
                 </div>
                 <p id="msg-confirmar" style="font-size:12px;margin-top:5px;min-height:16px;"></p>
             </div>
-=======
-            <h2>NUEVA CONTRASEÑA</h2>
-            <div class="input-wrapper">
-                <input type="password" name="nueva_contrasena" id="nuevaPass" class="input"
-                       placeholder="Mínimo 8 caracteres" required minlength="8">
-                <button type="button" class="btn-toggle-pass" id="toggleNueva"
-                        onclick="togglePassword('nuevaPass', 'toggleNueva')">Mostrar</button>
-            </div>
-            <div class="fuerza-bar" id="fuerzaBar"></div>
-
-            <h2>CONFIRMAR CONTRASEÑA*</h2>
-            <div class="input-wrapper">
-                <input type="password" name="confirmar_contrasena" id="confirmaPass" class="input"
-                       placeholder="Repite la contraseña" required>
-                <button type="button" class="btn-toggle-pass" id="toggleConfirma"
-                        onclick="togglePassword('confirmaPass', 'toggleConfirma')">Mostrar</button>
-            </div>
-
-            <p id="matchMsg" style="font-size:13px;text-align:center;color:red;display:none;">
-                Las contraseñas no coinciden.
-            </p>
->>>>>>> 0ef390fcf575676a49658babda86ea85581ee587
-
             <button type="submit" class="btn-primario">Guardar contraseña</button>
         </form>
     </div>
