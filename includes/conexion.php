@@ -1,7 +1,7 @@
 <?php
 $db_host     = 'localhost';
 $db_usuario  = 'root';
-$db_password = '';
+$db_password = '46374491';
 $db_nombre   = 'burguersoft';
 
 $conn = new mysqli($db_host, $db_usuario, $db_password, $db_nombre);
