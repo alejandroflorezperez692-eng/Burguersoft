@@ -151,10 +151,13 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <button type="button" class="btn-cart-action" onclick="verFactura()">
                         Ver Factura
                     </button>
-                    <button type="button" class="btn-cart-action btn-pago" onclick="seleccionarMetodoPago()">
-                        Método de Pago
-                    </button>
-                    
+                    <select class="btn-cart-action btn-pago">
+                        <option value="">Método de Pago</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta</option>
+                        <option value="nequi">Nequi</option>
+                        <option value="daviplata">Daviplata</option>
+                    </select>
                 </div>
 
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
