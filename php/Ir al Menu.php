@@ -249,7 +249,6 @@ include __DIR__ . '/../includes/header_publico.php';
 ?>
 
 
-
 <h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
 
 <div id="productos-container">

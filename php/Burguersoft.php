@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 // Promociones activas
+$paginaActiva = 'inicio';
 $hoy = date('Y-m-d');
 $stmtPromo = $pdo->prepare(
     "SELECT id, nombre, descripcion, precio, imagen
@@ -716,7 +717,7 @@ async function cargarPromociones() {
                             <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
                             <button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
                                 onclick="window.location.href='/burguersoft/php/login.php'">
-                                🔒
+                                <img src="../estilos/img/bloquear.png" style="filter:invert(1); pointer-events:none; width:18px; height:18px;">
                             </button>
                         </div>
                     </div>
