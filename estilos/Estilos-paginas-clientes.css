@@ -147,15 +147,16 @@ header hr {
     transition: width var(--transicion);
 }
 
-.header-center a:hover {
+.header-center a:hover,
+.header-center a.activo {
     color: var(--color-acento);
-    background: var(--color-primario)
+    background: var(--color-primario);
 }
 
-.header-center a:hover::after {
+.header-center a:hover::after,
+.header-center a.activo::after {
     width: 60%;
 }
-
 
 .btn-sesion {
     background: var(--color-secundario);
