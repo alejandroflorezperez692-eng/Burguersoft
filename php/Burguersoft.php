@@ -2,7 +2,13 @@
 session_start();
 require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
-
+global $pdo;
+$stmtProd = $pdo->query(
+    "SELECT id, nombre, valor, descripcion, img, categoria
+     FROM producto
+     WHERE estado IN ('Disponible','Por agotarse')
+     ORDER BY categoria, nombre"
+);
 // Promociones activas
 $paginaActiva = 'inicio';
 $hoy = date('Y-m-d');

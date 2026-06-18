@@ -253,7 +253,7 @@ include __DIR__ . '/../includes/header_publico.php';
 
 <div id="productos-container">
 
-    <?php if (empty($grupos) && empty($promociones)): ?>
+    <?php if (empty($grupos)): ?>
         <div class="menu-vacio">
             El menú está vacío por ahora. ¡Vuelve pronto!
         </div>
