@@ -1,5 +1,6 @@
 <?php
 session_start();
+$paginaActiva = 'contacto';
 ?>
 
 <!DOCTYPE html>
