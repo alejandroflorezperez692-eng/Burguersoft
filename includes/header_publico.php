@@ -154,6 +154,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <button type="button" class="btn-cart-action btn-pago" onclick="seleccionarMetodoPago()">
                         Método de Pago
                     </button>
+                    
                 </div>
 
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
