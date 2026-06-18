@@ -3,17 +3,19 @@ var carrito = typeof carrito !== 'undefined' ? carrito : [];
 var pedidoRealizado = false;
 
 // ─── CARRITO ─────────────────────────────────────────────
+// DESPUÉS:
 function agregarAlCarrito(id, nombre, precio, img, tipo) {
     carrito.push({ id, nombre, precio: Number(precio), img, tipo });
     actualizarCarrito();
 
-    // Feedback visual en el botón
-    event.target.textContent = '✓';
-    event.target.style.background = '#27ae60';
-    setTimeout(() => {
-        event.target.textContent = '+';
-        event.target.style.background = '';
-    }, 800);
+    // Feedback visual
+    const btn = document.querySelector(`.btn-add[onclick*="${id}"]`);
+    if (btn) {
+        setTimeout(() => {
+            btn.textContent = '+';
+            btn.style.background = '';
+        }, 800);
+    }
 }
 
 function actualizarCarrito() {

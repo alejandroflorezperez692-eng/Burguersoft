@@ -248,6 +248,14 @@ $paginaActiva = 'menu';
 include __DIR__ . '/../includes/header_publico.php';
 ?>
 
+    <section class="hero">
+        <div class="carousel-container">
+            <div class="carousel-slide active" style="background-image: url('https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/4e4293857c03d819e4ae51de1e86d66a.jpg');"></div>
+            <div class="carousel-slide" style="background-image: url('https://ranchera.com.co/wp-content/uploads/2022/11/perro-colombiano-1.jpg');"></div>
+            <div class="carousel-slide" style="background-image: url('https://chefstv.net/wp-content/uploads/2024/03/0045-empanadas-saltenas-fritas-wide-web.webp');"></div>
+            <div class="carousel-slide" style="background-image: url('https://www.elespectador.com/resizer/v2/4YMEEW2QBVGALOUC7LSPUFNKMU.jpg?auth=1913090d3e141e8a3ccce35509259201363e9dddf853024e2f30ac71ce6383a9&width=1110&height=739&smart=true&quality=60');"></div>
+        </div>
+    </section>
 
 <h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
 
@@ -286,7 +294,9 @@ include __DIR__ . '/../includes/header_publico.php';
                             )">+</button>
                         <?php else: ?>
                         <a href="/burguersoft/php/login.php">
-                            <button type="button" class="btn-add" title="Inicia sesión para agregar">🔒</button>
+                            <button type="button" class="btn-add" title="Inicia sesión para agregar">
+                                <img style="width:18px;height:18px;filter:invert(1);pointer-events:none;" src="../estilos/img/bloquear.png" alt="Login">
+                            </button>
                         </a>
                         <?php endif; ?>
                     </div>
@@ -304,7 +314,7 @@ $checkout_modal = __DIR__ . '/../php/checkout_modal.php';
 if (file_exists($checkout_modal)) include $checkout_modal;
 ?>
 
-<script src="/../js/Menu.js"></script>
+<script src="/burguersoft/js/Menu.js"></script>
 
 <!-- Accesibilidad -->
 <div class="acc-panel" id="accPanel">
