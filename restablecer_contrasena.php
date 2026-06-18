@@ -22,6 +22,17 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
         .fuerza-bar.debil  { background:#e74c3c; width:33%; }
         .fuerza-bar.media  { background:#f39c12; width:66%; }
         .fuerza-bar.fuerte { background:#27ae60; width:100%; }
+        .input-wrapper { position:relative; display:flex; align-items:center; }
+        .input-wrapper .input { flex:1; padding-right:90px; }
+        .btn-toggle-pass {
+            position:absolute; right:8px;
+            background:#555; color:#fff;
+            border:none; border-radius:5px;
+            padding:5px 10px; font-size:12px;
+            cursor:pointer; white-space:nowrap;
+            transition:background .2s;
+        }
+        .btn-toggle-pass:hover { background:#333; }
     </style>
 </head>
 <body>
@@ -42,13 +53,21 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
         <form method="POST" action="guardar_nueva_contrasena.php" id="formNuevaPass">
 
             <h2>NUEVA CONTRASEÑA</h2>
-            <input type="password" name="nueva_contrasena" id="nuevaPass" class="input"
-                   placeholder="Mínimo 8 caracteres" required minlength="8">
+            <div class="input-wrapper">
+                <input type="password" name="nueva_contrasena" id="nuevaPass" class="input"
+                       placeholder="Mínimo 8 caracteres" required minlength="8">
+                <button type="button" class="btn-toggle-pass" id="toggleNueva"
+                        onclick="togglePassword('nuevaPass', 'toggleNueva')">Mostrar</button>
+            </div>
             <div class="fuerza-bar" id="fuerzaBar"></div>
 
             <h2>CONFIRMAR CONTRASEÑA</h2>
-            <input type="password" name="confirmar_contrasena" id="confirmaPass" class="input"
-                   placeholder="Repite la contraseña" required>
+            <div class="input-wrapper">
+                <input type="password" name="confirmar_contrasena" id="confirmaPass" class="input"
+                       placeholder="Repite la contraseña" required>
+                <button type="button" class="btn-toggle-pass" id="toggleConfirma"
+                        onclick="togglePassword('confirmaPass', 'toggleConfirma')">Mostrar</button>
+            </div>
 
             <p id="matchMsg" style="font-size:13px;text-align:center;color:red;display:none;">
                 Las contraseñas no coinciden.
@@ -90,6 +109,18 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 <script src="js/accesibilidad.js"></script>
 
     <script>
+    function togglePassword(inputId, btnId) {
+        const input = document.getElementById(inputId);
+        const btn   = document.getElementById(btnId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = 'Ocultar';
+        } else {
+            input.type = 'password';
+            btn.textContent = 'Mostrar';
+        }
+    }
+
     document.getElementById('nuevaPass').addEventListener('input', function () {
         const bar = document.getElementById('fuerzaBar');
         const v = this.value;
