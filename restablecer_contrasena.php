@@ -61,7 +61,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
             </div>
             <div class="fuerza-bar" id="fuerzaBar"></div>
 
-            <h2>CONFIRMAR CONTRASEÑA</h2>
+            <h2>CONFIRMAR CONTRASEÑA*</h2>
             <div class="input-wrapper">
                 <input type="password" name="confirmar_contrasena" id="confirmaPass" class="input"
                        placeholder="Repite la contraseña" required>
