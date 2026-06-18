@@ -98,7 +98,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
                 </div>
                 <p id="msg-confirmar" style="font-size:12px;margin-top:5px;min-height:16px;"></p>
             </div>
-            <button type="submit" class="btn-primario">Guardar contraseña</button>
+            <button type="submit" class="btn-primario">Cambiar contraseña</button>
         </form>
     </div>
 
