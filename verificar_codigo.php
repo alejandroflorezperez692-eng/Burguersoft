@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&display=swap">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificar código</title>
+    <title>BURGUERSOFT - Verificar código</title>
     <link rel="stylesheet" href="estilos/estilos-login.css">
     <link rel="icon" href="estilos/img/icono.png" type="image/x-icon">
     <style>

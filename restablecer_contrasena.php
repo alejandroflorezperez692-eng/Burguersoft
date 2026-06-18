@@ -146,7 +146,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
         <form method="POST" action="guardar_nueva_contrasena.php" id="formNuevaPass">
 
             <div class="campo">
-                <label for="password">CONTRASEÑA*</label>
+                <label for="password">NUEVA CONTRASEÑA*</label>
                 <div class="input-wrapper">
                     <input type="password" id="password" name="password" required
                            placeholder="Mínimo 8 caracteres">
