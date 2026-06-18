@@ -304,7 +304,7 @@ $checkout_modal = __DIR__ . '/../php/checkout_modal.php';
 if (file_exists($checkout_modal)) include $checkout_modal;
 ?>
 
-<script src="/burguersoft/js/carrito.js"></script>
+<script src="/../js/Menu.js"></script>
 
 <!-- Accesibilidad -->
 <div class="acc-panel" id="accPanel">
