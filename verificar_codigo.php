@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 require_once 'includes/conexion.php';
 require_once 'includes/funciones.php';
@@ -81,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="navbar">
-        <img src="estilos/img/icono.png" class="logo">
-        <a href="php/recuperar_contrasena.php" class="btn-regresar">Regresar</a>
+        <img src="estilos/img/icono.png" class="logo" alt="Logo">
+        <a href="recuperar_contrasena.php" class="btn-regresar">Regresar</a>
     </div>
 
     <div class="header-bar">INGRESA TU CÓDIGO</div>
@@ -103,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </p>
         <?php endif; ?>
 
-        <form method="POST" action="verificar_codigo.php" id="formCodigo">
+        <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" id="formCodigo">
             <div class="codigo-inputs">
                 <?php for ($i = 1; $i <= 6; $i++): ?>
                     <input type="text" name="d<?= $i ?>" id="d<?= $i ?>"
@@ -117,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <p style="color:#2c1810;margin-top:16px;font-size:14px;text-align:center;">
             ¿No recibiste el código?
-            <a href="php/recuperar_contrasena.php" style="color:#2c1810;font-weight:bold;">Enviar de nuevo</a>
+            <a href="recuperar_contrasena.php" style="color:#2c1810;font-weight:bold;">Enviar de nuevo</a>
         </p>
     </div>
 
@@ -159,19 +158,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     inputs.forEach((input, i) => {
         input.addEventListener('input', function () {
-            // Solo permitir números
             this.value = this.value.replace(/\D/g, '');
             if (this.value && i < inputs.length - 1) {
                 inputs[i + 1].focus();
             }
         });
         input.addEventListener('keydown', function (e) {
-            // Borrar retrocede al anterior
             if (e.key === 'Backspace' && !this.value && i > 0) {
                 inputs[i - 1].focus();
             }
         });
-        // Pegar el código completo de una vez
         input.addEventListener('paste', function (e) {
             e.preventDefault();
             const pegado = (e.clipboardData || window.clipboardData)
@@ -183,7 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
 
-    // Enfocar el primer input al cargar
     inputs[0].focus();
     </script>
 
