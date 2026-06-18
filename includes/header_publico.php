@@ -108,15 +108,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 
     <div class="header-right">
 
-        <button class="btn-icono" id="btnAccesibilidad" title="Accesibilidad">
-            <div class="icono-circulo">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 8v8M8 12h8"/>
-                </svg>
-            </div>
-        </button>
-
     <?php if ($logueado): ?>
         
         <button class="btn-icono" id="toggleCart" title="Carrito">
@@ -148,18 +139,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                 </div>
             </div>
             <div class="cart-footer">
-                <div class="cart-actions-grid">
-                    <button class="btn-cart-action btn-vaciar" onclick="vaciarCarrito()">
-                        🗑 Vaciar Carrito
-                    </button>
-                    <button class="btn-cart-action btn-pago" onclick="seleccionarMetodoPago()">
-                        💳 Método Pago
-                    </button>
-                    <button class="btn-cart-action btn-pago" style="grid-column: span 2;" onclick="verFactura()">
-                        📄 Ver Factura / Detalles
-                    </button>
-                </div>
-
                 <div class="subtotal">
                     <span>Total a pagar:</span>
                     <strong id="cartTotal">$0</strong>
@@ -199,6 +178,25 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
             </div>
         </div>
 
+        <script>
+           
+            document.addEventListener('DOMContentLoaded', function() {
+                const btnDropdown = document.getElementById('btnPerfilDropdown');
+                const menuDropdown = document.getElementById('perfilDropdownMenu');
+
+                if (btnDropdown && menuDropdown) {
+                    btnDropdown.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        menuDropdown.classList.toggle('abierto');
+                    });
+
+                    document.addEventListener('click', function() {
+                        menuDropdown.classList.remove('abierto');
+                    });
+                }
+            });
+        </script>
+
     <?php else: ?>
         <a href="/burguersoft/php/login.php" class="link-sesion">
             <button class="btn-sesion">
@@ -209,33 +207,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 
     </div>
 </header>
-
-<div class="acc-overlay" id="accOverlay" onclick="togglePanelAccesibilidad()"></div>
-<div class="acc-panel" id="accPanel" role="dialog" aria-label="Opciones de Accesibilidad">
-    <div class="acc-header">
-        <h3>Accesibilidad visual</h3>
-        <button class="acc-close" onclick="togglePanelAccesibilidad()">✕</button>
-    </div>
-    <div class="acc-body">
-        <div class="acc-option">
-            <span class="acc-opt-title">Modo de pantalla</span>
-            <button class="acc-btn-toggle" id="btnModoOscuro" onclick="toggleModoOscuro()">Activar Modo Oscuro</button>
-        </div>
-        <div class="acc-option">
-            <span class="acc-opt-title">Tamaño de fuente</span>
-            <div class="acc-btn-group">
-                <button onclick="cambiarFuente(0.9)">Pequeño</button>
-                <button class="active" id="btnFuenteNormal" onclick="cambiarFuente(1)">Normal</button>
-                <button onclick="cambiarFuente(1.15)">Grande</button>
-                <button onclick="cambiarFuente(1.3)">Muy Grande</button>
-            </div>
-        </div>
-        <div class="acc-option">
-            <span class="acc-opt-title">Puntero del mouse</span>
-            <button class="acc-btn-toggle" id="btnCursor" onclick="toggleCursorGrande()">Cursor Grande</button>
-        </div>
-    </div>
-</div>
 
 <?php if ($logueado && !empty($uModal)): ?>
 <?php 
@@ -486,61 +457,8 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
 body {
     overflow-x: hidden;
     width: 100%;
-    transition: font-size 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-/* --- CLASES GLOBALES DE ACCESIBILIDAD --- */
-body.dark-mode {
-    background-color: #121212 !important;
-    color: #f5f5f5 !important;
-}
-body.dark-mode header {
-    background-color: #1e1e1e !important;
-    border-bottom: 1px solid #333;
-}
-body.dark-mode .dropdown-menu, 
-body.dark-mode .cart-panel, 
-body.dark-mode .mp-panel,
-body.dark-mode .acc-panel {
-    background-color: #1e1e1e !important;
-    color: #f5f5f5 !important;
-}
-body.dark-mode .dropdown-menu a,
-body.dark-mode .mp-title,
-body.dark-mode .mp-label,
-body.dark-mode .acc-opt-title {
-    color: #e0e0e0 !important;
-}
-body.dark-mode .dropdown-menu a:hover {
-    background-color: #333 !important;
-}
-body.dark-mode input, body.dark-mode select {
-    background-color: #2d2d2d !important;
-    color: #fff !important;
-    border-color: #444 !important;
-}
-body.big-cursor, body.big-cursor a, body.big-cursor button, body.big-cursor select, body.big-cursor input {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24' fill='%23EF9F27' stroke='black' stroke-width='1'%3E%3Cpath d='M4.5 3V17l4-4 3 6 2.5-1.2-3-5.8 5.5-.3z'/%3E%3C/svg%3E"), auto !important;
-}
-
-/* --- ESTILOS DEL PANEL DE ACCESIBILIDAD --- */
-.acc-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 10010; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
-.acc-overlay.active { opacity: 1; pointer-events: all; }
-.acc-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: min(400px, 90vw); background: #fff; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 10011; opacity: 0; pointer-events: none; transition: all 0.25s ease; padding: 20px; }
-.acc-panel.active { opacity: 1; pointer-events: all; transform: translate(-50%, -50%) scale(1); }
-.acc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
-.acc-header h3 { margin: 0; font-size: 16px; color: #1C1410; }
-.acc-close { background: none; border: none; font-size: 16px; cursor: pointer; color: #7A6855; }
-.acc-body { display: flex; flex-direction: column; gap: 16px; }
-.acc-option { display: flex; flex-direction: column; gap: 6px; }
-.acc-opt-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #7A6855; letter-spacing: 0.03em; }
-.acc-btn-toggle { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #E0D5C5; background: #F7F2EA; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #1C1410; }
-.acc-btn-toggle.active { background: #EF9F27; color: #412402; border-color: #EF9F27; }
-.acc-btn-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.acc-btn-group button { padding: 8px 4px; font-size: 11px; font-weight: 600; border: 1px solid #E0D5C5; background: #F7F2EA; border-radius: 6px; cursor: pointer; }
-.acc-btn-group button.active { background: #BA7517; color: white; border-color: #BA7517; }
-
-/* Estilos previos existentes */
 .mp-tabs-container{display:flex;justify-content:space-around;margin-bottom:25px;border-bottom:1px solid #eee;padding-bottom:10px;}
 .mp-tab{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:10px 15px;border-radius:12px;transition:all 0.3s ease;color:#7A6855;font-weight:600;font-family:inherit;font-size:12px;}
 .mp-tab-active{background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.08);color:#BA7517;}
@@ -562,16 +480,58 @@ body.big-cursor, body.big-cursor a, body.big-cursor button, body.big-cursor sele
 .cart-footer{border-top:1px solid #eee;padding:20px}
 .subtotal{display:flex;justify-content:space-between;margin-bottom:15px;align-items:center}
 .subtotal strong{color:#000;font-size:24px}
-body.dark-mode .subtotal strong { color: #fff; }
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
 
-.cart-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.btn-cart-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 12px; font-family: inherit; font-size: 12px; font-weight: 600; border: 1px solid #E0D5C5; border-radius: 8px; cursor: pointer; background-color: #F7F2EA; color: #7A6855; transition: all 0.2s ease; }
-.btn-cart-action:hover { background-color: #E0D5C5; color: #1C1410; transform: translateY(-1px); }
-.btn-vaciar:hover { background-color: #FFF0EE; border-color: #F0A090; color: #C0392B; }
-.btn-pago { background-color: #fff; border-color: #E0D5C5; color: #BA7517; }
-.btn-pago:hover { background-color: #FAEEDA; border-color: #EF9F27; color: #412402; }
+/* ESTILOS NUEVOS PARA LOS BOTONES DEL CARRITO */
+.cart-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.btn-pago {
+    grid-column: 1 / -1;
+}
+.btn-cart-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #E0D5C5;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #F7F2EA;
+    color: #7A6855;
+    transition: all 0.2s ease;
+}
+.btn-cart-action:hover {
+    background-color: #E0D5C5;
+    color: #1C1410;
+    transform: translateY(-1px);
+}
+.btn-vaciar:hover {
+    background-color: #FFF0EE;
+    border-color: #F0A090;
+    color: #C0392B;
+}
+.btn-pago {
+    background-color: #fff;
+    border-color: #E0D5C5;
+    color: #BA7517;
+}
+.btn-pago:hover {
+    background-color: #FAEEDA;
+    border-color: #EF9F27;
+    color: #412402;
+}
+.btn-checkout {
+    margin-top: 5px;
+}
 
 .mp-panel { opacity: 0; pointer-events: none; }
 .mp-panel.mp-show { opacity: 1; pointer-events: all; }
@@ -582,8 +542,8 @@ body.dark-mode .subtotal strong { color: #fff; }
 .icono-circulo-perfil{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:white}
 .perfil-nombre{font-size:14px;font-weight:600;color:white;white-space:nowrap}
 
-.dropdown-menu{display:none;position:absolute;right:0;top:calc(100% + 10px);background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:180px;z-index:999;overflow:hidden;}
-.dropdown-menu.abierto { display: block !important; }
+.dropdown-menu{display:none;position:absolute;right:0;top:calc(100% + 10px);background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:180px;z-index:999;overflow:hidden;animation:fadeDown .2s ease}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .dropdown-menu a{display:flex;align-items:center;gap:10px;padding:11px 18px;color:#333;text-decoration:none;font-size:11px;font-weight:600;text-transform:uppercase;transition:background .2s}
 .dropdown-menu a:hover{background:#cbbfbf}
 .dropdown-icon{width:18px;height:18px;object-fit:contain;flex-shrink:0}
@@ -592,7 +552,7 @@ body.dark-mode .subtotal strong { color: #fff; }
 
 .mp-overlay{position:fixed;inset:0;background:rgba(26,9,13,.55);backdrop-filter:blur(4px);z-index:10000;opacity:0;pointer-events:none;transition:opacity .28s ease}
 .mp-overlay.mp-show{opacity:1;pointer-events:all}
-.mp-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%) scale(.96);width:min(540px,94vw);max-height:88vh;overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(26,9,13,.3);z-index:10001;opacity:0;pointer-events:none;transition:opacity .28s ease,transform .28s ease;}
+.mp-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%) scale(.96);width:min(540px,94vw);max-height:88vh;overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(26,9,13,.3);z-index:10001;opacity:0;pointer-events:none;transition:opacity .28s ease,transform .28s ease;scrollbar-width:thin;scrollbar-color:#E0D5C5 transparent}
 .mp-panel.mp-show{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
 .mp-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid #F0EAE0;position:sticky;top:0;background:#fff;z-index:5}
 .mp-head-left{display:flex;align-items:center;gap:12px}
@@ -621,6 +581,8 @@ body.dark-mode .subtotal strong { color: #fff; }
 .mp-select-wrap::after{content:'';pointer-events:none;position:absolute;right:13px;top:50%;transform:translateY(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #BA7517}
 .mp-pw{position:relative}
 .mp-pw input{padding-right:74px}
+.mp-pw-toggle{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:#EF9F27;padding:0}
+.mp-pw-toggle:hover{color:#FAC775;background:none!important;border:none!important;outline:none!important;box-shadow:none!important}
 .mp-info-list{display:flex;flex-direction:column;gap:8px}
 .mp-info-row{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:#F7F2EA;border-radius:10px;font-size:13px}
 .mp-info-lbl{font-size:11px;color:#7A6855;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
@@ -640,58 +602,35 @@ body.dark-mode .subtotal strong { color: #fff; }
     .mp-body,.mp-head{padding:16px}
 }
 </style>
+<style>
+.dropdown-menu { display: none; }
+.dropdown-menu.abierto { display: block !important; }
+</style>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
-    // CARGAR CONFIGURACIONES DE ACCESIBILIDAD PREVIAS DESDE LOCALSTORAGE
-    if(localStorage.getItem('modoOscuro') === 'true') {
-        document.body.classList.add('dark-mode');
-        const btn = document.getElementById('btnModoOscuro');
-        if(btn) btn.textContent = "Desactivar Modo Oscuro";
-    }
-    
-    if(localStorage.getItem('cursorGrande') === 'true') {
-        document.body.classList.add('big-cursor');
-        const btn = document.getElementById('btnCursor');
-        if(btn) btn.textContent = "Cursor Normal";
-    }
-    
-    if(localStorage.getItem('factorFuente')) {
-        const factor = parseFloat(localStorage.getItem('factorFuente'));
-        document.body.style.fontSize = (factor * 100) + '%';
-        marcarBotonFuenteActivo(factor);
-    }
-
-    // Lógica Dropdown Perfil
-    const btnDropdown = document.getElementById('btnPerfilDropdown');
-    const menuDropdown = document.getElementById('perfilDropdownMenu');
-    if (btnDropdown && menuDropdown) {
-        btnDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-            menuDropdown.classList.toggle('abierto');
-        });
-        document.addEventListener('click', function() {
-            menuDropdown.classList.remove('abierto');
-        });
-    }
-
-    // Lógica Carrito
     const toggleCartBtn = document.getElementById('toggleCart');
     const closeCartBtn = document.getElementById('closeCart');
     const cartPanel = document.getElementById('cartPanel');
 
+    
     if (toggleCartBtn && cartPanel) {
         toggleCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
             cartPanel.classList.add('active');
         });
     }
+
+    
     if (closeCartBtn && cartPanel) {
         closeCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
             cartPanel.classList.remove('active');
         });
     }
+
+    
     document.addEventListener('click', function(e) {
         if (cartPanel && cartPanel.classList.contains('active')) {
             if (!cartPanel.contains(e.target) && !toggleCartBtn.contains(e.target)) {
@@ -699,55 +638,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
-    // Evento del botón de accesibilidad para abrir el panel
-    const btnAcc = document.getElementById('btnAccesibilidad');
-    if(btnAcc) {
-        btnAcc.addEventListener('click', function() {
-            togglePanelAccesibilidad();
-        });
-    }
 });
 
-/* --- FUNCIONES ACCESIBILIDAD --- */
-function togglePanelAccesibilidad() {
-    const overlay = document.getElementById('accOverlay');
-    const panel = document.getElementById('accPanel');
-    if(overlay && panel) {
-        overlay.classList.toggle('active');
-        panel.classList.toggle('active');
-    }
-}
 
-function toggleModoOscuro() {
-    const esOscuro = document.body.classList.toggle('dark-mode');
-    localStorage.setItem('modoOscuro', esOscuro);
-    document.getElementById('btnModoOscuro').textContent = esOscuro ? "Desactivar Modo Oscuro" : "Activar Modo Oscuro";
-}
-
-function cambiarFuente(factor) {
-    document.body.style.fontSize = (factor * 100) + '%';
-    localStorage.setItem('factorFuente', factor);
-    marcarBotonFuenteActivo(factor);
-}
-
-function marcarBotonFuenteActivo(factor) {
-    const botones = document.querySelectorAll('.acc-btn-group button');
-    botones.forEach(btn => btn.classList.remove('active'));
-    // Encontrar dinámicamente cuál gatilló
-    if(factor === 0.9) botones[0].classList.add('active');
-    if(factor === 1) botones[1].classList.add('active');
-    if(factor === 1.15) botones[2].classList.add('active');
-    if(factor === 1.3) botones[3].classList.add('active');
-}
-
-function toggleCursorGrande() {
-    const esGrande = document.body.classList.toggle('big-cursor');
-    localStorage.setItem('cursorGrande', esGrande);
-    document.getElementById('btnCursor').textContent = esGrande ? "Cursor Normal" : "Cursor Grande";
-}
-
-/* --- LOGICA ORIGINAL DE CARRITO Y MODALES PERFIL --- */
 function verFactura() {
     console.log("Abriendo visualización de factura...");
     alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
@@ -756,6 +649,7 @@ function verFactura() {
 function vaciarCarrito() {
     if (confirm("¿Estás seguro de que deseas vaciar por completo tu carrito de compras?")) {
         console.log("Vaciando carrito...");
+        
         const cartItems = document.getElementById('cartItems');
         const emptyCart = document.getElementById('emptyCart');
         const cartTotal = document.getElementById('cartTotal');
@@ -776,6 +670,7 @@ function seleccionarMetodoPago() {
     console.log("Abriendo opciones de método de pago...");
     alert("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
 }
+
 
 function abrirModalPerfil() {
     const overlay = document.getElementById('mpOverlay');
