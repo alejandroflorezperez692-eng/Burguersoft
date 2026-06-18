@@ -200,6 +200,11 @@ if (!function_exists('formatCOP')) {
             color: var(--primario);
             font-family: 'Lucida Sans', sans-serif;
         }
+
+        body .dark-mode .prod-card-nombre {
+            color: #E8821A !important;
+        }
+           
         .prod-card-desc {
             font-size: 12px;
             color: #777;

@@ -310,3 +310,7 @@ body.dark-mode select,
 body.dark-mode button:not(.acc-fab) {
     background-color: #242222!important;
 }
+
+body .dark-mode .prod-card-nombre {
+    color: #E8821A !important;
+}   
