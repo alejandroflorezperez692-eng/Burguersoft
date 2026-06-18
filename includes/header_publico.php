@@ -621,6 +621,13 @@ body {
 
 <script>
 
+if (typeof carrito === 'undefined') {
+    var carrito = [];
+}
+if (typeof pedidoRealizado === 'undefined') {
+    var pedidoRealizado = false;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const toggleCartBtn = document.getElementById('toggleCart');
     const closeCartBtn = document.getElementById('closeCart');
@@ -656,22 +663,9 @@ function verFactura() {
 }
 
 function vaciarCarrito() {
-    if (confirm("¿Estás seguro de que deseas vaciar por completo tu carrito de compras?")) {
-        console.log("Vaciando carrito...");
-        
-        const cartItems = document.getElementById('cartItems');
-        const emptyCart = document.getElementById('emptyCart');
-        const cartTotal = document.getElementById('cartTotal');
-        const badgeCarrito = document.getElementById('badge-carrito');
-        const btnCheckout = document.getElementById('btnCheckout');
-
-        if (cartItems && emptyCart) {
-            cartItems.innerHTML = '';
-            cartItems.appendChild(emptyCart);
-        }
-        if (cartTotal) cartTotal.textContent = '$0';
-        if (badgeCarrito) badgeCarrito.textContent = '0';
-        if (btnCheckout) btnCheckout.disabled = true;
+    if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+        carrito = [];
+        actualizarCarrito();
     }
 }
 

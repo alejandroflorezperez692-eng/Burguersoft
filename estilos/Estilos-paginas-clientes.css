@@ -143,10 +143,8 @@ header hr {
     width: 0;
     height: 2px;
     background: var(--color-secundario);
-    border-radius: 2px;
-    transition: width var(--transicion);
+    transition: width var(--transicion);  /* ← esto faltaba */
 }
-
 .header-center a:hover,
 .header-center a.activo {
     color: var(--color-acento);
@@ -156,6 +154,12 @@ header hr {
 .header-center a:hover::after,
 .header-center a.activo::after {
     width: 60%;
+}
+
+.header-center a.activo {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
 }
 
 .btn-sesion {
