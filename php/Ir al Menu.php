@@ -321,22 +321,7 @@ include __DIR__ . '/../includes/header_publico.php';
     </div>
 </div>
 
-<<<<<<< HEAD
-<div id="invoice-overlay" role="dialog" aria-hidden="true">
-    <div id="invoice-box">
-        <div id="invoice-content"></div>
-        <div class="invoice-actions">
-            <button type="button" class="btn-imprimir"  onclick="imprimirFactura()">🖨 Imprimir</button>
-            <button type="button" class="btn-cerrar-inv" onclick="closeInvoice()">Cerrar</button>
-        </div>
-    </div>
-</div>
-
-<h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
-<div id="productos-container"><div class="cargando">⏳ Cargando menú…</div></div>
-=======
 <script src="/burguersoft/js/Menu.js"></script>
->>>>>>> d9d8ddf1aa6a892932dc0460027b7227c73522ee
 
 <!-- Accesibilidad -->
 <div class="acc-panel" id="accPanel">
