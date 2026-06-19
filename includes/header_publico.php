@@ -668,7 +668,9 @@ function verFactura() {
 function vaciarCarrito() {
     if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
         carrito = [];
-        actualizarCarrito();
+        if (typeof actualizarCarrito === 'function') {
+            actualizarCarrito();
+        }
     }
 }
 
@@ -722,5 +724,9 @@ function mpSwitchTab(tab) {
         if(panelInfo) panelInfo.classList.remove('mp-hidden');
         if(tabInfo) tabInfo.classList.add('mp-tab-active');
     }
+}
+
+function abrirCheckout() {
+    enviarPedido();
 }
 </script>

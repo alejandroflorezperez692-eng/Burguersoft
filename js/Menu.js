@@ -4,20 +4,20 @@ var pedidoRealizado = false;
 
 // ─── CARRITO ─────────────────────────────────────────────
 // DESPUÉS:
-function agregarAlCarrito(id, nombre, precio, img, tipo) {
+function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
     carrito.push({ id, nombre, precio: Number(precio), img, tipo });
     actualizarCarrito();
 
     // Feedback visual
-    const btn = document.querySelector(`.btn-add[onclick*="${id}"]`);
-    if (btn) {
+    if (btnElement) {
+        btnElement.textContent = '✓';
+        btnElement.style.background = '#27ae60';
         setTimeout(() => {
-            btn.textContent = '+';
-            btn.style.background = '';
+            btnElement.textContent = '+';
+            btnElement.style.background = '';
         }, 800);
     }
 }
-
 function actualizarCarrito() {
     const badge      = document.getElementById('badge-carrito');
     const cartItems  = document.getElementById('cartItems');

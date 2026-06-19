@@ -8,7 +8,7 @@ $navActivo = 'ventas';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Burgersoft — Gestión de Ventas</title>
+    <title>BURGUERSOFT —  Gestión de Ventas</title>
     <link rel="stylesheet" href="../estilos/estilos-header-lader-admin.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>

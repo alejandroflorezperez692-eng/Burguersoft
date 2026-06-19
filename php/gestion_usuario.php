@@ -8,7 +8,7 @@ $navActivo = 'usuarios';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Burgersoft — Gestión de Usuarios</title>
+    <title>BURGUERSOFT —  Gestión de Usuarios</title>
     <link rel="stylesheet" href="../estilos/estilos-header-lader-admin.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <style>
