@@ -24,6 +24,7 @@ $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
 function formatCOP($valor) {
     return '$' . number_format((float)$valor, 0, ',', '.');
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
