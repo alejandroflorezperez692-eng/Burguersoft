@@ -341,6 +341,7 @@ foreach ($filas as $f) {
                 </div>
                 
 
+                
                 <table class="pedido-table">
                     <thead>
                         <tr>
