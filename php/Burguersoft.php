@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 require_once __DIR__ . '/../includes/conexion.php';
@@ -143,20 +142,66 @@ function togglePanel() {
     document.getElementById('accPanel').classList.toggle('open');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    cargarPromociones();
-});
+function agregarPromoAlCarrito(id, nombre, precio, imgSrc, btnElement) {
+    if (typeof agregarAlCarrito === 'function') {
+        agregarAlCarrito(id, nombre, precio, imgSrc, 'promocion', btnElement);
+    } else {
+        if (typeof carrito === 'undefined') window.carrito = [];
+        carrito.push({ id, nombre, precio: Number(precio), img: imgSrc, tipo: 'promocion' });
+        const badge = document.getElementById('badge-carrito');
+        if (badge) badge.textContent = carrito.length;
+        const btnCheckout = document.getElementById('btnCheckout');
+        if (btnCheckout) btnCheckout.disabled = false;
+        if (typeof actualizarCarrito === 'function') actualizarCarrito();
+    }
+
+    if (btnElement) {
+        btnElement.textContent = '✓';
+        btnElement.style.background = '#27ae60';
+        setTimeout(() => { btnElement.textContent = '+'; btnElement.style.background = ''; }, 900);
+    }
+
+    mostrarToastPromo('✅ ' + nombre + ' agregado al carrito');
+}
+
+function mostrarToastPromo(msg) {
+    let t = document.getElementById('_toast-promo');
+    if (!t) {
+        t = document.createElement('div');
+        t.id = '_toast-promo';
+        t.style.cssText = [
+            'position:fixed', 'bottom:28px', 'left:50%',
+            'transform:translateX(-50%) translateY(16px)',
+            'background:#222', 'color:#fff', 'padding:12px 24px',
+            'border-radius:10px', 'font-size:14px', 'z-index:99999',
+            'opacity:0', 'transition:opacity .3s,transform .3s',
+            'pointer-events:none', 'white-space:nowrap',
+            'box-shadow:0 4px 16px rgba(0,0,0,.25)'
+        ].join(';');
+        document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(t._t);
+    t._t = setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateX(-50%) translateY(16px)';
+    }, 2400);
+}
+
+document.addEventListener('DOMContentLoaded', () => { cargarPromociones(); });
 
 async function cargarPromociones() {
     const grid = document.getElementById('grid-promociones');
     try {
-        const res = await fetch('/burguersoft/controllers/promociones.php');
+        const res    = await fetch('/burguersoft/controllers/promociones.php');
         const promos = await res.json();
 
-        const hoy = new Date().toISOString().slice(0, 10);
+        const hoy     = new Date().toISOString().slice(0, 10);
         const activas = promos.filter(p => {
             if (p.estado !== 'Activa') return false;
-            if (p.fecha_fin && p.fecha_fin < hoy) return false;
+            if (p.fecha_fin    && p.fecha_fin    < hoy) return false;
             if (p.fecha_inicio && p.fecha_inicio > hoy) return false;
             return true;
         });
@@ -166,65 +211,58 @@ async function cargarPromociones() {
             return;
         }
 
-        grid.innerHTML = activas.map(p => {
-            const imgSrc = p.imagen || '../estilos/img/promocion.png';
+        grid.innerHTML = '';
+
+        activas.forEach(p => {
+            const imgSrc    = p.imagen || '../estilos/img/promocion.png';
             const fechaHtml = (p.fecha_inicio || p.fecha_fin)
                 ? `<div class="promo-fechas">
                        ${p.fecha_inicio ? 'Desde ' + p.fecha_inicio : ''}
-                       ${p.fecha_fin ? ' hasta ' + p.fecha_fin : ''}
+                       ${p.fecha_fin    ? ' hasta ' + p.fecha_fin   : ''}
                    </div>`
                 : '';
 
+            const card = document.createElement('div');
+            card.className = 'promo-card-pub';
+            card.innerHTML = `
+                <div class="promo-img-pub">
+                    <img src="${imgSrc}" alt="${p.nombre}"
+                         onerror="this.src='../estilos/img/promocion.png'">
+                    <span class="promo-badge-pub">PROMO</span>
+                </div>
+                <div class="promo-info-pub">
+                    <h3>${p.nombre}</h3>
+                    ${p.descripcion ? `<p>${p.descripcion}</p>` : ''}
+                    ${fechaHtml}
+                    <div class="promo-footer-pub">
+                        <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
+                        ${SESION_ACTIVA
+                            ? `<button class="btn-circular-add" title="Agregar al carrito">+</button>`
+                            : `<button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
+                                   onclick="window.location.href='/burguersoft/php/login.php'">
+                                   <img src="../estilos/img/bloquear.png"
+                                        style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                               </button>`
+                        }
+                    </div>
+                </div>`;
+
             if (SESION_ACTIVA) {
-                return `
-                <div class="promo-card-pub">
-                    <div class="promo-img-pub">
-                        <img src="${imgSrc}" alt="${p.nombre}" onerror="this.src='../estilos/img/promocion.png'">
-                        <span class="promo-badge-pub">PROMO</span>
-                    </div>
-                    <div class="promo-info-pub">
-                        <h3>${p.nombre}</h3>
-                        ${p.descripcion ? `<p>${p.descripcion}</p>` : ''}
-                        ${fechaHtml}
-                        <div class="promo-footer-pub">
-                            <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
-                            <button class="btn-circular-add" title="Agregar al carrito"
-                                onclick="agregarAlCarrito(${p.id}, ${JSON.stringify(p.nombre)}, ${p.precio}, ${JSON.stringify(imgSrc)}, 'promocion', this)">
-                                +
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
-            } else {
-                return `
-                <div class="promo-card-pub">
-                    <div class="promo-img-pub">
-                        <img src="${imgSrc}" alt="${p.nombre}" onerror="this.src='../estilos/img/promocion.png'">
-                        <span class="promo-badge-pub">PROMO</span>
-                    </div>
-                    <div class="promo-info-pub">
-                        <h3>${p.nombre}</h3>
-                        ${p.descripcion ? `<p>${p.descripcion}</p>` : ''}
-                        ${fechaHtml}
-                        <div class="promo-footer-pub">
-                            <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
-                            <button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
-                                onclick="window.location.href='/burguersoft/php/login.php'">
-                                <img src="../estilos/img/bloquear.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
+                const btn = card.querySelector('.btn-circular-add');
+                btn.addEventListener('click', function() {
+                    agregarPromoAlCarrito(p.id, p.nombre, p.precio, imgSrc, this);
+                });
             }
-        }).join('');
+
+            grid.appendChild(card);
+        });
 
     } catch (e) {
         grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No se pudieron cargar las promociones.</p>';
+        console.error('Error cargando promociones:', e);
     }
 }
 </script>
 
 </body>
 </html>
-
-<head></body>
