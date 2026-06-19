@@ -624,8 +624,6 @@ body {
 
 <script>
 
-alert("¡Felicicdades, has iniciado sesion correctamente");
-
 if (typeof carrito === 'undefined') {
     var carrito = [];
 }

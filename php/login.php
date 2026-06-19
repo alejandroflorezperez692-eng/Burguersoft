@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             else {
                 redirigir('/burguersoft/php/Burguersoft.php');
+                echo "Haz iniciado sesion correctamente";
             };
 
         } else {
