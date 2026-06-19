@@ -36,6 +36,7 @@ function formatCOP($valor) {
     <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
     <script src="../js/Hero-Carrusel.js" defer></script>
+    <script src="../js/Menu.js"></script>
     <style>
     body { overflow-x: hidden; }
     .promociones { padding: 40px; max-width: 1200px; margin: 0 auto; box-sizing: border-box; width: 100%; }
@@ -162,10 +163,11 @@ async function cargarPromociones() {
         });
 
         if (!activas.length) {
-            grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No hay promociones activas en este momento.</p>';
+            grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No hay promociones activas.</p>';
             return;
         }
 
+<<<<<<< Updated upstream
         grid.innerHTML = activas.map(p => {
             const imgSrc = p.imagen || '../estilos/img/promocion.png';
             const fechaHtml = (p.fecha_inicio || p.fecha_fin)
@@ -215,10 +217,43 @@ async function cargarPromociones() {
                         </div>
                     </div>
                 </div>`;
+=======
+        grid.innerHTML = activas.map(function(p) {
+            var imgSrc = p.imagen || '../estilos/img/promocion.png';
+            var fechaHtml = '';
+            if (p.fecha_inicio || p.fecha_fin) {
+                fechaHtml = '<div class="promo-fechas">';
+                if (p.fecha_inicio) fechaHtml += 'Desde ' + p.fecha_inicio;
+                if (p.fecha_fin) fechaHtml += ' hasta ' + p.fecha_fin;
+                fechaHtml += '</div>';
+>>>>>>> Stashed changes
             }
+
+            var btnHtml = '';
+            if (SESION_ACTIVA) {
+                btnHtml = '<button class="btn-circular-add" title="Agregar al carrito" onclick="agregarAlCarrito(' + p.id + ', ' + JSON.stringify(p.nombre) + ', ' + p.precio + ', ' + JSON.stringify(imgSrc) + ', \'promocion\')">+</button>';
+            } else {
+                btnHtml = '<button class="btn-circular-add btn-login" title="Inicia sesion" onclick="window.location.href=\'/burguersoft/php/login.php\'"><img src="../estilos/img/bloquear.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>';
+            }
+
+            return '<div class="promo-card-pub">'
+                + '<div class="promo-img-pub">'
+                + '<img src="' + imgSrc + '" alt="' + p.nombre + '" onerror="this.src=\'../estilos/img/promocion.png\'">'
+                + '<span class="promo-badge-pub">PROMO</span>'
+                + '</div>'
+                + '<div class="promo-info-pub">'
+                + '<h3>' + p.nombre + '</h3>'
+                + (p.descripcion ? '<p>' + p.descripcion + '</p>' : '')
+                + fechaHtml
+                + '<div class="promo-footer-pub">'
+                + '<div class="promo-precio-pub">$' + Number(p.precio).toLocaleString('es-CO') + '</div>'
+                + btnHtml
+                + '</div>'
+                + '</div>'
+                + '</div>';
         }).join('');
 
-    } catch (e) {
+    } catch(e) {
         grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No se pudieron cargar las promociones.</p>';
     }
 }
