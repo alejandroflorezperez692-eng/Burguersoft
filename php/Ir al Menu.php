@@ -272,7 +272,7 @@ include __DIR__ . '/../includes/header_publico.php';
                 <div class="prod-card">
                     <img class="prod-card-img"
                          src="<?= hv($p['img']) ?>"
-                         alt="<?= hv($p['nombre']) ?>"
+                         alt="<?= hv($p['nombre']) ?>"  
                          onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
                     <div class="prod-card-body">
                         <div class="prod-card-nombre"><?= hv($p['nombre']) ?></div>
