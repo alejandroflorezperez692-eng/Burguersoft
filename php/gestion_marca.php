@@ -515,7 +515,6 @@ $navActivo = 'marca';
     <div class="meta-bar">
         <span id="contador-marcas">0 marcas</span>
     </div>
-
     <div class="marcas-grid" id="listaGaseosas"></div>
 
 </div>
