@@ -777,6 +777,7 @@ async function guardar() {
         items: [{ producto_id: idProd, cantidad: cantidad, precio_unitario: precio }],
         promociones: []
     };
+    
 
     try {
         const res  = await fetch(`${API}/ventas.php`, {
