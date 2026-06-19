@@ -184,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </footer>
 <script>
+        alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
     function togglePassword() {
         const input  = document.getElementById('password');
         const btn    = document.getElementById('btnToggle');
