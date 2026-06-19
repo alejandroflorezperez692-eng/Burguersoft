@@ -91,7 +91,8 @@ if (!function_exists('hv')) {
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 ?>
-
+<link rel="stylesheet" href="../estilos/accesibilidad.css">
+<script src="../estilos/accesibilidad.js"></script>
 <header>
     <div class="header-left">
         <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
@@ -520,28 +521,25 @@ body {
     border: 1px solid #E0D5C5;
     border-radius: 8px;
     cursor: pointer;
-    background-color: #F7F2EA;
+    background-color: #412a2a;
     color: #7A6855;
     transition: all 0.2s ease;
 }
 .btn-cart-action:hover {
-    background-color: #E0D5C5;
-    color: #1C1410;
+    background-color: #665050;
+    color: #EF9F27;
     transform: translateY(-1px);
 }
 .btn-vaciar:hover {
-    background-color: #FFF0EE;
-    border-color: #F0A090;
+    background-color: #665050;
     color: #C0392B;
 }
 .btn-pago {
-    background-color: #fff;
-    border-color: #E0D5C5;
+    background-color: #412a2a;
     color: #BA7517;
 }
 .btn-pago:hover {
-    background-color: #FAEEDA;
-    border-color: #EF9F27;
+    background-color: #665050;
     color: #412402;
 }
 .btn-checkout {

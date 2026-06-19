@@ -327,7 +327,9 @@ body.dark-mode .cart-actions-grid {
     color: #ffffff !important;
 }
 
-
+body .darck-mode .btn-pago {
+    background-color: #ffffff !important;
+}
 
 .cart-actions-grid .btn-cart-action,
 .cart-actions-grid .btn-vaciar,
