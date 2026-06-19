@@ -659,7 +659,7 @@ function verFactura() {
     alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
 }
 
-<<<<<<< Updated upstream
+
 function vaciarCarrito() {
     if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
         carrito = [];
@@ -668,8 +668,7 @@ function vaciarCarrito() {
         }
     }
 }
-=======
->>>>>>> Stashed changes
+
 
 function seleccionarMetodoPago() {
     console.log("Abriendo opciones de método de pago...");
