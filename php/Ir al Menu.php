@@ -375,6 +375,5 @@ include __DIR__ . '/../includes/header_publico.php';
         <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
     </div>
 </footer>
-
 </body>
 </html>
