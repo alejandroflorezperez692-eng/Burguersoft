@@ -516,26 +516,26 @@ body {
     font-family: inherit;
     font-size: 12px;
     font-weight: 600;
-    border: 1px solid #E0D5C5;
+    border: 1px solid #ffffff;
     border-radius: 8px;
     cursor: pointer;
     background-color: #F7F2EA;
-    color: #7A6855;
+    color: #ffffff;
     transition: all 0.2s ease;
 }
 .btn-cart-action:hover {
     background-color: #E0D5C5;
-    color: #1C1410;
+    color: #f8f8f8;
     transform: translateY(-1px);
 }
 .btn-vaciar:hover {
     background-color: #FFF0EE;
     border-color: #F0A090;
-    color: #C0392B;
+    color: #ffffff;
 }
 .btn-pago {
     background-color: #fff;
-    border-color: #E0D5C5;
+    border-color: #ffffff;
     color: #BA7517;
 }
 .btn-pago:hover {
