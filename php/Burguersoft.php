@@ -1,6 +1,4 @@
-Te doy el archivo completo y correcto. Copia y reemplaza todo tu `Burguersoft.php` con esto:
 
-```php
 <?php
 session_start();
 require_once __DIR__ . '/../includes/conexion.php';
@@ -228,6 +226,5 @@ async function cargarPromociones() {
 
 </body>
 </html>
-```
 
-Los cambios clave fueron: CSS en el `<head>`, y los tres scripts **al final antes de `</body>`** en orden: `accesibilidad.js` → `Menu.js` → tu script. Sin duplicados.
+<head></body>

@@ -98,6 +98,7 @@
     box-shadow: 0 8px 28px rgba(232,130,26,0.6);
 }
 
+
 body.dark-mode {
     --color-fondo:       rgb(65, 65, 65);
     --color-fondo-alt:   #1a1a1a;
@@ -105,8 +106,15 @@ body.dark-mode {
     --color-texto-suave: #E8821A;
     --color-primario:    #E8821A;
     --color-borde:       rgba(232,130,26,0.25);
+
+    
+    --dm-texto:        #E8821A; 
+    --dm-texto-titulo: #f5c98a;  
+    --dm-texto-suave:  #c8b09a;  
+    --dm-texto-input:  #f0e8dc; 
+
     background-color: #121212 !important;
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 
@@ -118,7 +126,7 @@ body.dark-mode .site-header {
 
 body.dark-mode .nav-link,
 body.dark-mode .nav-links a {
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 
@@ -132,14 +140,14 @@ body.dark-mode .map-content,
 body.dark-mode .section-title,
 body.dark-mode .section-text {
     background-color: #242222 !important;
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 body.dark-mode h1,
 body.dark-mode h2,
 body.dark-mode h3,
 body.dark-mode h4 {
-    color: #f5c98a !important;
+    color: var(--dm-texto-titulo) !important;
 }
 
 body.dark-mode p,
@@ -147,7 +155,7 @@ body.dark-mode span,
 body.dark-mode li,
 body.dark-mode label,
 body.dark-mode .descripcion {
-    color: #c8b09a !important;
+    color: var(--dm-texto-suave) !important;
 }
 
 body.dark-mode .producto-card,
@@ -156,12 +164,12 @@ body.dark-mode .icon-box,
 body.dark-mode .card {
     background-color: #2a1c12 !important;
     border-color: rgba(232,130,26,0.2) !important;
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 body.dark-mode .producto-card h3,
 body.dark-mode .promo-card h3 {
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 body.dark-mode .icons-container,
@@ -171,36 +179,36 @@ body.dark-mode .icon-box {
 
 body.dark-mode .producto-card p,
 body.dark-mode .promo-card p {
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 
 body.dark-mode footer {
     background-color: #242222 !important;
-    border-top: 1px solid #E8821A !important; 
+    border-top: 1px solid var(--dm-texto) !important; 
 }
 
 body.dark-mode .footer-container,
 body.dark-mode .footer-brand,
 body.dark-mode .footer-section {
     background-color: #242222 !important;
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 body.dark-mode .footer-bottom {
     background-color: #3f3f3f !important;
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 body.dark-mode footer h3,
 body.dark-mode footer h4 {
-    color: #E8821A !important;
+    color: var(--dm-texto) !important;
 }
 
 body.dark-mode footer p,
 body.dark-mode footer span,
 body.dark-mode footer li {
-    color: #c8b09a !important;
+    color: var(--dm-texto-suave) !important;
 }
 
 
@@ -211,7 +219,7 @@ body.dark-mode .acc-panel {
 
 body.dark-mode .acc-panel-title,
 body.dark-mode .acc-row-label {
-    color: #f5c98a !important;
+    color: var(--dm-texto-titulo) !important;
     border-color: rgba(232,130,26,0.2) !important;
 }
 
@@ -219,7 +227,7 @@ body.dark-mode .acc-btn-option,
 body.dark-mode .acc_tema,
 body.dark-mode .acc-btn-reset {
     background-color: #3a2410 !important;
-    color: #f0e8dc !important;
+    color: var(--dm-texto-input) !important;
     border-color: rgba(232,130,26,0.25) !important;
 }
 
@@ -228,7 +236,7 @@ body.dark-mode input,
 body.dark-mode textarea,
 body.dark-mode select {
     background-color: #2a1c12 !important;
-    color: #f0e8dc !important;
+    color: var(--dm-texto-input) !important;
     border-color: rgba(232,130,26,0.3) !important;
 }
 
@@ -309,4 +317,27 @@ body.dark-mode textarea,
 body.dark-mode select,
 body.dark-mode button:not(.acc-fab) {
     background-color: #242222!important;
+}
+
+body.dark-mode .prod-card-nombre {
+    color: var(--dm-texto) !important;
+}
+
+body.dark-mode .cart-actions-grid {
+    color: #ffffff !important;
+}
+
+
+
+.cart-actions-grid .btn-cart-action,
+.cart-actions-grid .btn-vaciar,
+.cart-actions-grid .btn-pago,
+.cart-actions-grid select.btn-pago option {
+    color: #ffffff !important;
+}
+
+.cart-actions-grid .btn-cart-action:hover,
+.cart-actions-grid .btn-vaciar:hover,
+.cart-actions-grid .btn-pago:hover {
+    color: #ffffff !important;
 }
