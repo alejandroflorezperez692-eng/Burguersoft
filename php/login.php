@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['apellido']    = $usuario['apellido'];
             $_SESSION['correo']      = $usuario['correo'];
             $_SESSION['rol_usuario'] = $usuario['nombre_rol'];
+            $_SESSION['login_exitoso'] = true; 
             if ($usuario['nombre_rol'] === 'Administrador') {
                 $_SESSION['es_admin'] = true;
                 redirigir('/burguersoft/php/inicio_admin.php');
@@ -184,7 +185,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </footer>
 <script>
+        window.addEventListener('DOMContentLoaded', function() {
         alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
+    });
     function togglePassword() {
         const input  = document.getElementById('password');
         const btn    = document.getElementById('btnToggle');

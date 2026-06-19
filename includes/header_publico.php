@@ -5,6 +5,13 @@ $modalError   = '';
 $modalSuccess = '';
 $modalTab     = 'datos';
 
+if (isset($_SESSION['login_exitoso'])) {
+    echo "<script>
+        alert('Inicio de sesión correctamente');
+    </script>";
+    unset($_SESSION['login_exitoso']); // para que no se repita al refrescar
+}
+
 if ($logueado) {
     if (!function_exists('getPDO')) {
         require_once __DIR__ . '/../includes/conexion.php';
@@ -624,6 +631,7 @@ body {
 </style>
 <script src="/burguersoft/js/Menu.js"></script>
 <script>
+    
 
 
 document.addEventListener('DOMContentLoaded', function() {

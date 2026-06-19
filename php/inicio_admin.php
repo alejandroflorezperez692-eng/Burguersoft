@@ -2,6 +2,12 @@
 require_once __DIR__ . '/../includes/funciones.php';
 requerirAdmin();
 $navActivo = 'inicio';
+if (isset($_SESSION['login_exitoso'])) {
+    echo "<script>
+        alert('Bienevenido Administrador');
+    </script>";
+    unset($_SESSION['login_exitoso']); // para que no se repita al refrescar
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
