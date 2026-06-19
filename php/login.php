@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #fff;
         }
     </style>
+    
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
