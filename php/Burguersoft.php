@@ -222,9 +222,27 @@ async function cargarPromociones() {
         grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No se pudieron cargar las promociones.</p>';
     }
 }
+
+function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
+    carrito.push({ id, nombre, precio: Number(precio), img, tipo });
+    actualizarCarrito();
+
+    // Feedback visual
+    if (btnElement) {
+        btnElement.textContent = '✓';
+        btnElement.style.background = '#27ae60';
+        setTimeout(() => {
+            btnElement.textContent = '+';
+            btnElement.style.background = '';
+        }, 800);
+    }
+}
 </script>
 
 </body>
 </html>
+<<<<<<< Updated upstream
 
 <head></body>
+=======
+>>>>>>> Stashed changes

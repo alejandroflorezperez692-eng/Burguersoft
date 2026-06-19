@@ -1,11 +1,30 @@
-// ─── ESTADO GLOBAL ───────────────────────────────────────
-var carrito = typeof carrito !== 'undefined' ? carrito : [];
+function cargarCarritoGuardado() {
+    try {
+        const guardado = localStorage.getItem('burguersoft_carrito');
+        return guardado ? JSON.parse(guardado) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function guardarCarrito() {
+    try {
+        localStorage.setItem('burguersoft_carrito', JSON.stringify(carrito));
+    } catch (e) {
+        console.error('No se pudo guardar el carrito', e);
+    }
+}
+
+var carrito = cargarCarritoGuardado();
 var pedidoRealizado = false;
+
+document.addEventListener('DOMContentLoaded', actualizarCarrito);
 
 // ─── CARRITO ─────────────────────────────────────────────
 // DESPUÉS:
 function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
     carrito.push({ id, nombre, precio: Number(precio), img, tipo });
+    guardarCarrito();
     actualizarCarrito();
 
     // Feedback visual
@@ -78,12 +97,14 @@ function actualizarCarrito() {
 function quitarDelCarrito(nombre) {
     const idx = carrito.findIndex(i => i.nombre === nombre);
     if (idx !== -1) carrito.splice(idx, 1);
+    guardarCarrito();
     actualizarCarrito();
 }
 
 function vaciarCarrito() {
     if (!confirm('¿Vaciar el carrito?')) return;
     carrito = [];
+    guardarCarrito();
     actualizarCarrito();
 }
 

@@ -621,15 +621,9 @@ body {
 .dropdown-menu { display: none; }
 .dropdown-menu.abierto { display: block !important; }
 </style>
-
+<script src="/burguersoft/js/Menu.js"></script>
 <script>
 
-if (typeof carrito === 'undefined') {
-    var carrito = [];
-}
-if (typeof pedidoRealizado === 'undefined') {
-    var pedidoRealizado = false;
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     const toggleCartBtn = document.getElementById('toggleCart');
@@ -665,6 +659,7 @@ function verFactura() {
     alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
 }
 
+<<<<<<< Updated upstream
 function vaciarCarrito() {
     if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
         carrito = [];
@@ -673,6 +668,8 @@ function vaciarCarrito() {
         }
     }
 }
+=======
+>>>>>>> Stashed changes
 
 function seleccionarMetodoPago() {
     console.log("Abriendo opciones de método de pago...");
