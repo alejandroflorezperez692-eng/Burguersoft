@@ -123,6 +123,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
         </button>
 
         
+        
         <div class="cart-panel" id="cartPanel">
             <div class="cart-header-title">
                 <span> MI CARRITO</span>

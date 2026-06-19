@@ -23,6 +23,7 @@ $stmtPromo->execute([$hoy, $hoy]);
 $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
 
 function formatCOP($valor) {
+
     return '$' . number_format((float)$valor, 0, ',', '.');
 }
 ?>
@@ -241,8 +242,4 @@ function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
 
 </body>
 </html>
-<<<<<<< Updated upstream
 
-<head></body>
-=======
->>>>>>> Stashed changes

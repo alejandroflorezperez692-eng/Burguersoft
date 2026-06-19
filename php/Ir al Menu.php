@@ -24,7 +24,6 @@ $stmtPromo = $pdo->prepare(
 $stmtPromo->execute([$hoy, $hoy]);
 $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
 
-// Agrupar productos por categoría
 $grupos = [];
 foreach ($productos as $p) {
     $grupos[$p['categoria']][] = $p;
