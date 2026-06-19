@@ -520,12 +520,12 @@ body {
     border: 1px solid #E0D5C5;
     border-radius: 8px;
     cursor: pointer;
-    background-color: #F7F2EA;
+    background-color: #817e78;
     color: #7A6855;
     transition: all 0.2s ease;
 }
 .btn-cart-action:hover {
-    background-color: #E0D5C5;
+    background-color: #817e78;
     color: #1C1410;
     transform: translateY(-1px);
 }
@@ -535,7 +535,7 @@ body {
     color: #C0392B;
 }
 .btn-pago {
-    background-color: #fff;
+    background-color: #817e78;
     border-color: #E0D5C5;
     color: #BA7517;
 }
@@ -546,6 +546,7 @@ body {
 }
 .btn-checkout {
     margin-top: 5px;
+    background-color:  #EF9F27;
 }
 
 .mp-panel { opacity: 0; pointer-events: none; }
