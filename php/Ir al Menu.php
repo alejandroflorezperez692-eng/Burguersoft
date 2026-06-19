@@ -300,10 +300,17 @@ include __DIR__ . '/../includes/header_publico.php';
 
 </div>
 
-<?php
-$checkout_modal = __DIR__ . '/../php/checkout_modal.php';
-if (file_exists($checkout_modal)) include $checkout_modal;
-?>
+<div id="mesa-modal" role="dialog" aria-modal="true" aria-label="Número de mesa">
+    <div class="mesa-box">
+        <h3>Número de mesa</h3>
+        <p>Escribe un número entre <strong>1</strong> y <strong>4</strong></p>
+        <input id="mesa-modal-input" type="number" min="1" max="4" title="Número de mesa" aria-label="Número de mesa">
+        <div class="mesa-btns">
+            <button type="button" class="btn-confirmar-mesa" onclick="confirmarMesaModal()">Confirmar</button>
+            <button type="button" class="btn-cancelar-mesa"  onclick="cerrarMesaModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
 
 <script src="/burguersoft/js/Menu.js"></script>
 

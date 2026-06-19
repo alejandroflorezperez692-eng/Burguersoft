@@ -1,433 +1,284 @@
 <?php
 session_start();
-require_once __DIR__ . '/../includes/conexion.php';
-require_once __DIR__ . '/../includes/funciones.php';
-requerirLogin();
+// require_once '../includes/funciones.php'; // Si usas conexiones, también lleva ../
 
-$pdo = getPDO();
-
-$stmt = $pdo->prepare("
-    SELECT 
-        ve.id              AS id_venta,
-        ve.fecha           AS fecha,
-        ve.estado          AS estado_venta,
-        ve.metodo_pago     AS metodo_pago,
-        ve.valor_total     AS valor_total,
-        p.nombre           AS producto,
-        p.img              AS producto_img,
-        dv.cantidad        AS cantidad,
-        dv.precio_unitario AS precio_unitario,
-        dv.subtotal        AS subtotal,
-        dv.estado          AS estado_item
-    FROM venta ve
-    JOIN detalle_venta dv ON dv.venta_id = ve.id
-    JOIN producto p       ON p.id = dv.producto_id
-    WHERE ve.usuario_id = ?
-    ORDER BY ve.fecha DESC, ve.id DESC
-");
-$stmt->execute([$_SESSION['id_usuario']]);
-$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$pedidos = [];
-foreach ($filas as $f) {
-    $vid = $f['id_venta'];
-    if (!isset($pedidos[$vid])) {
-        $pedidos[$vid] = [
-            'id'     => $vid,
-            'fecha'  => $f['fecha'],
-            'estado' => $f['estado_venta'],
-            'items'  => [],
-            'total'  => 0,
-        ];
-    }
-    $pedidos[$vid]['items'][]  = $f;
-    $pedidos[$vid]['total']   += (float)$f['subtotal'];
-}
+// SIMULACIÓN PARA PRUEBAS:
+// null = Muestra la vista limpia de "No tienes pedidos"
+// 'En cocina', 'En barra' o 'Entregado' = Muestra el stepper de seguimiento gráfico
+$estado_actual = null; 
+$numero_orden = "#0842";
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Pedidos – Burguersoft</title>
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
-    <link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700;900&display=swap">
-    <link rel="stylesheet" href="../estilos/accesibilidad.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BURGUERSOFT - Mis Pedidos</title>
+    
+    <link rel="stylesheet" href="../estilos/estilos-login.css">
+    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    
     <style>
-        :root {
-            --brand:   #E8821A;
-            --brand-d: #c96d12;
-            --dark:    #f5f2f0;
-            --mid:     #2e1f0a;
-            --text:    #ecebe9;
-            --muted:   #353331;
-            --card-bg: #241609;
-            --border:  rgba(232,130,26,.18);
-            --radius:  12px;
-        }
-
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            background: var(--dark);
-            color: var(--text);
+        body, input, button {
             font-family: 'Lato', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            color: #2c1810;
         }
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 32px;
-            background: #110b04;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .navbar-brand img {
-            width: 83px;
-            height: 83px;
-            object-fit: contain;
-        }
-        .navbar-brand span {
+        .header-bar, h1, h2, h3 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.7rem;
-            color: var(--brand);
             font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .navbar-divider {
-    display: inline-block;
-    width: 2px;
-    height: 40px;
-    background-color: var(--brand);
-    margin: 0 10px;
-}
-        .btn-regresar {
-            padding: 8px 22px;
-            border: 2px solid var(--brand);
-            color: var(--brand);
-            background: transparent;
-            border-radius: 8px;
-            font-family: 'Lato', sans-serif;
-            font-weight: 700;
-            font-size: .88rem;
-            letter-spacing: .5px;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: background .2s, color .2s;
-            cursor: pointer;
-        }
-        .btn-regresar:hover {
-            background: var(--brand);
-            color: #fff;
         }
 
-        .pedidos-page {
-            max-width: 900px;
+        .btn-regresar {
+            font-family: 'Playfair Display', serif !important;
+            font-weight: 700 !important;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            color: #ffffff !important;
+        }
+
+        /* --- TIMELINE / STEPPER GRAPHIC --- */
+        .tracking-container {
+            margin: 25px 0 15px 0;
+            padding: 10px 0;
             width: 100%;
-            margin: 0 auto;
-            padding: 40px 20px 80px;
+        }
+
+        .timeline {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 17px;
+            left: 10px;
+            right: 10px;
+            height: 4px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .timeline-bar {
+            position: absolute;
+            top: 17px;
+            left: 10px;
+            height: 4px;
+            background: #E8821A;
+            z-index: 2;
+            transition: width 0.4s ease;
+            width: <?php 
+                if ($estado_actual === 'En cocina') echo '0%';
+                elseif ($estado_actual === 'En barra') echo '50%';
+                elseif ($estado_actual === 'Entregado') echo '100%';
+                else echo '0%';
+            ?>;
+        }
+
+        .step {
+            position: relative;
+            z-index: 3;
+            text-align: center;
             flex: 1;
         }
 
-        .pedidos-header {
-            margin-bottom: 36px;
-            animation: fadeDown .5s ease both;
-        }
-        .pedidos-header h1 {
-            font-family: 'Lato', 'Segoe UI', sans-serif;
-            font-size: clamp(1.8rem, 4vw, 2.6rem);
-            color: var(--brand);
-        }
-        .pedidos-header p {
-            color: var(--muted);
-            margin-top: 6px;
-            font-size: 1.04rem;
-        }
-
-        .pedidos-empty {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--muted);
-            animation: fadeUp .5s ease both;
-        }
-        .pedidos-empty .icon { font-size: 3.5rem; margin-bottom: 16px; }
-        .pedidos-empty p { font-size: 1.05rem; }
-        .pedidos-empty a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 11px 28px;
-            background: var(--brand);
-            color: #fff;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: background .2s;
-        }
-        .pedidos-empty a:hover { background: var(--brand-d); }
-
-        .pedido-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            margin-bottom: 24px;
-            overflow: hidden;
-            animation: fadeUp .45s ease both;
-        }
-        .pedido-card:nth-child(2) { animation-delay: .08s; }
-        .pedido-card:nth-child(3) { animation-delay: .16s; }
-        .pedido-card:nth-child(4) { animation-delay: .24s; }
-
-        .pedido-head {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 16px 22px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(232,130,26,.06);
-        }
-        .pedido-head-left { display: flex; flex-direction: column; gap: 3px; }
-        .pedido-num {
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            color: var(--brand);
-            font-weight: 700;
-        }
-        .pedido-fecha { font-size: .8rem; color: var(--muted); }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 999px;
-            font-size: .78rem;
-            font-weight: 700;
-            letter-spacing: .4px;
-            text-transform: uppercase;
-        }
-        .badge-pagado    { background: rgba(50,180,80,.12);  color: #5ecb7a; border: 1px solid rgba(50,180,80,.3); }
-        .badge-cancelado { background: rgba(220,50,50,.12);  color: #e06060; border: 1px solid rgba(220,50,50,.3); }
-        .badge-reembolsada { background: rgba(100,160,220,.12); color: #7ab8f0; border: 1px solid rgba(100,160,220,.3); }
-        .badge-rechazada { background: rgba(180,60,60,.15);  color: #e08080; border: 1px solid rgba(180,60,60,.3); }
-
-        .pedido-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-        .pedido-table thead tr { background: rgba(255,255,255,.03); }
-        .pedido-table th {
-            padding: 10px 16px;
-            text-align: left;
-            font-size: .75rem;
-            text-transform: uppercase;
-            letter-spacing: .6px;
-            color: var(--muted);
-            font-weight: 700;
-        }
-        .pedido-table th:last-child,
-        .pedido-table td:last-child { text-align: right; }
-        .pedido-table td {
-            padding: 11px 16px;
-            border-top: 1px solid var(--border);
-        }
-        .pedido-table tr:hover td { background: rgba(232,130,26,.04); }
-        .producto-nombre { font-weight: 700; }
-        .precio-unit { color: var(--muted); font-size: .82rem; }
-
-        .pedido-foot {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 14px 22px;
-            border-top: 1px solid var(--border);
-            gap: 8px;
-        }
-        .pedido-foot .label { color: var(--muted); font-size: .85rem; }
-        .pedido-foot .total {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.15rem;
-            color: var(--brand);
-            font-weight: 700;
-        }
-
-        .acc-fab {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 52px;
-            height: 52px;
+        .step-icon {
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            background: var(--brand);
-            border: none;
-            cursor: pointer;
+            background: #e0e0e0;
+            margin: 0 auto 10px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 14px rgba(232,130,26,.4);
-            z-index: 999;
-            transition: background .2s;
-        }
-        .acc-fab:hover { background: var(--brand-d); }
-
-        @keyframes fadeDown {
-            from { opacity: 0; transform: translateY(-16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to   { opacity: 1; transform: translateY(0); }
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 0 0 4px #faf6f0;
         }
 
-        @media (max-width: 540px) {
-            .pedido-table th:nth-child(2),
-            .pedido-table td:nth-child(2) { display: none; }
-            .navbar { padding: 12px 16px; }
+        .step-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #8c7e7a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .step.active .step-icon {
+            background: #E8821A;
+            box-shadow: 0 0 0 4px #faf6f0, 0 0 10px rgba(232, 130, 26, 0.25);
+        }
+        
+        .step.active .step-label {
+            color: #E8821A;
+            font-weight: 900;
+        }
+
+        .step.completed-success .step-icon {
+            background: #27ae60;
+            box-shadow: 0 0 0 4px #faf6f0;
+        }
+        
+        .step.completed-success .step-label {
+            color: #27ae60;
+            font-weight: 900;
+        }
+
+        .pedido-info {
+            background: #fdfcfb;
+            border: 1px solid #eadecc;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 20px;
+            font-size: 13px;
+            text-align: left;
+        }
+        
+        .pedido-info div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #f3ebd9;
+            padding-bottom: 4px;
+        }
+        
+        .pedido-info div:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        /* --- VISTA ESTADO VACÍO --- */
+        .sin-pedidos-contenedor {
+            padding: 20px 10px;
+            text-align: center;
+        }
+        .sin-pedidos-icon {
+            width: 70px;
+            height: auto;
+            opacity: 0.6;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-<link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css">
-<?php include __DIR__ . '/../includes/header_publico.php'; ?>
 
-<div class="pedidos-page">
-
-    <div class="pedidos-header">
-        <h1>Mis Pedidos</h1>
-        <p>Hola, <?php echo htmlspecialchars($_SESSION['nombre']); ?>. Aquí están todos tus pedidos realizados.</p>
+    <div class="navbar">
+        <img src="../estilos/img/icono.png" class="logo" alt="Logo Burguersoft">
+        <a href="index.php" class="btn-regresar">[ Menú ]</a>
     </div>
 
-    <?php if (empty($pedidos)): ?>
-        <div class="pedidos-empty">
-            <div class="icon"></div>
-            <p>Aún no tienes pedidos registrados.</p>
-            <a href="/burguersoft/php/Ir al Menu.php">Ver el menú</a>
-        </div>
+    <div class="header-bar">ESTADO DE TU PEDIDO</div>
 
-    <?php else: ?>
-        <?php foreach ($pedidos as $p): ?>
-            <?php
-                $estado = strtolower($p['estado'] ?? 'pendiente');
-                $badgeClass = match($estado) {
-                    'pagado'      => 'badge-pagado',
-                    'cancelado'   => 'badge-cancelado',
-                    'reembolsada' => 'badge-reembolsada',
-                    'rechazada'   => 'badge-rechazada',
-                    default       => 'badge-cancelado',
-                };
-                $fechaFormato = !empty($p['fecha'])
-                    ? date('d/m/Y H:i', strtotime($p['fecha']))
-                    : '—';
-            ?>
-            <div class="pedido-card">
-                <div class="pedido-head">
-                    <div class="pedido-head-left">
-                        <span class="pedido-num">Pedido #<?php echo $p['id']; ?></span>
-                        <span class="pedido-fecha"><?php echo $fechaFormato; ?></span>
+    <div class="card" style="padding: 24px; max-width: 450px; margin: 40px auto;">
+        
+        <?php if ($estado_actual !== null): ?>
+            <div class="icono" style="margin-bottom: 10px; text-align: center;">
+                <img src="../estilos/img/bloquear.png" alt="Pedido" style="width: 48px; height: auto; filter: hue-rotate(15deg);">
+            </div>
+
+            <h3 style="margin: 5px 0; font-size: 19px; color: #2c1810; text-align: center;">¡Gracias por tu compra!</h3>
+            <p class="descripcion" style="margin-bottom: 10px; font-size: 13px; color: #666; text-align: center;">
+                Tu orden está siendo procesada en tiempo real.
+            </p>
+
+            <div class="tracking-container">
+                <div class="timeline">
+                    <div class="timeline-bar"></div>
+
+                    <div class="step <?php echo ($estado_actual === 'En cocina' || $estado_actual === 'En barra' || $estado_actual === 'Entregado') ? 'active' : ''; ?>">
+                        <div class="step-icon">1</div>
+                        <div class="step-label">En Cocina</div>
                     </div>
-                    <span class="badge <?php echo $badgeClass; ?>">
-                        <?php echo htmlspecialchars(ucfirst($p['estado'] ?? 'Pendiente')); ?>
+
+                    <div class="step <?php echo ($estado_actual === 'En barra' || $estado_actual === 'Entregado') ? 'active' : ''; ?>">
+                        <div class="step-icon">2</div>
+                        <div class="step-label">En Barra</div>
+                    </div>
+
+                    <div class="step <?php echo ($estado_actual === 'Entregado') ? 'completed-success' : ''; ?>">
+                        <div class="step-icon">3</div>
+                        <div class="step-label">Entregado</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pedido-info">
+                <div><strong>Orden:</strong> <span><?php echo $numero_orden; ?></span></div>
+                <div><strong>Método:</strong> <span>Para retirar en local</span></div>
+                <div>
+                    <strong>Estado actual:</strong> 
+                    <span style="font-weight: bold; color: <?php echo $estado_actual === 'Entregado' ? '#27ae60' : '#E8821A'; ?>;">
+                        <?php 
+                            if ($estado_actual === 'En cocina') echo 'Preparando tus hamburguesas';
+                            elseif ($estado_actual === 'En barra') echo '¡Listo en barra para retirar!';
+                            elseif ($estado_actual === 'Entregado') echo 'Pedido entregado exitosamente';
+                        ?>
                     </span>
                 </div>
-
-                <table class="pedido-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio unit.</th>
-                            <th>Cantidad</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($p['items'] as $item): ?>
-                        <tr>
-                            <td><span class="producto-nombre"><?php echo htmlspecialchars($item['producto']); ?></span></td>
-                            <td><span class="precio-unit">$<?php echo number_format((float)$item['precio_unitario'], 0, ',', '.'); ?></span></td>
-                            <td><?php echo (int)$item['cantidad']; ?></td>
-                            <td>$<?php echo number_format((float)$item['subtotal'], 0, ',', '.'); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-                <div class="pedido-foot">
-                    <span class="label">Total del pedido:</span>
-                    <span class="total">$<?php echo number_format($p['total'], 0, ',', '.'); ?></span>
-                </div>
             </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
 
-</div>
+            <button type="button" class="btn-primario" style="margin-top: 20px;" onclick="window.location.reload();">
+                Actualizar Estado
+            </button>
 
-<footer>
-    <div class="footer-container">
-        <div class="footer-brand">
-            <div class="footer-brand-text">
-                <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;margin-top:-30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
-                    <hr>
-                    <h3 style="margin:6px;">El Oriente</h3>
-                </div>
-                <p>El sabor auténtico de El Oriente. Calidad y servicio en cada mordida.</p>
+        <?php else: ?>
+            <div class="sin-pedidos-contenedor">
+                <img src="../estilos/img/bloquear.png" alt="Sin pedidos" class="sin-pedidos-icon" style="filter: grayscale(1) sepia(0.4) contrast(0.8);">
+                <h3 style="margin: 5px 0; font-size: 19px; color: #2c1810;">No tienes pedidos activos</h3>
+                <p class="descripcion" style="margin-bottom: 25px; font-size: 14px; color: #776e6a; line-height: 1.4;">
+                    Parece que aún no has armado tu Combo de hoy o no tienes órdenes pendientes por retirar.
+                </p>
+                
+                <a href="index.php" class="btn-primario" style="text-decoration: none; display: block; line-height: 40px; height: 40px; text-align: center;">
+                    Ver el Menú Completo
+                </a>
+            </div>
+        <?php endif; ?>
+
+    </div>
+
+    <div class="acc-panel" id="accPanel">
+        <div class="acc-panel-title">Accesibilidad</div>
+        <div class="acc-row">
+            <div class="acc-row-label">Tema</div>
+            <div class="acc-row-btns">
+                <button class="acc_tema" onclick="setTema('claro')">Claro</button>
+                <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
             </div>
         </div>
-        <div class="footer-section">
-            <h4>Horarios de atención</h4>
-            <ul class="footer-horarios">
-                <li><span>Lunes – Viernes:</span> <span>3:30 PM – 10:00 PM</span></li>
-                <li><span>Sábado:</span> <span>3:00 PM – 11:00 PM</span></li>
-                <li><span>Domingo:</span> <span>3:00 PM – 10:00 PM</span></li>
-            </ul>
-        </div>
+        <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
     </div>
-    <div class="footer-bottom">
-        <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
-    </div>
-</footer>
 
-<div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title">Accesibilidad</div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tema</div>
-        <div class="acc-row-btns">
-            <button class="acc_tema" onclick="setTema('claro')">Claro</button>
-            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
-        </div>
-    </div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tamaño de letra</div>
-        <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A-</button>
-            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
-        </div>
-    </div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tipo de letra</div>
-        <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
-            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
-        </div>
-    </div>
-    <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
-</div>
+    <button class="acc-fab" id="accFab" onclick="togglePanel()">
+        <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
+    </button>
+    <link rel="stylesheet" href="../estilos/accesibilidad.css">
+    <script src="../js/accesibilidad.js"></script>
 
-<button class="acc-fab" id="accFab" onclick="togglePanel()">
-    <img style="width:24px;height:24px;filter:invert(1);pointer-events:none;"
-         src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
-</button>
-
-<script src="../js/accesibilidad.js"></script>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-brand-text">
+                    <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
+                        <img src="../estilos/img/icono.png" alt="Logo" class="footer-logo">
+                        <hr>
+                        <h3 style="margin: 6px; color:#fff;">El Oriente</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 BURGUERSOFT - EL ORIENTE.</p>
+        </div>
+    </footer>
 </body>
 </html>

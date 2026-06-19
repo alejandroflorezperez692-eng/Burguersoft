@@ -15,7 +15,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&display=swap" media="print" onload="this.media='all'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BURGUERSOFT - Recuperar acceso</title>
+    <title>BURGUERSOFT - Recuperar Contraseña</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
 </head>
