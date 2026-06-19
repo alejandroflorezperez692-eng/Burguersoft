@@ -339,6 +339,7 @@ foreach ($filas as $f) {
                         <?php echo htmlspecialchars(ucfirst($p['estado'] ?? 'Pendiente')); ?>
                     </span>
                 </div>
+                
 
                 <table class="pedido-table">
                     <thead>
