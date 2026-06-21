@@ -54,6 +54,7 @@ if ($method === 'POST') {
         jsonResponse(['error' => 'Faltan datos de la venta'], 400);
 
     $metodos_validos = ['Efectivo','Tarjeta','Transferencia','Nequi','Daviplata'];
+    $metodo = ucfirst(strtolower($metodo));
     if (!in_array($metodo, $metodos_validos))
         jsonResponse(['error' => 'Método de pago inválido'], 400);
 
@@ -72,7 +73,7 @@ if ($method === 'POST') {
             $cant    = (int)($item['cantidad'] ?? 1);
             if (!$prod_id) continue;
 
-            $sStock = $pdo->prepare("SELECT catidad FROM producto WHERE id = ?");
+            $sStock = $pdo->prepare("SELECT cantidad FROM producto WHERE id = ?");
             $sStock->execute([$prod_id]);
             $stock = (int)$sStock->fetchColumn();
             if ($stock < $cant)
@@ -98,15 +99,15 @@ if ($method === 'POST') {
             $promo_id = (int)($promo['promocion_id'] ?? 0);
             if (!$promo_id) continue;
             $sp = $pdo->prepare("
-                SELECT pp.producto_id, p.catidad, p.nombre
+                SELECT pp.id_producto, p.cantidad, p.nombre
                 FROM promocion_producto pp
-                JOIN producto p ON p.id = pp.producto_id
-                WHERE pp.promocion_id = ?
+                JOIN producto p ON p.id = pp.id_producto
+                WHERE pp.id_promocion = ?
             ");
             $sp->execute([$promo_id]);
             $prods_promo = $sp->fetchAll();
             foreach ($prods_promo as $pp) {
-                if ((int)$pp['catidad'] < 1)
+                if ((int)$pp['cantidad'] < 1)
                     throw new RuntimeException("Stock insuficiente para: " . $pp['nombre']);
             }
         }
@@ -131,7 +132,7 @@ if ($method === 'POST') {
 
             $pdo->prepare("
                 UPDATE producto
-                SET catidad = GREATEST(0, CAST(catidad AS SIGNED) - ?)
+                SET cantidad = GREATEST(0, CAST(cantidad AS SIGNED) - ?)
                 WHERE id = ?
             ")->execute([$cant, $prod_id]);
 
@@ -151,7 +152,7 @@ if ($method === 'POST') {
             $insPromo->execute([$venta_id, $promo_id]);
 
             $sp = $pdo->prepare("
-                SELECT producto_id FROM promocion_producto WHERE promocion_id = ?
+                SELECT id_producto FROM promocion_producto WHERE id_promocion = ?
             ");
             $sp->execute([$promo_id]);
             $prods_promo = $sp->fetchAll(PDO::FETCH_COLUMN);
@@ -166,7 +167,7 @@ if ($method === 'POST') {
 
                 $pdo->prepare("
                     UPDATE producto
-                    SET catidad = GREATEST(0, CAST(catidad AS SIGNED) - 1)
+                    SET cantidad = GREATEST(0, CAST(cantidad AS SIGNED) - 1)
                     WHERE id = ?
                 ")->execute([$pid]);
 

@@ -370,6 +370,11 @@ $navActivo = 'ventas';
             <div class="kpi-sub">Transacciones del día</div>
         </div>
         <div class="kpi-card" style="--kpi-accent:#E8821A;">
+            <div class="kpi-label">Ingresos hoy</div>
+            <div class="kpi-val" id="kpi-ingresos-hoy">—</div>
+            <div class="kpi-sub">Recaudo del día</div>
+        </div>
+        <div class="kpi-card" style="--kpi-accent:#E8821A;">
             <div class="kpi-label">Promociones hoy</div>
             <div class="kpi-val" id="kpi-promos-hoy">—</div>
             <div class="kpi-sub">Promociones vendidas hoy</div>
@@ -584,6 +589,11 @@ async function listarVentas() {
     }
 }
 
+function setText(id, valor) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor;
+}
+
 function actualizarKPIs(datos) {
     const hoy         = hoyStr();
     const hoyDatos    = datos.filter(v => soloDia(v.fecha) === hoy);
@@ -591,11 +601,11 @@ function actualizarKPIs(datos) {
     let promosHoy     = 0;
     hoyDatos.forEach(v => { promosHoy += (detallesGlobal[v.id]?.promos || []).length; });
 
-    document.getElementById('kpi-hoy').textContent          = hoyDatos.length;
-    document.getElementById('kpi-ingresos-hoy').textContent = '$' + Math.round(ingresosHoy).toLocaleString('es-CO');
-    document.getElementById('kpi-promos-hoy').textContent   = promosHoy;
-    document.getElementById('kpi-total').textContent        = datos.length;
-    document.getElementById('kpi-ingresos').textContent     = '$' + Math.round(datos.reduce((s,v) => s + Number(v.valor_total||0), 0)).toLocaleString('es-CO');
+    setText('kpi-hoy', hoyDatos.length);
+    setText('kpi-ingresos-hoy', '$' + Math.round(ingresosHoy).toLocaleString('es-CO'));
+    setText('kpi-promos-hoy', promosHoy);
+    setText('kpi-total', datos.length);
+    setText('kpi-ingresos', '$' + Math.round(datos.reduce((s,v) => s + Number(v.valor_total||0), 0)).toLocaleString('es-CO'));
 }
 
 function renderCharts(datos) {
@@ -777,7 +787,6 @@ async function guardar() {
         items: [{ producto_id: idProd, cantidad: cantidad, precio_unitario: precio }],
         promociones: []
     };
-    
 
     try {
         const res  = await fetch(`${API}/ventas.php`, {
