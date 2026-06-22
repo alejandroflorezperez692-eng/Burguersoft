@@ -4,7 +4,6 @@ $logueado = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : false;
 $modalError   = '';
 $modalSuccess = '';
 $modalTab     = 'datos';
-
 if ($logueado) {
     if (!function_exists('getPDO')) {
         require_once __DIR__ . '/../includes/conexion.php';
@@ -90,6 +89,8 @@ if (!function_exists('hv')) {
 }
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
+
+include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php'; 
 ?>
 
 <header>
@@ -723,7 +724,4 @@ function mpSwitchTab(tab) {
     }
 }
 
-function abrirCheckout() {
-    enviarPedido();
-}
 </script>
