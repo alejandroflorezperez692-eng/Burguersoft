@@ -2,12 +2,6 @@
 require_once __DIR__ . '/../includes/funciones.php';
 requerirAdmin();
 $navActivo = 'inicio';
-if (isset($_SESSION['login_exitoso'])) {
-    echo "<script>
-        alert('Bienevenido Administrador');
-    </script>";
-    unset($_SESSION['login_exitoso']); // para que no se repita al refrescar
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -42,6 +36,32 @@ if (isset($_SESSION['login_exitoso'])) {
             gap: 24px;
             position: relative;
             overflow: hidden;
+        }
+
+                .toast-bienvenida {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #2f2a1f;
+            color: #F2A93B;
+            border: 1px solid #E8821A;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0;
+            z-index: 9999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast-bienvenida.mostrar {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         .welcome-banner::before {
@@ -281,7 +301,7 @@ if (isset($_SESSION['login_exitoso'])) {
 </button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
-
+<div id="toastBienvenida" class="toast-bienvenida"></div>
 <script>
 function togglePanel() {
     document.getElementById('accPanel').classList.toggle('open');
@@ -311,6 +331,23 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(r => r.json()).then(d => {
             document.getElementById('stat-insumos').textContent = Array.isArray(d) ? d.length : '—';
         }).catch(() => {});
+});
+document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    const toast  = params.get('toast');
+    const toastEl = document.getElementById('toastBienvenida');
+
+    if (toastEl && toast === 'login_ok') {
+        toastEl.textContent = '¡Bienvenido a BurguerSoft, Administrador!'; 
+        setTimeout(() => toastEl.classList.add('mostrar'), 100);
+        // Ocultar después de 3.5s
+        setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
+
+        // Limpiar el parámetro de la URL
+        const url = new URL(window.location.href);
+        url.searchParams.delete('toast');
+        window.history.replaceState({}, '', url);
+    }
 });
 </script>
 </body>

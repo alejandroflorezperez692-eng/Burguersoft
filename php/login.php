@@ -34,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['login_exitoso'] = true; 
             if ($usuario['nombre_rol'] === 'Administrador') {
                 $_SESSION['es_admin'] = true;
-                redirigir('/burguersoft/php/inicio_admin.php');
+                redirigir('/burguersoft/php/inicio_admin.php?toast=login_ok');
             }
             else {
-                redirigir('/burguersoft/php/Burguersoft.php');
+                redirigir('/burguersoft/php/Burguersoft.php?toast=login_ok');
             };
 
         } else {
@@ -76,6 +76,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body.modo-oscuro-accesible .btn-toggle-password:hover {
             color: #fff;
         }
+
+        .toast-bienvenida {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #2f2a1f;
+            color: #F2A93B;
+            border: 1px solid #E8821A;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0;
+            z-index: 9999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast-bienvenida.mostrar {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 <body>
     <div class="navbar">
@@ -84,6 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="header-bar"> INICIAR SESIÓN </div>
+
+    <div id="toastBienvenida" class="toast-bienvenida">¡Bienvenido a BurguerSoft! Inicia sesión para continuar.</div>
 
     <div class="card">
         <?php if ($error): ?>
@@ -185,9 +213,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </footer>
 <script>
-        window.addEventListener('DOMContentLoaded', function() {
-        alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
+    window.addEventListener('DOMContentLoaded', function() {
+        const toast = document.getElementById('toastBienvenida');
+        if (toast) {
+            // Mostrar
+            setTimeout(() => toast.classList.add('mostrar'), 100);
+            // Ocultar después de 3.5s
+            setTimeout(() => toast.classList.remove('mostrar'), 3500);
+        }
     });
+
     function togglePassword() {
         const input  = document.getElementById('password');
         const btn    = document.getElementById('btnToggle');

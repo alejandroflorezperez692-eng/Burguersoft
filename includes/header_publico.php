@@ -5,12 +5,7 @@ $modalError   = '';
 $modalSuccess = '';
 $modalTab     = 'datos';
 
-if (isset($_SESSION['login_exitoso'])) {
-    echo "<script>
-        alert('Inicio de sesión correctamente');
-    </script>";
-    unset($_SESSION['login_exitoso']); // para que no se repita al refrescar
-}
+
 
 if ($logueado) {
     if (!function_exists('getPDO')) {
@@ -98,6 +93,8 @@ if (!function_exists('hv')) {
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 ?>
+
+<div id="toastGlobal" class="toast-global"></div>
 
 <header>
     <div class="header-left">
@@ -481,6 +478,32 @@ body {
     width: 100%;
 }
 
+.toast-global {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: #2f2a1f;
+    color: #F2A93B;
+    border: 1px solid #E8821A;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    opacity: 0;
+    z-index: 99999;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+
+.toast-global.mostrar {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 .mp-tabs-container{display:flex;justify-content:space-around;margin-bottom:25px;border-bottom:1px solid #eee;padding-bottom:10px;}
 .mp-tab{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:10px 15px;border-radius:12px;transition:all 0.3s ease;color:#7A6855;font-weight:600;font-family:inherit;font-size:12px;}
 .mp-tab-active{background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.08);color:#BA7517;}
@@ -629,10 +652,27 @@ body {
 .dropdown-menu { display: none; }
 .dropdown-menu.abierto { display: block !important; }
 </style>
+<div id="toastGlobal" class="toast-global"></div>
 <script src="/burguersoft/js/Menu.js"></script>
 <script>
     
+let toastTimeoutId = null;
 
+function mostrarToast(mensaje, duracion = 3500) {
+    const toast = document.getElementById('toastGlobal');
+    if (!toast) return;
+
+    if (toastTimeoutId) {
+        clearTimeout(toastTimeoutId);
+    }
+
+    toast.textContent = mensaje;
+    toast.classList.add('mostrar');
+
+    toastTimeoutId = setTimeout(() => {
+        toast.classList.remove('mostrar');
+    }, duracion);
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const toggleCartBtn = document.getElementById('toggleCart');
@@ -665,7 +705,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function verFactura() {
     console.log("Abriendo visualización de factura...");
-    alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
+    mostrarToast("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
 }
 
 
@@ -675,13 +715,14 @@ function vaciarCarrito() {
         if (typeof actualizarCarrito === 'function') {
             actualizarCarrito();
         }
+        mostrarToast("Carrito vaciado correctamente.");
     }
 }
 
 
 function seleccionarMetodoPago() {
     console.log("Abriendo opciones de método de pago...");
-    alert("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
+    mostrarToast("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
 }
 
 function abrirModalPerfil() {
@@ -734,4 +775,25 @@ function mpSwitchTab(tab) {
 function abrirCheckout() {
     enviarPedido();
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    const toast  = params.get('toast');
+
+    if (toast === 'login_ok') {
+        mostrarToast('¡Bienvenido! Has iniciado sesión correctamente.');
+    } else if (toast === 'logout_ok') {
+        mostrarToast('Sesión cerrada correctamente. ¡Hasta pronto!');
+    }
+
+    if (toast) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('toast');
+        window.history.replaceState({}, '', url);
+    }
+});
+<?php if ($modalSuccess): ?>
+document.addEventListener('DOMContentLoaded', function () {
+    mostrarToast('✓ <?= addslashes($modalSuccess) ?>');
+});
+<?php endif; ?>
 </script>
