@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/funciones.php';
-requerirLogin();
+requerirAdmin();
 $navActivo = 'materia';
 ?>
 <!DOCTYPE html>

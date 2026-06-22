@@ -9,6 +9,11 @@ $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
 $id     = (int)($_GET['id'] ?? 0);
 
+function requerirAdminApi(): void {
+    if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador')
+        jsonResponse(['error' => 'No autorizado'], 403);
+}
+
 if ($method === 'GET') {
     try {
         $datos = $pdo->query("
@@ -25,6 +30,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
+    requerirAdminApi();
     $body     = json_decode(file_get_contents('php://input'), true) ?? [];
     $nombre   = limpiar($body['nombre']        ?? '');
     $tipo     = limpiar($body['tipo']          ?? '');
@@ -48,6 +54,7 @@ if ($method === 'POST') {
 
 if ($method === 'PUT') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
+    requerirAdminApi();
     $body     = json_decode(file_get_contents('php://input'), true) ?? [];
     $nombre   = limpiar($body['nombre']        ?? '');
     $tipo     = limpiar($body['tipo']          ?? '');
@@ -67,6 +74,7 @@ if ($method === 'PUT') {
 
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
+    requerirAdminApi();
     try {
         $pdo->prepare("UPDATE materia_prima SET estado = 'Inactivo' WHERE id=?")->execute([$id]);
         jsonResponse(['success' => true]);

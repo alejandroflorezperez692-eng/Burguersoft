@@ -464,6 +464,8 @@ a { text-decoration:none; color:inherit; }
 .btn-icon-edit:hover { background: #2d89ef; color: #fff; }
 .btn-icon-del   { background: #fde8e8; color: #922; }
 .btn-icon-del:hover { background: var(--danger); color: #fff; }
+.btn-icon-cancel { background: rgba(232,130,26,0.15); color: #8a4a10; }
+.btn-icon-cancel:hover { background: var(--brand); color: #fff; }
 
 .stat-grid {
     display: grid;

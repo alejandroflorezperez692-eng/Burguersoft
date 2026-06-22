@@ -750,6 +750,9 @@ function mostrarTabla(datos) {
                 <td>${estadoBadge(v.estado)}</td>
                 <td>
                     <button class="btn-icon btn-icon-edit" onclick="prepararEdicion(${v.id})" title="Editar">Editar</button>
+                    ${v.estado !== 'Cancelado'
+                        ? `<button class="btn-icon btn-icon-cancel" onclick="cancelarVenta(${v.id})" title="Cancelar" style="margin-left:6px;">Cancelar</button>`
+                        : ''}
                     <button class="btn-icon btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar" style="margin-left:6px;">Eliminar</button>
                 </td>
             `;
@@ -818,6 +821,22 @@ function limpiarCampos() {
     document.getElementById('metodo_pago').value = '';
     document.getElementById('form-title').textContent    = 'Nueva Venta';
     document.getElementById('btn-guardar-v').textContent = 'Guardar venta';
+}
+
+async function cancelarVenta(id) {
+    if (!confirm(`¿Cancelar la venta #${id}? El stock de los productos se devolverá al inventario.`)) return;
+    try {
+        const res  = await fetch(`${API}/ventas.php?id=${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ estado: 'Cancelado' })
+        });
+        const data = await res.json();
+        if (data.success) {
+            await cargarProductos();
+            await listarVentas();
+        } else alert('Error al cancelar: ' + (data.error || ''));
+    } catch (e) { alert('Error de conexión'); }
 }
 
 async function eliminarVenta(id) {
