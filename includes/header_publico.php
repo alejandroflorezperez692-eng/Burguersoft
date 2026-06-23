@@ -96,7 +96,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
     <div class="header-left">
         <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
         <hr>
-        <a href="/burguersoft/php/El Oriente.php" class="nom-local">El Oriente</a>
+        <a href="/burguersoft/php/el_oriente.php" class="nom-local">El Oriente</a>
     </div>
 
     <nav class="header-center">

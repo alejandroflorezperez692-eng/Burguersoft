@@ -16,6 +16,27 @@ function requerirAdminApi(): void {
         jsonResponse(['error' => 'No autorizado'], 403);
 }
 
+function crearMateriaPrimaDesdeCompra(PDO $pdo, array $datos, int $marca_id, float $valorReferencia): int {
+    $nombre = limpiar($datos['nombre'] ?? '');
+    $tipo   = limpiar($datos['tipo']   ?? '');
+    $unidad = limpiar($datos['unidad_medida'] ?? '');
+
+    if (!$nombre || !$tipo)
+        throw new RuntimeException('El insumo nuevo necesita nombre y tipo');
+
+    $sExiste = $pdo->prepare("SELECT id FROM materia_prima WHERE LOWER(nombre) = LOWER(?)");
+    $sExiste->execute([$nombre]);
+    if ($sExiste->fetchColumn())
+        throw new RuntimeException("Ya existe un insumo registrado con el nombre: $nombre");
+
+    $pdo->prepare("
+        INSERT INTO materia_prima (nombre, tipo, valor, cantidad, unidad_medida, marca_id, estado)
+        VALUES (?,?,?,0,?,?,'Disponible')
+    ")->execute([$nombre, $tipo, $valorReferencia, $unidad ?: null, $marca_id]);
+
+    return (int)$pdo->lastInsertId();
+}
+
 if ($method === 'GET') {
     if ($id) {
         $s = $pdo->prepare("
@@ -53,10 +74,13 @@ if ($method === 'POST') {
 
     $total = 0;
     foreach ($items as $item) {
-        $cant = (float)($item['cantidad'] ?? 0);
-        $pu   = (float)($item['precio_unitario'] ?? 0);
+        $cant     = (float)($item['cantidad'] ?? 0);
+        $pu       = (float)($item['precio_unitario'] ?? 0);
+        $marca_id = (int)($item['marca_id'] ?? 0);
         if ($cant <= 0 || $pu <= 0)
             jsonResponse(['error' => 'Cantidad y precio deben ser mayores a cero'], 400);
+        if (!$marca_id)
+            jsonResponse(['error' => 'Cada insumo comprado debe tener un proveedor seleccionado'], 400);
         $total += $cant * $pu;
     }
 
@@ -76,8 +100,14 @@ if ($method === 'POST') {
             $materia_id = (int)($item['materia_prima_id'] ?? 0);
             $cant       = (float)($item['cantidad'] ?? 0);
             $pu         = (float)($item['precio_unitario'] ?? 0);
-            $marca_id   = !empty($item['marca_id']) ? (int)$item['marca_id'] : null;
+            $marca_id   = (int)($item['marca_id'] ?? 0);
             $subtotal   = $cant * $pu;
+            $nuevoInsumo = $item['nuevo_insumo'] ?? null;
+
+            if (!$materia_id && is_array($nuevoInsumo)) {
+                $materia_id = crearMateriaPrimaDesdeCompra($pdo, $nuevoInsumo, $marca_id, $pu);
+            }
+
             if (!$materia_id) continue;
 
             $sMateria = $pdo->prepare("SELECT id FROM materia_prima WHERE id = ?");

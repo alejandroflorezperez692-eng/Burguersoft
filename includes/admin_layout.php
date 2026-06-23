@@ -34,6 +34,13 @@ $esAdmin     = $rolAdmin === 'Administrador';
             </a>
         </div>
 
+        <div class="sidebar-item <?= $navActivo === 'materia' ? 'active' : '' ?>">
+            <a href="../php/materia_prima.php">
+                <img src="../estilos/img/tratamiento-a-base-de-hierbas.png" class="icono-sidebar" alt="">
+                Materia Prima
+            </a>
+        </div>
+
         <div class="sidebar-item <?= $navActivo === 'compras' ? 'active' : '' ?>">
             <a href="../php/compras.php">
                 <img src="../estilos/img/buy.png" class="icono-sidebar" alt="">
@@ -41,12 +48,7 @@ $esAdmin     = $rolAdmin === 'Administrador';
             </a>
         </div>
 
-        <div class="sidebar-item <?= $navActivo === 'materia' ? 'active' : '' ?>">
-            <a href="../php/materia_prima.php">
-                <img src="../estilos/img/tratamiento-a-base-de-hierbas.png" class="icono-sidebar" alt="">
-                Materia Prima
-            </a>
-        </div>
+        
 
         <?php if ($esAdmin): ?>
         <div class="sidebar-item <?= $navActivo === 'marca' ? 'active' : '' ?>">

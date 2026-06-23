@@ -106,6 +106,17 @@ $navActivo = 'compras';
 
         .linea-row .field label { font-size: 10px; }
 
+        .nuevo-insumo-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 12px;
+            background: var(--surface-3);
+            border-radius: var(--r-sm);
+            border: 1px dashed var(--border-strong);
+        }
+
         .btn-quitar-linea {
             width: 38px;
             height: 38px;
@@ -270,7 +281,7 @@ $navActivo = 'compras';
             color: var(--text-400);
         }
 
-        .btn-icon {
+        .btn-icon-del {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -280,11 +291,26 @@ $navActivo = 'compras';
             border-radius: var(--r-sm);
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.18s;
+            background: #922; 
+            color: #fff; 
         }
 
-        .btn-icon-del { background: #fde8e8; color: #922; }
-        .btn-icon-del:hover { background: var(--danger); color: #fff; transform: scale(1.1); }
+         .btn-icon-det {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: rgb(19, 11, 74); 
+            color: #fff; 
+        }
+
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+        .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
 
         body.dark-mode .compras-table { background: var(--surface); }
         body.dark-mode .compras-table thead { background: #0e0500; }
@@ -448,9 +474,8 @@ async function cargarMarcas() {
 function agregarLinea() {
     const id = ++lineaSeq;
     const cont = document.getElementById('lineas-body');
-    const row = document.createElement('div');
-    row.className = 'linea-row';
-    row.id = `linea-${id}`;
+    const wrap = document.createElement('div');
+    wrap.id = `linea-${id}`;
 
     const opciones = materiasGlobal.map(m =>
         `<option value="${m.id}">${m.nombre} (${m.unidad_medida || ''})</option>`
@@ -460,36 +485,60 @@ function agregarLinea() {
         `<option value="${m.id}">${m.nombre}</option>`
     ).join('');
 
-    row.innerHTML = `
-        <div class="field">
-            <label>Materia prima</label>
-            <select onchange="recalcularTotal()" id="linea-${id}-materia">
-                <option value="">Seleccionar...</option>
-                ${opciones}
-            </select>
+    wrap.innerHTML = `
+        <div class="linea-row">
+            <div class="field">
+                <label>Materia prima</label>
+                <select onchange="onCambioMateria(${id})" id="linea-${id}-materia">
+                    <option value="">Seleccionar...</option>
+                    <option value="__nuevo__">+ Crear nuevo insumo</option>
+                    ${opciones}
+                </select>
+            </div>
+            <div class="field">
+                <label>Cantidad</label>
+                <input type="number" min="0" step="0.01" placeholder="0" id="linea-${id}-cantidad" oninput="recalcularTotal()">
+            </div>
+            <div class="field">
+                <label>Precio unitario</label>
+                <input type="number" min="0" step="0.01" placeholder="0" id="linea-${id}-precio" oninput="recalcularTotal()">
+            </div>
+            <div class="field">
+                <label>Subtotal</label>
+                <input type="text" disabled id="linea-${id}-subtotal" value="$0">
+            </div>
+            <div class="field">
+                <label>Proveedor *</label>
+                <select id="linea-${id}-marca">
+                    <option value="">Seleccionar...</option>
+                    ${opcionesMarca}
+                </select>
+            </div>
+            <button type="button" class="btn-quitar-linea" onclick="quitarLinea(${id})" title="Quitar">×</button>
         </div>
-        <div class="field">
-            <label>Cantidad</label>
-            <input type="number" min="0" step="0.01" placeholder="0" id="linea-${id}-cantidad" oninput="recalcularTotal()">
+        <div class="nuevo-insumo-row" id="linea-${id}-nuevo-wrap" style="display:none;">
+            <div class="field">
+                <label>Nombre del insumo nuevo</label>
+                <input type="text" placeholder="Ej: Queso mozzarella" id="linea-${id}-nuevo-nombre">
+            </div>
+            <div class="field">
+                <label>Tipo</label>
+                <input type="text" placeholder="Ej: Lácteo" id="linea-${id}-nuevo-tipo">
+            </div>
+            <div class="field">
+                <label>Unidad de medida</label>
+                <input type="text" placeholder="Ej: Kg, L, Unidades" id="linea-${id}-nuevo-unidad">
+            </div>
         </div>
-        <div class="field">
-            <label>Precio unitario</label>
-            <input type="number" min="0" step="0.01" placeholder="0" id="linea-${id}-precio" oninput="recalcularTotal()">
-        </div>
-        <div class="field">
-            <label>Subtotal</label>
-            <input type="text" disabled id="linea-${id}-subtotal" value="$0">
-        </div>
-        <div class="field">
-            <label>Proveedor</label>
-            <select id="linea-${id}-marca">
-                <option value="">Sin especificar</option>
-                ${opcionesMarca}
-            </select>
-        </div>
-        <button type="button" class="btn-quitar-linea" onclick="quitarLinea(${id})" title="Quitar">×</button>
     `;
-    cont.appendChild(row);
+    cont.appendChild(wrap);
+}
+
+function onCambioMateria(id) {
+    const sel = document.getElementById(`linea-${id}-materia`);
+    const wrapNuevo = document.getElementById(`linea-${id}-nuevo-wrap`);
+    wrapNuevo.style.display = sel.value === '__nuevo__' ? 'grid' : 'none';
+    recalcularTotal();
 }
 
 function quitarLinea(id) {
@@ -501,8 +550,8 @@ function quitarLinea(id) {
 
 function recalcularTotal() {
     let total = 0;
-    document.querySelectorAll('.linea-row').forEach(row => {
-        const idMatch = row.id.match(/linea-(\d+)/);
+    document.querySelectorAll('#lineas-body > div[id^="linea-"]').forEach(row => {
+        const idMatch = row.id.match(/^linea-(\d+)$/);
         if (!idMatch) return;
         const id = idMatch[1];
         const cantidad = parseFloat(document.getElementById(`linea-${id}-cantidad`)?.value) || 0;
@@ -520,19 +569,37 @@ async function guardarCompra() {
     if (!metodo) return alert('Selecciona un método de pago.');
 
     const items = [];
-    document.querySelectorAll('.linea-row').forEach(row => {
-        const idMatch = row.id.match(/linea-(\d+)/);
+    let lineaInvalida = false;
+
+    document.querySelectorAll('#lineas-body > div[id^="linea-"]').forEach(row => {
+        const idMatch = row.id.match(/^linea-(\d+)$/);
         if (!idMatch) return;
         const id = idMatch[1];
-        const materia_prima_id = document.getElementById(`linea-${id}-materia`)?.value;
+
+        const materiaSel       = document.getElementById(`linea-${id}-materia`)?.value || '';
         const cantidad         = parseFloat(document.getElementById(`linea-${id}-cantidad`)?.value) || 0;
         const precio_unitario  = parseFloat(document.getElementById(`linea-${id}-precio`)?.value) || 0;
-        const marca_id         = document.getElementById(`linea-${id}-marca`)?.value || null;
-        if (materia_prima_id && cantidad > 0 && precio_unitario > 0) {
-            items.push({ materia_prima_id, cantidad, precio_unitario, marca_id });
+        const marca_id         = document.getElementById(`linea-${id}-marca`)?.value || '';
+
+        if (!materiaSel && cantidad === 0 && precio_unitario === 0) return;
+
+        if (!materiaSel || cantidad <= 0 || precio_unitario <= 0 || !marca_id) {
+            lineaInvalida = true;
+            return;
+        }
+
+        if (materiaSel === '__nuevo__') {
+            const nombre = document.getElementById(`linea-${id}-nuevo-nombre`)?.value.trim() || '';
+            const tipo   = document.getElementById(`linea-${id}-nuevo-tipo`)?.value.trim() || '';
+            const unidad = document.getElementById(`linea-${id}-nuevo-unidad`)?.value.trim() || '';
+            if (!nombre || !tipo) { lineaInvalida = true; return; }
+            items.push({ nuevo_insumo: { nombre, tipo, unidad_medida: unidad }, cantidad, precio_unitario, marca_id });
+        } else {
+            items.push({ materia_prima_id: materiaSel, cantidad, precio_unitario, marca_id });
         }
     });
 
+    if (lineaInvalida) return alert('Revisa las líneas: cada insumo necesita materia prima, cantidad, precio y proveedor. Si es un insumo nuevo, también nombre y tipo.');
     if (!items.length) return alert('Agrega al menos un insumo válido con cantidad y precio.');
 
     const btn = document.getElementById('btn-guardar-compra');
@@ -628,7 +695,8 @@ function mostrarTabla(datos) {
             <td><span class="metodo-badge">${comp.metodo_pago}</span></td>
             <td class="valor-cell">$${fmt.format(Number(comp.valor_total) || 0)}</td>
             <td>
-                <button class="btn-icon btn-icon-del" onclick="eliminarCompra(${comp.id})" title="Eliminar">Eliminar</button>
+                <button class="btn-icon-del" onclick="eliminarCompra(${comp.id})" title="Eliminar"><img src="../estilos/img/trash.png"; style="filter:invert(1);pointer-events:none;width:18px;height:18px;";></button>
+                <button class="btn-icon-det" oneclick=" "><img src="../estilos/img/bill.png"; style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
             </td>
         </tr>`;
     });
