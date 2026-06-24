@@ -53,6 +53,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="estilos/estilos-login.css">
     <link rel="icon" href="estilos/img/icono.png" type="image/x-icon">
     <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        footer {
+            margin-top: 0 !important;
+        }
+
         .codigo-inputs {
             display: flex;
             justify-content: center;
@@ -120,40 +142,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </p>
     </div>
 
-   <div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title">Accesibilidad</div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tema</div>
-        <div class="acc-row-btns">
-            <button class="acc_tema" onclick="setTema('claro')">Claro</button>
-            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
+    <div class="acc-panel" id="accPanel">
+        <div class="acc-panel-title">Accesibilidad</div>
+        <div class="acc-row">
+            <div class="acc-row-label">Tema</div>
+            <div class="acc-row-btns">
+                <button class="acc_tema" onclick="setTema('claro')">Claro</button>
+                <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
+            </div>
         </div>
-    </div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tamaño de letra</div>
-        <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
-            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
+        <div class="acc-row">
+            <div class="acc-row-label">Tamaño de letra</div>
+            <div class="acc-row-btns">
+                <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
+                <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
+            </div>
         </div>
-    </div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tipo de letra</div>
-        <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
-            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
+        <div class="acc-row">
+            <div class="acc-row-label">Tipo de letra</div>
+            <div class="acc-row-btns">
+                <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
+                <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
+            </div>
         </div>
+        <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
     </div>
-    <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
-</div>
-<button class="acc-fab" id="accFab" onclick="togglePanel()">
-    <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="estilos/img/accesibilidad.png" alt="Accesibilidad">
-</button>
-<link rel="stylesheet" href="estilos/accesibilidad.css">
-<script src="js/accesibilidad.js"></script>
-
+    <button class="acc-fab" id="accFab" onclick="togglePanel()">
+        <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="estilos/img/accesibilidad.png" alt="Accesibilidad">
+    </button>
+    <link rel="stylesheet" href="estilos/accesibilidad.css">
+    <script src="js/accesibilidad.js"></script>
 
     <script>
-    // Auto-avance entre cajitas al escribir
     const inputs = document.querySelectorAll('.codigo-inputs input');
 
     inputs.forEach((input, i) => {
@@ -182,31 +202,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     inputs[0].focus();
     </script>
 
-    <footer>
-    <div class="footer-container">
-        <div class="footer-brand">
-            <div class="footer-brand-text">
-                <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                    <img src="estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
-                    <hr>
-                    <h3 style="margin: 6px;">El Oriente</h3>
+    <footer style="margin-top: 70px !important;">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-brand-text">
+                    <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
+                        <img src="estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                        <hr>
+                        <h3 style="margin: 6px;">El Oriente</h3>
+                    </div>
+                    <p>El sabor auténtico de El Oriente. Calidad y servicio en cada mordida.</p>
                 </div>
-                <p>El sabor auténtico de El Oriente. Calidad y servicio en cada mordida.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Horarios de atención</h4>
+                <ul class="footer-horarios">
+                    <li><span>Lunes – Viernes:</span> <span>3:30 PM – 10:00 PM</span></li>
+                    <li><span>Sábado:</span> <span>3:00 PM – 11:00 PM</span></li>
+                    <li><span>Domingo:</span> <span>3:00 PM – 10:00 PM</span></li>
+                </ul>
             </div>
         </div>
-
-        <div class="footer-section">
-            <h4>Horarios de atención</h4>
-            <ul class="footer-horarios">
-                <li><span>Lunes – Viernes:</span> <span>3:30 PM – 10:00 PM</span></li>
-                <li><span>Sábado:</span> <span>3:00 PM – 11:00 PM</span></li>
-                <li><span>Domingo:</span> <span>3:00 PM – 10:00 PM</span></li>
-            </ul>
+        <div class="footer-bottom">
+            <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
         </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
-    </div>
-</footer>
+    </footer>
 </body>
 </html>
