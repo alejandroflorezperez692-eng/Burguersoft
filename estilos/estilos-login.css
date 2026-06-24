@@ -493,7 +493,7 @@ footer {
     background: #1a0f0a; 
     color: #e0d8cf;
     padding: 60px 5% 20px;
-    margin-top: auto;
+    margin-top: 70px !important;
     width: 100%;
     align-self: stretch;
 }
