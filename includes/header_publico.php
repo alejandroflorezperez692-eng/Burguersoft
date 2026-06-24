@@ -4,7 +4,6 @@ $logueado = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : false;
 $modalError   = '';
 $modalSuccess = '';
 $modalTab     = 'datos';
-
 if ($logueado) {
     if (!function_exists('getPDO')) {
         require_once __DIR__ . '/../includes/conexion.php';
@@ -90,6 +89,8 @@ if (!function_exists('hv')) {
 }
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
+
+include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php'; 
 ?>
 
 <header>
@@ -151,14 +152,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     </button>
                     <button type="button" class="btn-cart-action" onclick="verFactura()">
                         Ver Factura
-                    </button>
-                    <select class="btn-cart-action btn-pago">
-                        <option value="">Método de Pago</option>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="tarjeta">Tarjeta</option>
-                        <option value="nequi">Nequi</option>
-                        <option value="daviplata">Daviplata</option>
-                    </select>
+                
                 </div>
 
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
@@ -671,12 +665,6 @@ function vaciarCarrito() {
     }
 }
 
-
-function seleccionarMetodoPago() {
-    console.log("Abriendo opciones de método de pago...");
-    alert("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
-}
-
 function abrirModalPerfil() {
     const overlay = document.getElementById('mpOverlay');
     const panel = document.getElementById('mpPanel');
@@ -724,7 +712,4 @@ function mpSwitchTab(tab) {
     }
 }
 
-function abrirCheckout() {
-    enviarPedido();
-}
 </script>
