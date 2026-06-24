@@ -705,17 +705,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function verFactura() {
     console.log("Abriendo visualización de factura...");
-    mostrarToast("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
+    if (!carrito || carrito.length === 0) {
+        mostrarToast("Tu carrito no tiene ningún producto, para efectuar una factura de venta");
+    return;
+    }
 }
 
 
 function vaciarCarrito() {
-    if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+    // Si el carrito está vacío
+    if (!carrito || carrito.length === 0) {
+        mostrarToast(' Tu carrito no tiene ningún producto.');
+        return;
+    }
+
+    // Si tiene productos, pedir confirmación
+    if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
         carrito = [];
         if (typeof actualizarCarrito === 'function') {
             actualizarCarrito();
         }
-        mostrarToast("Carrito vaciado correctamente.");
+        mostrarToast('✓ tu carrito ha sido vaciado exitosamente.');
     }
 }
 

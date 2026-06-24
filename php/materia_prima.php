@@ -421,29 +421,6 @@ function filtrar() {
     ));
 }
 
-async function guardar() {
-    const nombre   = document.getElementById('nombre').value.trim();
-    const tipo     = document.getElementById('tipo').value.trim();
-    const unidad   = document.getElementById('unidad_medida').value.trim();
-    const valor    = document.getElementById('valor').value.trim();
-    const cantidad = document.getElementById('cantidad').value.trim();
-    const marca    = document.getElementById('marca').value.trim();
-
-    if (!nombre || !tipo || !cantidad || !unidad)
-        return alert('Nombre, tipo, cantidad y unidad son obligatorios.');
-
-    const data = { nombre, tipo, unidad_medida: unidad, valor: valor === '' ? 0 : parseFloat(valor),
-                   cantidad, marca_id: marca || null };
-    const url    = editId ? `${API_MP}?id=${editId}` : API_MP;
-    const method = editId ? 'PUT' : 'POST';
-
-    try {
-        const res  = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
-        const resp = await res.json();
-        if (res.ok) { limpiar(); listar(); }
-        else alert('Error: ' + (resp.error || ''));
-    } catch (e) { alert('Error de conexión'); }
-}
 
 function editar(id, nombre, tipo, stock, valor, unidad, marca) {
     editId = id;
@@ -458,11 +435,98 @@ function editar(id, nombre, tipo, stock, valor, unidad, marca) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+let _toastMpTimer = null;
+
+function mostrarToastMp(mensaje, tipo = 'ok') {
+    let toast = document.getElementById('toastMp');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastMp';
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            padding: 14px 24px; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0; z-index: 99999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none; max-width: 90%; text-align: center;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    if (tipo === 'ok') {
+        toast.style.background = '#2f2a1f';
+        toast.style.color      = '#F2A93B';
+        toast.style.border     = '1px solid #E8821A';
+    } else {
+        toast.style.background = '#2f1f1f';
+        toast.style.color      = '#e63946';
+        toast.style.border     = '1px solid #e63946';
+    }
+
+    toast.textContent = mensaje;
+    toast.style.opacity   = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    if (_toastMpTimer) clearTimeout(_toastMpTimer);
+    _toastMpTimer = setTimeout(() => {
+        toast.style.opacity   = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3500);
+}
+
+// ── Guardar / Actualizar ─────────────────────────────────
+async function guardar() {
+    const nombre   = document.getElementById('nombre').value.trim();
+    const tipo     = document.getElementById('tipo').value.trim();
+    const unidad   = document.getElementById('unidad_medida').value.trim();
+    const valor    = document.getElementById('valor').value.trim();
+    const cantidad = document.getElementById('cantidad').value.trim();
+    const marca    = document.getElementById('marca').value.trim();
+
+    if (!nombre || !tipo || !cantidad || !unidad) {
+        mostrarToastMp('⚠ Nombre, tipo, cantidad y unidad son obligatorios.', 'error');
+        return;
+    }
+
+    const data = { nombre, tipo, unidad_medida: unidad,
+                   valor: valor === '' ? 0 : parseFloat(valor),
+                   cantidad, marca_id: marca || null };
+    const url    = editId ? `${API_MP}?id=${editId}` : API_MP;
+    const method = editId ? 'PUT' : 'POST';
+
+    try {
+        const res  = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+        const resp = await res.json();
+        if (res.ok) {
+            const msg = editId
+                ? ' Materia prima modificada correctamente.'
+                : ' Materia prima agregada correctamente.';
+            limpiar();
+            listar();
+            mostrarToastMp(msg, 'ok');
+        } else {
+            mostrarToastMp('⚠ Error: ' + (resp.error || 'Inténtalo de nuevo.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastMp('⚠ Error de conexión.', 'error');
+    }
+}
+
 async function eliminar(id) {
     if (!confirm('¿Eliminar este insumo?')) return;
-    const res = await fetch(`${API_MP}?id=${id}`, { method: 'DELETE' });
-    if (res.ok) listar();
-    else alert('No se pudo eliminar.');
+    try {
+        const res = await fetch(`${API_MP}?id=${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            listar();
+            mostrarToastMp(' Materia prima eliminada correctamente.', 'ok');
+        } else {
+            mostrarToastMp('⚠ No se pudo eliminar el insumo.', 'error');
+        }
+    } catch (e) {
+        mostrarToastMp('⚠ Error de conexión.', 'error');
+    }
 }
 
 function limpiar() {

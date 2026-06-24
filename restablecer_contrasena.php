@@ -218,6 +218,42 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
     <script src="js/accesibilidad.js"></script>
 
     <script>
+            window.addEventListener('DOMContentLoaded', () => {
+        mostrarToastCodigo('✓ felicitaciones tu código ha sido verificado, puedes cambiar tu contraseña.');
+    });
+
+    let _toastTimer = null;
+
+    function mostrarToastCodigo(mensaje) {
+        let toast = document.getElementById('toastCodigo');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastCodigo';
+            toast.style.cssText = `
+                position: fixed; top: 20px; left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                padding: 14px 24px; border-radius: 10px;
+                font-size: 14px; font-weight: 600;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+                opacity: 0; z-index: 99999;
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                pointer-events: none; max-width: 90%; text-align: center;
+                background: #2f2a1f; color: #F2A93B;
+                border: 1px solid #E8821A;
+            `;
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = mensaje;
+        toast.style.opacity   = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => {
+            toast.style.opacity   = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        }, 3500);
+    }
     function togglePassword(inputId, btn) {
         const input = document.getElementById(inputId);
         if (input.type === 'password') {

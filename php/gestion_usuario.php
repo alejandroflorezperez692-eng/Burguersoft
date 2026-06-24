@@ -448,6 +448,8 @@ function abrirModal(id, rol, estado) {
 
 function cerrarModal() { document.getElementById('modalEditar').classList.remove('activo'); }
 
+
+
 async function guardarCambios() {
     const id     = document.getElementById('modal-id').value;
     const rol    = document.getElementById('modal-rol').value;
@@ -456,9 +458,16 @@ async function guardarCambios() {
         const res  = await fetch(`${API}?id=${id}`, { method: 'PUT',
             headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rol, estado }) });
         const data = await res.json();
-        if (data.success) { cerrarModal(); fetchUsuarios(); }
-        else alert('Error: ' + (data.error || ''));
-    } catch (e) { alert('Error de red'); }
+        if (data.success) {
+            cerrarModal();
+            fetchUsuarios();
+            mostrarToastUsuario(' Usuario modificado exitosamente.', 'ok');
+        } else {
+            mostrarToastUsuario('⚠ Error: ' + (data.error || 'Inténtalo de nuevo.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastUsuario('⚠ Error de red.', 'error');
+    }
 }
 
 async function eliminarUsuario(id) {
@@ -466,11 +475,57 @@ async function eliminarUsuario(id) {
     try {
         const res  = await fetch(`${API}?id=${id}`, { method: 'DELETE' });
         const data = await res.json();
-        if (data.success) fetchUsuarios();
-        else alert('Error: ' + (data.error || ''));
-    } catch (e) { alert('Error de red'); }
+        if (data.success) {
+            fetchUsuarios();
+            mostrarToastUsuario(' Usuario eliminado exitosamente.', 'ok');
+        } else {
+            mostrarToastUsuario('⚠ Error: ' + (data.error || 'No se pudo eliminar.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastUsuario('⚠ Error de red.', 'error');
+    }
 }
 
+let _toastUsuarioTimer = null;
+
+function mostrarToastUsuario(mensaje, tipo = 'ok') {
+    let toast = document.getElementById('toastUsuario');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastUsuario';
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            padding: 14px 24px; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0; z-index: 99999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none; max-width: 90%; text-align: center;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    if (tipo === 'ok') {
+        toast.style.background = '#2f2a1f';
+        toast.style.color      = '#F2A93B';
+        toast.style.border     = '1px solid #E8821A';
+    } else {
+        toast.style.background = '#2f1f1f';
+        toast.style.color      = '#e63946';
+        toast.style.border     = '1px solid #e63946';
+    }
+
+    toast.textContent = mensaje;
+    toast.style.opacity   = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    if (_toastUsuarioTimer) clearTimeout(_toastUsuarioTimer);
+    _toastUsuarioTimer = setTimeout(() => {
+        toast.style.opacity   = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3500);
+}
 document.getElementById('modalEditar').addEventListener('click', function(e) {
     if (e.target === this) cerrarModal();
 });

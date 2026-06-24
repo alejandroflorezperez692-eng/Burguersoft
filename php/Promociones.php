@@ -614,6 +614,48 @@ function abrirModal() {
 
 function cerrarModal() { document.getElementById('formulario').classList.remove('show'); editandoId = null; seleccionados.clear(); }
 
+let _toastMpTimer = null;
+
+function mostrarToastMp(mensaje, tipo = 'ok') {
+    let toast = document.getElementById('toastMp');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastMp';
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            padding: 14px 24px; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0; z-index: 99999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none; max-width: 90%; text-align: center;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    if (tipo === 'ok') {
+        toast.style.background = '#2f2a1f';
+        toast.style.color      = '#F2A93B';
+        toast.style.border     = '1px solid #E8821A';
+    } else {
+        toast.style.background = '#2f1f1f';
+        toast.style.color      = '#e63946';
+        toast.style.border     = '1px solid #e63946';
+    }
+
+    toast.textContent = mensaje;
+    toast.style.opacity   = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    if (_toastMpTimer) clearTimeout(_toastMpTimer);
+    _toastMpTimer = setTimeout(() => {
+        toast.style.opacity   = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3500);
+}
+
+
 async function editarPromo(id) {
     const promo = promociones.find(p => p.id === id);
     if (!promo) return;
@@ -645,8 +687,15 @@ async function eliminarPromo(id) {
     try {
         const res  = await fetch(`${CTRL}?id=${id}`, { method: 'DELETE' });
         const data = await res.json();
-        if (data.success) cargarPromos(); else alert('Error: ' + (data.error || ''));
-    } catch (e) { alert('Error de conexión'); }
+        if (data.success) {
+            cargarPromos();
+            mostrarToastPromo(' Promoción eliminada exitosamente.', 'ok');
+        } else {
+            mostrarToastPromo('⚠ Error: ' + (data.error || 'No se pudo eliminar.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastPromo('⚠ Error de conexión.', 'error');
+    }
 }
 
 async function guardarPromo() {
@@ -662,6 +711,8 @@ async function guardarPromo() {
         return;
     }
 
+
+
     const fd = new FormData();
     fd.append('nombre', nombre);
     fd.append('descripcion', descripcion);
@@ -673,22 +724,25 @@ async function guardarPromo() {
     if (imagenFile) fd.append('imagen', imagenFile);
     if (editandoId) fd.append('_method', 'PUT');
 
+
     const url    = editandoId ? `${CTRL}?id=${editandoId}` : CTRL;
     const method = 'POST';
 
     try {
         const res  = await fetch(url, { method, body: fd });
         const data = await res.json();
-
-        if (data.success || data.id) {
-            cerrarModal();
-            cargarPromos();
-            // ✅ Mensaje de éxito
-            const msg = editandoId
-                ? '✓ Promoción actualizada exitosamente.'
-                : '✓ Promoción guardada exitosamente.';
-            mostrarToastPromo(msg, 'ok');
-        }else {
+if (data.success || data.id) {
+    
+    const eraEdicion = editandoId !== null;
+    
+    cerrarModal();
+    cargarPromos();
+    
+    const msg = eraEdicion
+        ? ' Promoción actualizada exitosamente.'
+        : ' Promoción guardada exitosamente.';
+    mostrarToastPromo(msg, 'ok');
+}else {
             mostrarToastPromo('⚠ Error: ' + (data.error || 'Inténtalo de nuevo.'), 'error');
         }
     } catch (e) {
