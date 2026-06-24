@@ -34,11 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($usuario['nombre_rol'] === 'Administrador') {
                 $_SESSION['es_admin'] = true;
                 redirigir('/burguersoft/php/inicio_admin.php');
-            }
-            else {
+            } else {
                 redirigir('/burguersoft/php/Burguersoft.php');
-            };
-
+            }
         } else {
             $error = 'Correo o contraseña incorrectos.';
         }
@@ -55,8 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>BURGUERSOFT - Iniciar Sesión</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
-</head>
-<style>
+    <style>
         .input-password-wrapper {
             position: relative;
             width: 100%;
@@ -75,57 +72,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body.modo-oscuro-accesible .btn-toggle-password:hover {
             color: #fff;
         }
+
+        .contenedor-login {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding-bottom: 60px;
+        }
+
+        footer {
+            margin-top: 0 !important;
+        }
     </style>
+</head>
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
         <a href="../php/Burguersoft.php" class="btn-regresar"> [ Regresar ]</a>
     </div>
 
-    <div class="header-bar"> INICIAR SESIÓN </div>
+    <div class="contenedor-login">
 
-    <div class="card">
-        <?php if ($error): ?>
-            <p style="color:red;text-align:center;margin-bottom:10px;"><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
+        <div class="header-bar"> INICIAR SESIÓN </div>
 
-        <form id="loginForm" method="POST" action="login.php">
+        <div class="card">
+            <?php if ($error): ?>
+                <p style="color:red;text-align:center;margin-bottom:10px;"><?= htmlspecialchars($error) ?></p>
+            <?php endif; ?>
 
-            <h2>CORREO*</h2>
-            <input type="email" name="correo" id="email" class="input"
-                   placeholder="ejemplo@gmail.com" required
-                   value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>">
+            <form id="loginForm" method="POST" action="login.php">
 
-            <h2>CONTRASEÑA*</h2>
-            <div class="input-password-wrapper">
-                <input type="password" name="contrasena" id="password" class="input"
-                       placeholder="Ingresa tu contraseña" required>
-                <button type="button" id="btnToggle" onclick="togglePassword()"
-                    onmouseover="this.style.color='#000000'"
-                    onmouseout="this.style.color='#E8821A'"
-                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                        background:none; border:none; cursor:pointer; font-size:13px;
-                        font-weight:700; color:#E8821A;">
-                    Mostrar
-                </button>
-            </div>
+                <h2>CORREO*</h2>
+                <input type="email" name="correo" id="email" class="input"
+                       placeholder="ejemplo@gmail.com" required
+                       value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>">
 
-            <button type="submit" id="botonEntrar" class="btn-primario">INICIAR SESIÓN</button>
+                <h2>CONTRASEÑA*</h2>
+                <div class="input-password-wrapper">
+                    <input type="password" name="contrasena" id="password" class="input"
+                           placeholder="Ingresa tu contraseña" required>
+                    <button type="button" id="btnToggle" onclick="togglePassword()"
+                        onmouseover="this.style.color='#000000'"
+                        onmouseout="this.style.color='#E8821A'"
+                        style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                            background:none; border:none; cursor:pointer; font-size:13px;
+                            font-weight:700; color:#E8821A;">
+                        Mostrar
+                    </button>
+                </div>
 
-            <a href="recuperar_contrasena.php" class="link">¿Recuperar tu contraseña?</a>
+                <button type="submit" id="botonEntrar" class="btn-primario">INICIAR SESIÓN</button>
 
-            <div class="separador-contenedor">
-                <div class="linea"></div>
-                <span class="circulo">o</span>
-                <div class="linea"></div>
-            </div>
+                <a href="recuperar_contrasena.php" class="link">¿Recuperar tu contraseña?</a>
 
-            <div class="enlace-externo">
-                ¿No tienes una cuenta?
-                <a href="Registro.php">Crear cuenta</a>
-            </div>
+                <div class="separador-contenedor">
+                    <div class="linea"></div>
+                    <span class="circulo">o</span>
+                    <div class="linea"></div>
+                </div>
 
-        </form>
+                <div class="enlace-externo">
+                    ¿No tienes una cuenta?
+                    <a href="Registro.php">Crear cuenta</a>
+                </div>
+
+            </form>
+        </div>
+
     </div>
 
 <div class="acc-panel" id="accPanel">
@@ -154,14 +170,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
 
-<button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"
+         src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
+</button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
+
 <footer>
     <div class="footer-container">
         <div class="footer-brand">
             <div class="footer-brand-text">
-                <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
+                <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
                     <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>
@@ -183,14 +203,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
     </div>
 </footer>
+
 <script>
-        alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
+    alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
     function togglePassword() {
         const input  = document.getElementById('password');
         const btn    = document.getElementById('btnToggle');
         const visible = input.type === 'text';
-
-        input.type   = visible ? 'password' : 'text';
+        input.type      = visible ? 'password' : 'text';
         btn.textContent = visible ? 'Mostrar' : 'Ocultar';
     }
 </script>
