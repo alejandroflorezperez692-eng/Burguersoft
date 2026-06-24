@@ -270,6 +270,30 @@ foreach ($filas as $f) {
             font-weight: 700;
         }
 
+        .btn-cancelar-pedido {
+            margin-right: auto;
+            padding: 8px 18px;
+            background: transparent;
+            border: 1.5px solid rgba(220,50,50,.4);
+            color: #e06060;
+            border-radius: 8px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: .3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+        .btn-cancelar-pedido:hover { background: rgba(220,50,50,.12); color: #ff8080; }
+
+        .acc-fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
         /* ── Estado vacío ── */
         .pedidos-empty {
             text-align: center;
@@ -374,6 +398,14 @@ foreach ($filas as $f) {
                     </div>
                 </div>
 
+                <div class="pedido-foot">
+                    <?php if (strtolower($p['estado'] ?? '') === 'pagado'): ?>
+                        <button type="button" class="btn-cancelar-pedido" onclick="cancelarPedido(<?php echo (int)$p['id']; ?>)">
+                            Cancelar pedido
+                        </button>
+                    <?php endif; ?>
+                    <span class="label">Total del pedido:</span>
+                    <span class="total">$<?php echo number_format($p['total'], 0, ',', '.'); ?></span>
                 <?php else: ?>
                 <div class="progreso-cancelado">
                     <span>Este pedido fue cancelado.</span>
@@ -474,5 +506,25 @@ foreach ($filas as $f) {
 </button>
 
 <script src="../js/accesibilidad.js"></script>
+<script>
+async function cancelarPedido(id) {
+    if (!confirm(`¿Cancelar el pedido #${id}? Esta acción no se puede deshacer.`)) return;
+    try {
+        const res = await fetch(`/burguersoft/controllers/ventas.php?id=${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ estado: 'Cancelado' })
+        });
+        const data = await res.json();
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('No se pudo cancelar el pedido: ' + (data.error || 'Error desconocido'));
+        }
+    } catch (e) {
+        alert('Error de conexión al cancelar el pedido.');
+    }
+}
+</script>
 </body>
 </html>

@@ -335,6 +335,53 @@ $navActivo = 'ventas';
         .valor-cell { font-weight: 700; color: var(--brand); }
         .usuario-cell { font-weight: 600; }
 
+        .btn-icon-del {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: #922; 
+            color: #fff; 
+        }
+
+         .btn-icon-det {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: rgb(19, 11, 74); 
+            color: #fff; 
+        }
+
+        .btn-icon-can {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: #E8821A;
+            color: #fff; 
+        }
+
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+        .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
+        .btn-icon-can:hover{ background: rgb(203, 104, 38); color: #fff;
+        }
+
         body.dark-mode .kpi-card,
         body.dark-mode .form-panel,
         body.dark-mode .chart-card,
@@ -368,6 +415,11 @@ $navActivo = 'ventas';
             <div class="kpi-label">Ventas hoy</div>
             <div class="kpi-val" id="kpi-hoy">—</div>
             <div class="kpi-sub">Transacciones del día</div>
+        </div>
+        <div class="kpi-card" style="--kpi-accent:#E8821A;">
+            <div class="kpi-label">Ingresos hoy</div>
+            <div class="kpi-val" id="kpi-ingresos-hoy">—</div>
+            <div class="kpi-sub">Recaudo del día</div>
         </div>
         <div class="kpi-card" style="--kpi-accent:#E8821A;">
             <div class="kpi-label">Promociones hoy</div>
@@ -584,6 +636,11 @@ async function listarVentas() {
     }
 }
 
+function setText(id, valor) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor;
+}
+
 function actualizarKPIs(datos) {
     const hoy         = hoyStr();
     const hoyDatos    = datos.filter(v => soloDia(v.fecha) === hoy);
@@ -591,11 +648,11 @@ function actualizarKPIs(datos) {
     let promosHoy     = 0;
     hoyDatos.forEach(v => { promosHoy += (detallesGlobal[v.id]?.promos || []).length; });
 
-    document.getElementById('kpi-hoy').textContent          = hoyDatos.length;
-    document.getElementById('kpi-ingresos-hoy').textContent = '$' + Math.round(ingresosHoy).toLocaleString('es-CO');
-    document.getElementById('kpi-promos-hoy').textContent   = promosHoy;
-    document.getElementById('kpi-total').textContent        = datos.length;
-    document.getElementById('kpi-ingresos').textContent     = '$' + Math.round(datos.reduce((s,v) => s + Number(v.valor_total||0), 0)).toLocaleString('es-CO');
+    setText('kpi-hoy', hoyDatos.length);
+    setText('kpi-ingresos-hoy', '$' + Math.round(ingresosHoy).toLocaleString('es-CO'));
+    setText('kpi-promos-hoy', promosHoy);
+    setText('kpi-total', datos.length);
+    setText('kpi-ingresos', '$' + Math.round(datos.reduce((s,v) => s + Number(v.valor_total||0), 0)).toLocaleString('es-CO'));
 }
 
 function renderCharts(datos) {
@@ -739,8 +796,11 @@ function mostrarTabla(datos) {
                 <td>${metodoBadge(v.metodo_pago)}</td>
                 <td>${estadoBadge(v.estado)}</td>
                 <td>
-                    <button class="btn-icon btn-icon-edit" onclick="prepararEdicion(${v.id})" title="Editar">Editar</button>
-                    <button class="btn-icon btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar" style="margin-left:6px;">Eliminar</button>
+                    <button class="btn-icon-det" onclick="prepararEdicion(${v.id})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                    ${v.estado !== 'Cancelado'
+                        ? `<button class="btn-icon-can" onclick="cancelarVenta(${v.id})" title="Cancelar" style="margin-left:6px;"><img src="../estilos/img/cancel.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>`
+                        : ''}
+                    <button class="btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar" style="margin-left:6px;"><img src="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -808,6 +868,22 @@ function limpiarCampos() {
     document.getElementById('metodo_pago').value = '';
     document.getElementById('form-title').textContent    = 'Nueva Venta';
     document.getElementById('btn-guardar-v').textContent = 'Guardar venta';
+}
+
+async function cancelarVenta(id) {
+    if (!confirm(`¿Cancelar la venta #${id}? El stock de los productos se devolverá al inventario.`)) return;
+    try {
+        const res  = await fetch(`${API}/ventas.php?id=${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ estado: 'Cancelado' })
+        });
+        const data = await res.json();
+        if (data.success) {
+            await cargarProductos();
+            await listarVentas();
+        } else alert('Error al cancelar: ' + (data.error || ''));
+    } catch (e) { alert('Error de conexión'); }
 }
 
 async function eliminarVenta(id) {

@@ -62,4 +62,19 @@ function jsonResponse(mixed $data, int $code = 200): never {
     echo json_encode($data);
     exit;
 }
+
+function calcularEstadoStock(int $cantidad): string {
+    if ($cantidad <= 0) return 'Agotado';
+    if ($cantidad <= 5)  return 'Por agotarse';
+    return 'Disponible';
+}
+
+function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
+    $s = $pdo->prepare("SELECT cantidad FROM producto WHERE id = ?");
+    $s->execute([$producto_id]);
+    $cantidad = (int)$s->fetchColumn();
+    $estado   = calcularEstadoStock($cantidad);
+    $pdo->prepare("UPDATE producto SET estado = ? WHERE id = ?")
+        ->execute([$estado, $producto_id]);
+}
 ?>

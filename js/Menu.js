@@ -108,31 +108,95 @@ function vaciarCarrito() {
     actualizarCarrito();
 }
 
-// ─── PEDIDO / WHATSAPP ───────────────────────────────────
-function enviarPedido() {
+// ─── PEDIDO / CONFIRMAR COMPRA ───────────────────────────
+let ultimaVentaId = null;
+
+async function enviarPedido() {
     if (carrito.length === 0) { alert('El carrito está vacío'); return; }
 
-    const map = new Map();
-    let total = 0;
+    const metodoPago = document.getElementById('pago')?.value || '';
+    if (!metodoPago) { alert('Selecciona un método de pago antes de finalizar la compra.'); return; }
+
+    // Separar productos normales de promociones, y agrupar cada uno por id
+    const mapProductos  = new Map();
+    const mapPromos     = new Map();
+
     carrito.forEach(item => {
-        total += item.precio;
-        if (!map.has(item.nombre)) map.set(item.nombre, { ...item, cantidad: 0 });
-        map.get(item.nombre).cantidad += 1;
+        const destino = item.tipo === 'promocion' ? mapPromos : mapProductos;
+        if (!destino.has(item.id)) destino.set(item.id, { ...item, cantidad: 0 });
+        destino.get(item.id).cantidad += 1;
     });
 
-    const metodoPago = document.getElementById('pago')?.value || '-';
-    let mensaje = ' Pedido BurgerSoft%0A%0A';
-    for (const [, v] of map.entries()) {
-        mensaje += `• ${v.nombre} x${v.cantidad} — $${(v.precio * v.cantidad).toLocaleString('es-CO')}%0A`;
+    const items = Array.from(mapProductos.values()).map(item => ({
+        producto_id: item.id,
+        cantidad: item.cantidad,
+        precio_unitario: item.precio
+    }));
+
+    // Cada promoción se envía una vez por unidad comprada (la BD no maneja cantidad de promo)
+    const promociones = [];
+    mapPromos.forEach(item => {
+        for (let i = 0; i < item.cantidad; i++) {
+            promociones.push({ promocion_id: item.id, precio: item.precio });
+        }
+    });
+
+    const total = items.reduce((s, it) => s + (it.precio_unitario * it.cantidad), 0)
+                + promociones.reduce((s, p) => s + p.precio, 0);
+
+    const btnCheckout = document.getElementById('btnCheckout');
+    if (btnCheckout) { btnCheckout.disabled = true; btnCheckout.textContent = 'Procesando...'; }
+
+    try {
+        const res = await fetch('/burguersoft/controllers/ventas.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                metodo_pago: metodoPago,
+                items: items,
+                promociones: promociones
+            })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || !data.success) {
+            alert('No se pudo registrar la venta: ' + (data.error || 'Error desconocido'));
+            return;
+        }
+
+        // Venta confirmada y guardada en `venta` y `detalle_venta`
+        ultimaVentaId = data.venta_id;
+        pedidoRealizado = true;
+
+        const todosLosItems = [...mapProductos.values(), ...mapPromos.values()];
+        const mensajeWa = construirMensajeWhatsapp(todosLosItems, total, metodoPago);
+        window.open('https://wa.me/573224548294?text=' + mensajeWa);
+
+        carrito = [];
+        guardarCarrito();
+        actualizarCarrito();
+
+        const btn = document.getElementById('btn-ver-factura');
+        if (btn) btn.style.display = 'block';
+
+        alert('¡Compra confirmada! Tu pedido #' + ultimaVentaId + ' fue registrado.');
+    } catch (e) {
+        console.error('Error al enviar el pedido', e);
+        alert('Error de conexión al confirmar la compra. Intenta de nuevo.');
+    } finally {
+        if (btnCheckout) { btnCheckout.disabled = carrito.length === 0; btnCheckout.textContent = 'Finalizar Compra'; }
     }
+}
+
+function construirMensajeWhatsapp(items, total, metodoPago) {
+    let mensaje = ' Pedido BurgerSoft%0A%0A';
+    items.forEach(v => {
+        mensaje += `• ${v.nombre} x${v.cantidad} — $${(v.precio * v.cantidad).toLocaleString('es-CO')}%0A`;
+    });
     mensaje += `%0A*TOTAL:* $${total.toLocaleString('es-CO')}`;
     mensaje += `%0A*Método de pago:* ${metodoPago}`;
-
-    window.open('https://wa.me/573224548294?text=' + mensaje);
-    pedidoRealizado = true;
-
-    const btn = document.getElementById('btn-ver-factura');
-    if (btn) btn.style.display = 'block';
+    return mensaje;
 }
 
 function mostrarFactura() {

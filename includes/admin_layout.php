@@ -41,6 +41,15 @@ $esAdmin     = $rolAdmin === 'Administrador';
             </a>
         </div>
 
+        <div class="sidebar-item <?= $navActivo === 'compras' ? 'active' : '' ?>">
+            <a href="../php/compras.php">
+                <img src="../estilos/img/buy.png" class="icono-sidebar" alt="">
+            Compras
+            </a>
+        </div>
+
+        
+
         <?php if ($esAdmin): ?>
         <div class="sidebar-item <?= $navActivo === 'marca' ? 'active' : '' ?>">
             <a href="../php/gestion_marca.php">

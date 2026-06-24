@@ -97,7 +97,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
     <div class="header-left">
         <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
         <hr>
-        <a href="/burguersoft/php/El Oriente.php" class="nom-local">El Oriente</a>
+        <a href="/burguersoft/php/el_oriente.php" class="nom-local">El Oriente</a>
     </div>
 
     <nav class="header-center">
@@ -150,7 +150,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
                     </button>
                     <button type="button" class="btn-cart-action" onclick="verFactura()">
                         Ver Factura
-                
+                     </button>
                 </div>
 
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">

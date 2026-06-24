@@ -23,12 +23,12 @@ foreach ($items as $item) {
 
 $pdo->beginTransaction();
 try {
-    $pdo->prepare("INSERT INTO venta (valor_total, metodo_pago, usuario_id) VALUES (?,?,?)")
-        ->execute([$total, $metodo, $usuario_id]);
+    $pdo->prepare("INSERT INTO venta (valor_total, metodo_pago, estado, usuario_id) VALUES (?,?,?,?)")
+        ->execute([$total, $metodo, 'Pagado', $usuario_id]);
     $venta_id = (int)$pdo->lastInsertId();
 
     foreach ($items as $item) {
-        $producto_id     = (int)($item['id_producto']     ?? 0);
+        $producto_id     = (int)($item['producto_id'] ?? $item['id_producto'] ?? 0);
         $cantidad        = (int)($item['cantidad']        ?? 1);
         $precio_unitario = (float)($item['precio_unitario'] ?? 0);
         $subtotal        = $cantidad * $precio_unitario;
