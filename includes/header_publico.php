@@ -152,14 +152,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
                     </button>
                     <button type="button" class="btn-cart-action" onclick="verFactura()">
                         Ver Factura
-                    </button>
-                    <select class="btn-cart-action btn-pago">
-                        <option value="">Método de Pago</option>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="tarjeta">Tarjeta</option>
-                        <option value="nequi">Nequi</option>
-                        <option value="daviplata">Daviplata</option>
-                    </select>
+                
                 </div>
 
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
@@ -669,12 +662,6 @@ function vaciarCarrito() {
             actualizarCarrito();
         }
     }
-}
-
-
-function seleccionarMetodoPago() {
-    console.log("Abriendo opciones de método de pago...");
-    alert("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
 }
 
 function abrirModalPerfil() {
