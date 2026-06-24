@@ -333,7 +333,7 @@ body.dark-mode .contact-section * {
     background-color: transparent;
 }
 
-
+/* SE CORRIGIÓ ESTA REGLA: Se agregó :not(#cartBtn) para evitar que alcance y pinte gris el fondo del botón del carrito en el navbar */
 body.dark-mode .producto-card, 
 body.dark-mode .producto-card *,
 body.dark-mode .prod-card,
@@ -347,7 +347,7 @@ body.dark-mode .acc-panel *,
 body.dark-mode input, 
 body.dark-mode textarea, 
 body.dark-mode select:not(.btn-pago),
-body.dark-mode button:not(.acc-fab):not(.close-cart):not(#cartItems button):not(.btn-cart-action):not(.cart-panel *):not(.btn-pago):not(.acc-btn-option):not(.acc_tema):not(.acc-btn-reset) {
+body.dark-mode button:not(.acc-fab):not(#cartBtn):not(.close-cart):not(#cartItems button):not(.btn-cart-action):not(.cart-panel *):not(.btn-pago):not(.acc-btn-option):not(.acc_tema):not(.acc-btn-reset) {
     background-color: #242222!important;
 }
 
@@ -469,4 +469,28 @@ body.dark-mode .cart-panel .btn-checkout:not(:disabled):hover {
     background: #222222 !important;
     color: #EF9F27 !important;
     border-color: #ff5722 !important;
+}
+
+/* ====================================================================
+   CORRECCIÓN DEFINITIVA: ELIMINACIÓN TOTAL DEL FONDO GRIS DETRÁS DEL CARRITO
+   ==================================================================== */
+body.dark-mode #cartBtn,
+body.dark-mode #cartBtn *,
+body.dark-mode .cart-container,
+body.dark-mode .cart-container *,
+body.dark-mode [id*="cartBtn"],
+body.dark-mode [id*="cartBtn"] * {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    background-image: none !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+body.dark-mode #cartBtn:hover,
+body.dark-mode #cartBtn *:hover {
+    background: #111111 !important;
+    background-color: #111111 !important;
 }
