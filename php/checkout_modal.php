@@ -163,19 +163,19 @@ if ($logueado): ?>
                 <label class="co-label">Metodo de pago <span class="co-req">*</span></label>
                 <div class="co-pay-grid" id="co-rec-pay-grid">
                     <button class="co-pay-opt" data-val="efectivo" onclick="selPago(this,'rec')" type="button">
-                        <img src="../estilos/img/efectivo.png" alt="Efectivo">
+                        <img src="/burguersoft/estilos/img/dinero.png" alt="Efectivo">
                         Efectivo
                     </button>
                     <button class="co-pay-opt" data-val="tarjeta" onclick="selPago(this,'rec')" type="button">
-                        <img src="../estilos/img/tarjeta.png" alt="Tarjeta">
+                        <img src="/burguersoft/estilos/img/tarjeta.png" alt="Tarjeta">
                         Tarjeta
                     </button>
                     <button class="co-pay-opt" data-val="nequi" onclick="selPago(this,'rec')" type="button">
-                        <img src="../estilos/img/nequi.png" alt="Nequi">
+                        <img src="/burguersoft/estilos/img/nequi.png">
                         Nequi
                     </button>
                     <button class="co-pay-opt" data-val="daviplata" onclick="selPago(this,'rec')" type="button">
-                        <img src="../estilos/img/daviplata.png" alt="Daviplata">
+                        <img src="/burguersoft/estilos/img/daviplata.png">
                         Daviplata
                     </button>
                 </div>
@@ -211,7 +211,7 @@ if ($logueado): ?>
                 <label class="co-label">Metodo de pago <span class="co-req">*</span></label>
                 <div class="co-pay-grid" id="co-res-pay-grid">
                     <button class="co-pay-opt" data-val="efectivo" onclick="selPago(this,'res')" type="button">
-                        <img src="../estilos/img/efectivo.png" alt="Efectivo">
+                        <img src="/burguersoft/estilos/img/dinero.png" alt="Efectivo">
                         Efectivo
                     </button>
                     <button class="co-pay-opt" data-val="tarjeta" onclick="selPago(this,'res')" type="button">
