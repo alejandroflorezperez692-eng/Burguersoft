@@ -196,40 +196,36 @@ $navActivo = 'materia';
             font-weight: 700;
         }
 
-        .btn-edit-mp {
+        .btn-icon-del {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 7px 12px;
+            width: 32px;
+            height: 32px;
             border: none;
             border-radius: var(--r-sm);
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-            background: #dbeafe;
-            color: #1a3f7e;
-            transition: all 0.18s;
+            font-size: 13px;
+            background: #922; 
+            color: #fff; 
         }
 
-        .btn-edit-mp:hover { background: var(--info); color: #fff; }
-
-        .btn-del-mp {
+         .btn-icon-det {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 7px 12px;
+            width: 32px;
+            height: 32px;
             border: none;
             border-radius: var(--r-sm);
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-            background: #fde8e8;
-            color: #922;
-            transition: all 0.18s;
-            margin-left: 6px;
+            font-size: 13px;
+            background: rgb(19, 11, 74); 
+            color: #fff; 
         }
 
-        .btn-del-mp:hover { background: var(--danger); color: #fff; }
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+        .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
 
         body.dark-mode .mp-table { background: var(--surface); }
         body.dark-mode .mp-table thead { background: #0e0500; }
@@ -430,8 +426,8 @@ function mostrarTabla(datos) {
             <td>${estadoBadge(m.estado, m.cantidad)}</td>
             <td style="color:var(--text-400);">${m.nombre_marca || '—'}</td>
             <td>
-                <button class="btn-edit-mp" onclick="editar(${m.id},'${encodeURIComponent(m.nombre)}','${encodeURIComponent(m.tipo)}','${encodeURIComponent(m.valor)}','${encodeURIComponent(m.unidad_medida || '')}',${m.marca_id||0})" title="Editar">Editar</button>
-                <button class="btn-del-mp" onclick="eliminar(${m.id})" title="Eliminar">Eliminar</button>
+                <button class="btn-icon-det" onclick="editar(${m.id},'${encodeURIComponent(m.nombre)}','${encodeURIComponent(m.tipo)}','${encodeURIComponent(m.valor)}','${encodeURIComponent(m.unidad_medida || '')}',${m.marca_id||0})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                <button class="btn-icon-del" onclick="eliminar(${m.id})" title="Eliminar"><img src ="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
             </td>
         </tr>`;
     });

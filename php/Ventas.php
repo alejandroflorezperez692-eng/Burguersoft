@@ -335,6 +335,53 @@ $navActivo = 'ventas';
         .valor-cell { font-weight: 700; color: var(--brand); }
         .usuario-cell { font-weight: 600; }
 
+        .btn-icon-del {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: #922; 
+            color: #fff; 
+        }
+
+         .btn-icon-det {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: rgb(19, 11, 74); 
+            color: #fff; 
+        }
+
+        .btn-icon-can {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: #E8821A;
+            color: #fff; 
+        }
+
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+        .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
+        .btn-icon-can:hover{ background: rgb(203, 104, 38); color: #fff;
+        }
+
         body.dark-mode .kpi-card,
         body.dark-mode .form-panel,
         body.dark-mode .chart-card,
@@ -749,11 +796,11 @@ function mostrarTabla(datos) {
                 <td>${metodoBadge(v.metodo_pago)}</td>
                 <td>${estadoBadge(v.estado)}</td>
                 <td>
-                    <button class="btn-icon btn-icon-edit" onclick="prepararEdicion(${v.id})" title="Editar">Editar</button>
+                    <button class="btn-icon-det" onclick="prepararEdicion(${v.id})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
                     ${v.estado !== 'Cancelado'
-                        ? `<button class="btn-icon btn-icon-cancel" onclick="cancelarVenta(${v.id})" title="Cancelar" style="margin-left:6px;">Cancelar</button>`
+                        ? `<button class="btn-icon-can" onclick="cancelarVenta(${v.id})" title="Cancelar" style="margin-left:6px;"><img src="../estilos/img/cancel.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>`
                         : ''}
-                    <button class="btn-icon btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar" style="margin-left:6px;">Eliminar</button>
+                    <button class="btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar" style="margin-left:6px;"><img src="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
                 </td>
             `;
             tbody.appendChild(tr);
