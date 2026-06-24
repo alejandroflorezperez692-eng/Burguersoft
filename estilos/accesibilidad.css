@@ -68,8 +68,11 @@
     color: var(--text-600, #6b4c38);
 }
 
+/* MODIFICADO EN MODO CLARO: Ahora el botón de restablecer se pone naranja completo al pasar el mouse */
 .acc-btn-reset:hover {
-    background: #f0e0cc;
+    background: var(--brand, #E8821A) !important;
+    color: #fff !important;
+    border-color: var(--brand, #E8821A) !important;
     transform: none;
     box-shadow: none;
 }
@@ -98,7 +101,24 @@
     box-shadow: 0 8px 28px rgba(232,130,26,0.6);
 }
 
+/* ====================================================================
+   MODO CLARO - AJUSTES DEL PANEL DEL CARRITO
+   ==================================================================== */
+.cart-panel .btn-checkout {
+    transition: background-color 0.2s ease !important;
+}
 
+/* CORREGIDO EN MODO CLARO: Cambiado a fondo naranja vivo con letras blancas para que resalte y no se pierda */
+.cart-panel .btn-checkout:hover {
+    background-color: #e8821a !important; 
+    color: #ffffff !important;
+    border-color: #e8821a !important;
+}
+
+
+/* ====================================================================
+   MODO OSCURO GENERAL
+   ==================================================================== */
 body.dark-mode {
     --color-fondo:       rgb(65, 65, 65);
     --color-fondo-alt:   #1a1a1a;
@@ -223,6 +243,7 @@ body.dark-mode .acc-row-label {
     border-color: rgba(232,130,26,0.2) !important;
 }
 
+
 body.dark-mode .acc-btn-option,
 body.dark-mode .acc_tema,
 body.dark-mode .acc-btn-reset {
@@ -231,10 +252,21 @@ body.dark-mode .acc-btn-reset {
     border-color: rgba(232,130,26,0.25) !important;
 }
 
+/* Selectores ultradefinidos para obligar a que se llene todo el botón con el color gris oscuro uniforme en hover (MODO OSCURO) */
+body.dark-mode .acc-panel button.acc-btn-option:hover,
+body.dark-mode .acc-panel button.acc_tema:hover,
+body.dark-mode .acc-panel button.acc-btn-reset:hover,
+body.dark-mode .acc-panel .acc-row-btns button:hover {
+    background: #555555 !important;
+    background-color: #555555 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
 
 body.dark-mode input,
 body.dark-mode textarea,
-body.dark-mode select {
+body.dark-mode select:not(.btn-pago) {
     background-color: #2a1c12 !important;
     color: var(--dm-texto-input) !important;
     border-color: rgba(232,130,26,0.3) !important;
@@ -269,7 +301,7 @@ body.dark-mode .card,
 body.dark-mode .acc-panel,
 body.dark-mode input,
 body.dark-mode textarea,
-body.dark-mode select {
+body.dark-mode select:not(.btn-pago) {
     background-color: #242222 !important;
 }
 
@@ -314,8 +346,8 @@ body.dark-mode .acc-panel,
 body.dark-mode .acc-panel *,
 body.dark-mode input, 
 body.dark-mode textarea, 
-body.dark-mode select,
-body.dark-mode button:not(.acc-fab) {
+body.dark-mode select:not(.btn-pago),
+body.dark-mode button:not(.acc-fab):not(.close-cart):not(#cartItems button):not(.btn-cart-action):not(.cart-panel *):not(.btn-pago):not(.acc-btn-option):not(.acc_tema):not(.acc-btn-reset) {
     background-color: #242222!important;
 }
 
@@ -323,23 +355,118 @@ body.dark-mode .prod-card-nombre {
     color: var(--dm-texto) !important;
 }
 
-body.dark-mode .cart-actions-grid {
+/* ====================================================================
+   MODO OSCURO - PANEL DEL CARRITO
+   Todo lo de aquí solo aplica cuando el body tiene la clase "dark-mode".
+   ==================================================================== */
+
+/* --- 1) FONDO GENERAL DEL PANEL --- */
+body.dark-mode .cart-panel {
+    background-color: #000000 !important;
+    box-shadow: -5px 0 25px rgba(0,0,0,.5) !important;
+}
+
+body.dark-mode .cart-items {
+    background-color: #000000 !important;
+}
+
+body.dark-mode .cart-footer {
+    background-color: #000000 !important;
+    border-top: 1px solid rgba(232,130,26,0.2) !important;
+}
+
+/* --- 2) ENCABEZADO "MI CARRITO" Y BOTÓN DE CERRAR (X) --- */
+body.dark-mode .cart-header-title {
+    background-color: #000000 !important;   
+    color: #000000 !important;               
+    border-bottom: 1px solid rgba(232,130,26,0.25) !important;  
+}
+
+body.dark-mode .cart-header-title .close-cart,
+body.dark-mode #closeCart,
+body.dark-mode .close-cart {
+    background-color: transparent !important;   
+    background: transparent !important;
+    color: #ffffff !important;               
+}
+
+/* --- 3) CARRITO VACÍO (icono y texto "Tu carrito está vacío") --- */
+body.dark-mode .empty-cart {
+    color: #888 !important;                  
+}
+
+body.dark-mode .empty-cart svg {
+    stroke: #ccc !important;                 
+}
+
+/* --- 4) CADA PRODUCTO DENTRO DEL CARRITO --- */
+body.dark-mode #cartItems > div {
+    border-bottom: 1px solid rgba(232,130,26,0.15) !important;
+    background-color: #000000 !important;
+}
+
+body.dark-mode #cartItems > div > div:nth-child(2) > div:nth-child(1) {
     color: #ffffff !important;
 }
 
-body .darck-mode .btn-pago {
-    background-color: #ffffff !important;
+body.dark-mode #cartItems > div > div:nth-child(2) > div:nth-child(2) {
+    color: #c8b09a !important;
 }
 
-.cart-actions-grid .btn-cart-action,
-.cart-actions-grid .btn-vaciar,
-.cart-actions-grid .btn-pago,
-.cart-actions-grid select.btn-pago option {
-    color: #ffffff !important;
+body.dark-mode #cartItems > div > button {
+    background-color: transparent !important;   
+    color: #e63946 !important;               
 }
 
-.cart-actions-grid .btn-cart-action:hover,
-.cart-actions-grid .btn-vaciar:hover,
-.cart-actions-grid .btn-pago:hover {
-    color: #ffffff !important;
+/* --- 5) TOTAL A PAGAR --- */
+body.dark-mode .subtotal span {
+    color: #BA7517 !important;               
+}
+
+body.dark-mode .subtotal strong {
+    color: #ffffff !important;               
+}
+
+/* --- 6) BOTONES INTERNOS DEL PANEL: Vaciar Carrito / Ver Factura / Método de Pago --- */
+body.dark-mode .cart-panel .cart-actions-grid,
+body.dark-mode .cart-panel .cart-actions-grid * {
+     background-color: #000000 !important; 
+}
+
+body.dark-mode .cart-panel .btn-cart-action,
+body.dark-mode .cart-panel .btn-pago,
+body.dark-mode .cart-panel select.btn-pago {
+    background-color: #000000 !important;   
+    color: #BA7517 !important;               
+    border: 1px solid #ff5722 !important;    
+    transition: background-color 0.2s ease !important;
+}
+
+body.dark-mode .cart-panel .btn-cart-action:hover,
+body.dark-mode .cart-panel .btn-pago:hover,
+body.dark-mode .cart-panel select.btn-pago:hover {
+    background-color: #222222 !important;   
+    color: #EF9F27 !important;               
+}
+
+body.dark-mode .cart-panel select.btn-pago option {
+    background-color: #1a1a1a !important;
+    color: #ff5722 !important;
+}
+
+/* --- 7) BOTÓN FINALIZAR COMPRA --- */
+body.dark-mode .cart-panel .btn-checkout {
+    background-color: #000000 !important;       
+    color: #ff5722 !important;
+    border: 1px solid #ff5722 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+/* Forza el fondo gris oscuro sólido en hover para Finalizar Compra (MODO OSCURO) */
+body.dark-mode .cart-panel .btn-checkout:hover,
+body.dark-mode .cart-panel .btn-checkout:not(:disabled):hover {
+    background-color: #222222 !important;
+    background: #222222 !important;
+    color: #EF9F27 !important;
+    border-color: #ff5722 !important;
 }

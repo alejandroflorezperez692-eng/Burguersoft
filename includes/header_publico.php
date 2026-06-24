@@ -91,7 +91,7 @@ if (!function_exists('hv')) {
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 ?>
-<link rel="stylesheet" href="../estilos/accesibilidad.css">
+<link rel="stylesheet" href="../estilos/accesibilidad.css?v=2">
 <script src="../estilos/accesibilidad.js"></script>
 <header>
     <div class="header-left">
