@@ -318,6 +318,68 @@ $navActivo = 'compras';
         body.dark-mode .field input,
         body.dark-mode .field select { background: var(--surface-2); color: var(--text-900); }
         body.dark-mode .search-input { background: var(--surface); color: var(--text-900); }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(14, 5, 0, 0.65); 
+            backdrop-filter: blur(4px); 
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .contenido-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 32px;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto; 
+            animation: slideUp 0.3s var(--ease);
+        }
+
+        .cerrar {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-400);
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.18s;
+        }
+
+        .cerrar:hover {
+            color: var(--danger);
+        }
+
+        #modalFactura p {
+            margin: 0;
+            color: var(--text-600);
+        }
+
+        #modalFactura strong {
+            color: var(--text-900);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -403,6 +465,38 @@ $navActivo = 'compras';
     </table>
 
 </div>
+</div>
+
+<div id="modalFactura" class="modal" style="display: none;">
+  <div class="contenido-modal" style="max-width: 600px; width: 90%;">
+    <span class="cerrar" onclick="cerrarModal()">&times;</span>
+    
+    <div class="form-panel-title" style="margin-bottom: 15px;">Detalle de la Compra / Factura</div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; font-size: 13px;">
+        <p><strong>ID Compra:</strong> <span id="factura-id">—</span></p>
+        <p><strong>Fecha:</strong> <span id="factura-fecha">—</span></p>
+        <p><strong>Método de Pago:</strong> <span id="factura-metodo" class="metodo-badge">—</span></p>
+    </div>
+
+    <table class="compras-table" style="box-shadow: none; margin-bottom: 15px;">
+        <thead style="background: var(--surface-3);">
+            <tr>
+                <th style="color: var(--text-900);">Insumo / Materia Prima</th>
+                <th style="color: var(--text-900);">Proveedor</th>
+                <th style="color: var(--text-900);">Cantidad</th>
+                <th style="color: var(--text-900);">Precio Unit.</th>
+                <th style="color: var(--text-900);">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody id="factura-lineas">
+            </tbody>
+    </table>
+
+    <div class="compra-total-row" style="border-radius: var(--r-sm);">
+        <span class="label">Total Facturado:</span>
+        <span class="valor" id="factura-total">$0</span>
+    </div>
 </div>
 
 <div class="acc-panel" id="accPanel">
@@ -696,7 +790,7 @@ function mostrarTabla(datos) {
             <td class="valor-cell">$${fmt.format(Number(comp.valor_total) || 0)}</td>
             <td>
                 <button class="btn-icon-del" onclick="eliminarCompra(${comp.id})" title="Eliminar"><img src="../estilos/img/trash.png"; style="filter:invert(1);pointer-events:none;width:18px;height:18px;";></button>
-                <button class="btn-icon-det" oneclick=" "><img src="../estilos/img/bill.png"; style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                <button class="btn-icon-det" onclick="verDetalle(${comp.id})" title="Ver Detalles"><img src="../estilos/img/bill.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
             </td>
         </tr>`;
     });
@@ -729,6 +823,54 @@ document.getElementById('buscar').addEventListener('input', e => {
             || String(c.id).includes(txt);
     });
     mostrarTabla(fil);
+});
+
+function verDetalle(id) {
+    const compra = comprasGlobal.find(c => c.id == id);
+    const items = detallesGlobal[id] || [];
+
+    if (!compra) return alert("No se encontraron los datos de esta compra.");
+
+    document.getElementById('factura-id').textContent = `#${compra.id}`;
+    document.getElementById('factura-fecha').textContent = compra.fecha ? new Date(compra.fecha).toLocaleDateString('es-CO') : '—';
+    document.getElementById('factura-metodo').textContent = compra.metodo_pago;
+    document.getElementById('factura-total').textContent = '$' + fmt.format(Number(compra.valor_total) || 0);
+
+    const tablaLineas = document.getElementById('factura-lineas');
+    tablaLineas.innerHTML = '';
+
+    if (items.length === 0) {
+        tablaLineas.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:15px; color:var(--text-400);">No hay detalles registrados para esta factura.</td></tr>`;
+    } else {
+        items.forEach(i => {
+            const cantidad = Number(i.cantidad) || 0;
+            const precioUnit = Number(i.precio_unitario) || 0;
+            const subtotal = cantidad * precioUnit;
+
+            tablaLineas.innerHTML += `
+                <tr>
+                    <td>${i.nombre_materia || '—'}</td>
+                    <td>${i.nombre_marca || '—'}</td>
+                    <td>${cantidad}</td>
+                    <td>$${fmt.format(precioUnit)}</td>
+                    <td class="valor-cell">$${fmt.format(subtotal)}</td>
+                </tr>
+            `;
+        });
+    }
+
+    document.getElementById('modalFactura').style.display = 'flex';
+}
+
+function cerrarModal() {
+    document.getElementById('modalFactura').style.display = 'none';
+}
+
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('modalFactura');
+    if (e.target === modal) {
+        cerrarModal();
+    }
 });
 </script>
 </body>

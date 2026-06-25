@@ -291,7 +291,9 @@ include __DIR__ . '/../includes/header_publico.php';
                             )">+</button>
                         <?php else: ?>
                         <a href="/burguersoft/php/login.php">
-                            <button type="button" class="btn-add" title="Inicia sesión para agregar">🔒</button>
+                            <button type="button" class="btn-add" title="Inicia sesión para agregar"><img src="../estilos/img/bloquear.png"
+                                        style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                            </button>
                         </a>
                         <?php endif; ?>
                     </div>
