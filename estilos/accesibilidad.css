@@ -104,15 +104,40 @@
 /* ====================================================================
    MODO CLARO - AJUSTES DEL PANEL DEL CARRITO
    ==================================================================== */
-.cart-panel .btn-checkout {
-    transition: background-color 0.2s ease !important;
-}
-
-/* CORREGIDO EN MODO CLARO: Cambiado a fondo naranja vivo con letras blancas para que resalte y no se pierda */
-.cart-panel .btn-checkout:hover {
+/* CORREGIDO EN MODO CLARO: El botón siempre será naranja vivo con letras blancas por defecto, incluso si está deshabilitado (:disabled) */
+.cart-panel .btn-checkout,
+body:not(.dark-mode) .cart-panel .btn-checkout,
+body:not(.dark-mode) .cart-panel .btn-checkout:disabled {
     background-color: #e8821a !important; 
     color: #ffffff !important;
     border-color: #e8821a !important;
+    opacity: 1 !important;
+    transition: background-color 0.2s ease, transform 0.1s ease !important;
+}
+
+/* MODIFICADO: Agregado un efecto visual al pasar el mouse (hover) cambiando el fondo a un tono naranja más oscuro y activo (#cf6f13) */
+.cart-panel .btn-checkout:hover,
+body:not(.dark-mode) .cart-panel .btn-checkout:hover,
+body:not(.dark-mode) .cart-panel .btn-checkout:not(:disabled):hover {
+    background-color: #cf6f13 !important; 
+    color: #ffffff !important;
+    border-color: #cf6f13 !important;
+}
+
+/* MODIFICADO EN MODO CLARO: Forzar que "Vaciar Carrito" y "Ver Factura" hereden el color de letra legible del select */
+body:not(.dark-mode) .cart-panel .btn-cart-action {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* ====================================================================
+   MODO CLARO - CORRECCIÓN SECCIÓN SOBRE NOSOTROS (FONDO BLANCO TOTAL)
+   ==================================================================== */
+.nosotros-section,
+body:not(.dark-mode) .nosotros-section {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
 }
 
 
@@ -120,20 +145,19 @@
    MODO OSCURO GENERAL
    ==================================================================== */
 body.dark-mode {
-    --color-fondo:       rgb(65, 65, 65);
-    --color-fondo-alt:   #1a1a1a;
+    --color-fondo:       #000000;
+    --color-fondo-alt:   #000000;
     --color-texto:       #E8821A;
     --color-texto-suave: #E8821A;
     --color-primario:    #E8821A;
     --color-borde:       rgba(232,130,26,0.25);
 
-    
     --dm-texto:        #E8821A; 
     --dm-texto-titulo: #f5c98a;  
     --dm-texto-suave:  #c8b09a;  
     --dm-texto-input:  #f0e8dc; 
 
-    background-color: #121212 !important;
+    background-color: #000000 !important;
     color: var(--dm-texto) !important;
 }
 
@@ -141,12 +165,20 @@ body.dark-mode {
 body.dark-mode header,
 body.dark-mode .nav-container,
 body.dark-mode .site-header {
-    background-color: #3f3f3f !important;
+    background-color: #1a1a1a !important;
 }
 
 body.dark-mode .nav-link,
 body.dark-mode .nav-links a {
     color: var(--dm-texto) !important;
+}
+
+/* Quita el fondo que aparece al pasar el mouse o al quedar en la página activa */
+.header-center a:hover,
+.header-center a.activo,
+body.dark-mode .header-center a:hover,
+body.dark-mode .header-center a.activo {
+    background: transparent !important;
 }
 
 
@@ -156,10 +188,9 @@ body.dark-mode .nosotros-section,
 body.dark-mode .nosotros-ubicacion,
 body.dark-mode .contact-section,
 body.dark-mode .promociones,
-body.dark-mode .map-content,
 body.dark-mode .section-title,
 body.dark-mode .section-text {
-    background-color: #242222 !important;
+    background-color: #000000 !important; /* CORREGIDO A NEGRO ABSOLUTO */
     color: var(--dm-texto) !important;
 }
 
@@ -182,7 +213,7 @@ body.dark-mode .producto-card,
 body.dark-mode .promo-card,
 body.dark-mode .icon-box,
 body.dark-mode .card {
-    background-color: #2a1c12 !important;
+    background-color: #121212 !important;
     border-color: rgba(232,130,26,0.2) !important;
     color: var(--dm-texto) !important;
 }
@@ -194,7 +225,7 @@ body.dark-mode .promo-card h3 {
 
 body.dark-mode .icons-container,
 body.dark-mode .icon-box {
-    background-color: #242222 ;
+    background-color: #000000 !important;
 }
 
 body.dark-mode .producto-card p,
@@ -204,19 +235,19 @@ body.dark-mode .promo-card p {
 
 
 body.dark-mode footer {
-    background-color: #242222 !important;
+    background-color: #000000 !important;
     border-top: 1px solid var(--dm-texto) !important; 
 }
 
 body.dark-mode .footer-container,
 body.dark-mode .footer-brand,
 body.dark-mode .footer-section {
-    background-color: #242222 !important;
+    background-color: #000000 !important;
     color: var(--dm-texto) !important;
 }
 
 body.dark-mode .footer-bottom {
-    background-color: #3f3f3f !important;
+    background-color: #1a1a1a !important;
     color: var(--dm-texto) !important;
 }
 
@@ -233,7 +264,7 @@ body.dark-mode footer li {
 
 
 body.dark-mode .acc-panel {
-    background-color: #2a1c12 !important;
+    background-color: #121212 !important;
     border-color: rgba(232,130,26,0.3) !important;
 }
 
@@ -247,7 +278,7 @@ body.dark-mode .acc-row-label {
 body.dark-mode .acc-btn-option,
 body.dark-mode .acc_tema,
 body.dark-mode .acc-btn-reset {
-    background-color: #3a2410 !important;
+    background-color: #1a1a1a !important;
     color: var(--dm-texto-input) !important;
     border-color: rgba(232,130,26,0.25) !important;
 }
@@ -267,7 +298,7 @@ body.dark-mode .acc-panel .acc-row-btns button:hover {
 body.dark-mode input,
 body.dark-mode textarea,
 body.dark-mode select:not(.btn-pago) {
-    background-color: #2a1c12 !important;
+    background-color: #121212 !important;
     color: var(--dm-texto-input) !important;
     border-color: rgba(232,130,26,0.3) !important;
 }
@@ -288,9 +319,8 @@ body.dark-mode .site-header,
 body.dark-mode .nosotros-section,
 body.dark-mode .nosotros-ubicacion,
 body.dark-mode .contact-section,
-body.dark-mode .promociones,
-body.dark-mode .map-content {
-    background-color: #111111 !important;
+body.dark-mode .promociones {
+    background-color: #000000 !important; /* CORREGIDO A NEGRO ABSOLUTO */
 }
 
 
@@ -302,7 +332,7 @@ body.dark-mode .acc-panel,
 body.dark-mode input,
 body.dark-mode textarea,
 body.dark-mode select:not(.btn-pago) {
-    background-color: #242222 !important;
+    background-color: #121212 !important;
 }
 
 
@@ -312,7 +342,7 @@ body.dark-mode .footer-container,
 body.dark-mode .footer-brand,
 body.dark-mode .footer-section,
 body.dark-mode .footer-bottom {
-    background-color: #1d1d1d !important;
+    background-color: #000000 !important;
 }
 
 
@@ -333,7 +363,7 @@ body.dark-mode .contact-section * {
     background-color: transparent;
 }
 
-/* SE CORRIGIÓ ESTA REGLA: Se agregó :not(#cartBtn) para evitar que alcance y pinte gris el fondo del botón del carrito en el navbar */
+/* CORRECCIÓN DE LA REGLA ULTRA-GLOBAL PARA EVITAR EL GRIS OSCURO */
 body.dark-mode .producto-card, 
 body.dark-mode .producto-card *,
 body.dark-mode .prod-card,
@@ -347,8 +377,8 @@ body.dark-mode .acc-panel *,
 body.dark-mode input, 
 body.dark-mode textarea, 
 body.dark-mode select:not(.btn-pago),
-body.dark-mode button:not(.acc-fab):not(#cartBtn):not(.close-cart):not(#cartItems button):not(.btn-cart-action):not(.cart-panel *):not(.btn-pago):not(.acc-btn-option):not(.acc_tema):not(.acc-btn-reset) {
-    background-color: #242222!important;
+body.dark-mode button:not(.acc-fab):not(#toggleCart):not(.close-cart):not(#cartItems button):not(.btn-cart-action):not(.cart-panel *):not(.btn-pago):not(.acc-btn-option):not(.acc_tema):not(.acc-btn-reset):not(.nosotros-ubicacion):not(.nosotros-ubicacion *):not(.map-content):not(.map-content *):not(.map-info):not(.map-info *) {
+    background-color: #000000 !important; /* CORREGIDO A NEGRO ABSOLUTO */
 }
 
 body.dark-mode .prod-card-nombre {
@@ -357,10 +387,7 @@ body.dark-mode .prod-card-nombre {
 
 /* ====================================================================
    MODO OSCURO - PANEL DEL CARRITO
-   Todo lo de aquí solo aplica cuando el body tiene la clase "dark-mode".
    ==================================================================== */
-
-/* --- 1) FONDO GENERAL DEL PANEL --- */
 body.dark-mode .cart-panel {
     background-color: #000000 !important;
     box-shadow: -5px 0 25px rgba(0,0,0,.5) !important;
@@ -375,7 +402,6 @@ body.dark-mode .cart-footer {
     border-top: 1px solid rgba(232,130,26,0.2) !important;
 }
 
-/* --- 2) ENCABEZADO "MI CARRITO" Y BOTÓN DE CERRAR (X) --- */
 body.dark-mode .cart-header-title {
     background-color: #000000 !important;   
     color: #000000 !important;               
@@ -390,7 +416,6 @@ body.dark-mode .close-cart {
     color: #ffffff !important;               
 }
 
-/* --- 3) CARRITO VACÍO (icono y texto "Tu carrito está vacío") --- */
 body.dark-mode .empty-cart {
     color: #888 !important;                  
 }
@@ -399,7 +424,6 @@ body.dark-mode .empty-cart svg {
     stroke: #ccc !important;                 
 }
 
-/* --- 4) CADA PRODUCTO DENTRO DEL CARRITO --- */
 body.dark-mode #cartItems > div {
     border-bottom: 1px solid rgba(232,130,26,0.15) !important;
     background-color: #000000 !important;
@@ -418,7 +442,6 @@ body.dark-mode #cartItems > div > button {
     color: #e63946 !important;               
 }
 
-/* --- 5) TOTAL A PAGAR --- */
 body.dark-mode .subtotal span {
     color: #BA7517 !important;               
 }
@@ -427,7 +450,6 @@ body.dark-mode .subtotal strong {
     color: #ffffff !important;               
 }
 
-/* --- 6) BOTONES INTERNOS DEL PANEL: Vaciar Carrito / Ver Factura / Método de Pago --- */
 body.dark-mode .cart-panel .cart-actions-grid,
 body.dark-mode .cart-panel .cart-actions-grid * {
      background-color: #000000 !important; 
@@ -454,7 +476,6 @@ body.dark-mode .cart-panel select.btn-pago option {
     color: #ff5722 !important;
 }
 
-/* --- 7) BOTÓN FINALIZAR COMPRA --- */
 body.dark-mode .cart-panel .btn-checkout {
     background-color: #000000 !important;       
     color: #ff5722 !important;
@@ -462,7 +483,6 @@ body.dark-mode .cart-panel .btn-checkout {
     transition: background-color 0.2s ease !important;
 }
 
-/* Forza el fondo gris oscuro sólido en hover para Finalizar Compra (MODO OSCURO) */
 body.dark-mode .cart-panel .btn-checkout:hover,
 body.dark-mode .cart-panel .btn-checkout:not(:disabled):hover {
     background-color: #222222 !important;
@@ -472,16 +492,16 @@ body.dark-mode .cart-panel .btn-checkout:not(:disabled):hover {
 }
 
 /* ====================================================================
-   CORRECCIÓN DEFINITIVA: ELIMINACIÓN TOTAL DEL FONDO GRIS DETRÁS DEL CARRITO
+   CORRECCIÓN DEFINITIVA: ELIMINACIÓN TOTAL DEL FONDO DETRÁS DEL CARRITO
    ==================================================================== */
-body.dark-mode #cartBtn,
-body.dark-mode #cartBtn *,
+body.dark-mode #toggleCart,
+body.dark-mode #toggleCart *,
 body.dark-mode .cart-container,
 body.dark-mode .cart-container *,
 body.dark-mode [id*="cartBtn"],
 body.dark-mode [id*="cartBtn"] * {
-    background: #111111 !important;
-    background-color: #111111 !important;
+    background: transparent !important;
+    background-color: transparent !important;
     background-image: none !important;
     border: none !important;
     border-color: transparent !important;
@@ -489,8 +509,31 @@ body.dark-mode [id*="cartBtn"] * {
     outline: none !important;
 }
 
-body.dark-mode #cartBtn:hover,
-body.dark-mode #cartBtn *:hover {
-    background: #111111 !important;
-    background-color: #111111 !important;
+body.dark-mode #toggleCart:hover,
+body.dark-mode #toggleCart *:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* ====================================================================
+   CORRECCIÓN ULTRA-REFORZADA: ELIMINAR FONDO DE LOS TEXTOS EN UBICACIÓN
+   ==================================================================== */
+body.dark-mode .nosotros-ubicacion,
+body.dark-mode .nosotros-ubicacion *,
+body.dark-mode .map-content,
+body.dark-mode .map-content *,
+body.dark-mode .map-info,
+body.dark-mode .map-info *,
+body.dark-mode [class*="ubicacion"],
+body.dark-mode [class*="ubicacion"] *,
+body.dark-mode .nosotros-ubicacion h2,
+body.dark-mode .nosotros-ubicacion p,
+body.dark-mode .nosotros-ubicacion span,
+body.dark-mode section h2,
+body.dark-mode section p,
+body.dark-mode section span,
+body.dark-mode .section-title,
+body.dark-mode .section-text {
+    background: transparent !important;
+    background-color: transparent !important;
 }
