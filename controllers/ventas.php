@@ -54,6 +54,7 @@ if ($method === 'POST') {
         jsonResponse(['error' => 'Faltan datos de la venta'], 400);
 
     $metodos_validos = ['Efectivo','Tarjeta','Transferencia','Nequi','Daviplata'];
+    $metodo = ucfirst(strtolower($metodo));
     if (!in_array($metodo, $metodos_validos))
         jsonResponse(['error' => 'Método de pago inválido'], 400);
 
@@ -72,11 +73,15 @@ if ($method === 'POST') {
             $cant    = (int)($item['cantidad'] ?? 1);
             if (!$prod_id) continue;
 
-            $sStock = $pdo->prepare("SELECT catidad FROM producto WHERE id = ?");
+            $sStock = $pdo->prepare("SELECT cantidad, nombre, estado FROM producto WHERE id = ?");
             $sStock->execute([$prod_id]);
-            $stock = (int)$sStock->fetchColumn();
+            $infoProd = $sStock->fetch();
+            if (!$infoProd)
+                throw new RuntimeException("El producto seleccionado ya no existe");
+
+            $stock = (int)$infoProd['cantidad'];
             if ($stock < $cant)
-                throw new RuntimeException("Stock insuficiente para el producto ID $prod_id");
+                throw new RuntimeException("Stock insuficiente para: " . $infoProd['nombre']);
 
             $sMateria = $pdo->prepare("
                 SELECT r.materia_id, r.cantidad_usada, mp.cantidad AS stock_mp, mp.nombre AS nombre_mp
@@ -98,15 +103,15 @@ if ($method === 'POST') {
             $promo_id = (int)($promo['promocion_id'] ?? 0);
             if (!$promo_id) continue;
             $sp = $pdo->prepare("
-                SELECT pp.producto_id, p.catidad, p.nombre
+                SELECT pp.id_producto, p.cantidad, p.nombre
                 FROM promocion_producto pp
-                JOIN producto p ON p.id = pp.producto_id
-                WHERE pp.promocion_id = ?
+                JOIN producto p ON p.id = pp.id_producto
+                WHERE pp.id_promocion = ?
             ");
             $sp->execute([$promo_id]);
             $prods_promo = $sp->fetchAll();
             foreach ($prods_promo as $pp) {
-                if ((int)$pp['catidad'] < 1)
+                if ((int)$pp['cantidad'] < 1)
                     throw new RuntimeException("Stock insuficiente para: " . $pp['nombre']);
             }
         }
@@ -131,7 +136,7 @@ if ($method === 'POST') {
 
             $pdo->prepare("
                 UPDATE producto
-                SET catidad = GREATEST(0, CAST(catidad AS SIGNED) - ?)
+                SET cantidad = GREATEST(0, CAST(cantidad AS SIGNED) - ?)
                 WHERE id = ?
             ")->execute([$cant, $prod_id]);
 
@@ -141,6 +146,8 @@ if ($method === 'POST') {
                 SET mp.cantidad = GREATEST(0, mp.cantidad - (r.cantidad_usada * ?))
                 WHERE r.producto_id = ? AND mp.estado != 'Inactivo'
             ")->execute([$cant, $prod_id]);
+
+            actualizarEstadoProducto($pdo, $prod_id);
         }
 
         $insPromo = $pdo->prepare("INSERT INTO venta_promocion (venta_id, promocion_id) VALUES (?,?)");
@@ -151,7 +158,7 @@ if ($method === 'POST') {
             $insPromo->execute([$venta_id, $promo_id]);
 
             $sp = $pdo->prepare("
-                SELECT producto_id FROM promocion_producto WHERE promocion_id = ?
+                SELECT id_producto FROM promocion_producto WHERE id_promocion = ?
             ");
             $sp->execute([$promo_id]);
             $prods_promo = $sp->fetchAll(PDO::FETCH_COLUMN);
@@ -166,7 +173,7 @@ if ($method === 'POST') {
 
                 $pdo->prepare("
                     UPDATE producto
-                    SET catidad = GREATEST(0, CAST(catidad AS SIGNED) - 1)
+                    SET cantidad = GREATEST(0, CAST(cantidad AS SIGNED) - 1)
                     WHERE id = ?
                 ")->execute([$pid]);
 
@@ -176,6 +183,8 @@ if ($method === 'POST') {
                     SET mp.cantidad = GREATEST(0, mp.cantidad - r.cantidad_usada)
                     WHERE r.producto_id = ? AND mp.estado != 'Inactivo'
                 ")->execute([$pid]);
+
+                actualizarEstadoProducto($pdo, $pid);
             }
         }
 
@@ -193,20 +202,91 @@ if ($method === 'PUT') {
     $estado = limpiar($body['estado'] ?? '');
     $metodo = limpiar($body['metodo_pago'] ?? '');
 
-    $campos = [];
-    $vals   = [];
-    if ($estado) { $campos[] = 'estado = ?'; $vals[] = $estado; }
-    if ($metodo) { $campos[] = 'metodo_pago = ?'; $vals[] = $metodo; }
-    if (!$campos) jsonResponse(['error' => 'Sin datos para actualizar'], 400);
-    $vals[] = $id;
-    $pdo->prepare("UPDATE venta SET " . implode(', ', $campos) . " WHERE id = ?")->execute($vals);
-    jsonResponse(['success' => true]);
+    if (!$estado && !$metodo) jsonResponse(['error' => 'Sin datos para actualizar'], 400);
+
+    $estados_validos = ['Pagado', 'Cancelado', 'Reembolsada', 'Rechazada'];
+    if ($estado && !in_array($estado, $estados_validos))
+        jsonResponse(['error' => 'Estado inválido'], 400);
+
+    $sVenta = $pdo->prepare("SELECT estado, usuario_id FROM venta WHERE id = ?");
+    $sVenta->execute([$id]);
+    $venta = $sVenta->fetch();
+    if (!$venta) jsonResponse(['error' => 'Venta no encontrada'], 404);
+    $estadoActual = $venta['estado'];
+
+    $esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
+    if (!$esAdmin) {
+        if ((int)$venta['usuario_id'] !== (int)$_SESSION['id_usuario'])
+            jsonResponse(['error' => 'No autorizado'], 403);
+        if ($estado !== 'Cancelado' || $metodo)
+            jsonResponse(['error' => 'Solo puedes cancelar tu pedido'], 403);
+        if ($estadoActual !== 'Pagado')
+            jsonResponse(['error' => 'Este pedido ya no se puede cancelar'], 409);
+    }
+
+    $pdo->beginTransaction();
+    try {
+        if ($estado === 'Cancelado' && $estadoActual !== 'Cancelado') {
+            $sDetalle = $pdo->prepare("
+                SELECT producto_id, cantidad
+                FROM detalle_venta
+                WHERE venta_id = ?
+            ");
+            $sDetalle->execute([$id]);
+            $detalles = $sDetalle->fetchAll();
+
+            foreach ($detalles as $d) {
+                $prod_id = (int)$d['producto_id'];
+                $cant    = (int)$d['cantidad'];
+
+                $pdo->prepare("
+                    UPDATE producto
+                    SET cantidad = CAST(cantidad AS SIGNED) + ?
+                    WHERE id = ?
+                ")->execute([$cant, $prod_id]);
+
+                $pdo->prepare("
+                    UPDATE materia_prima mp
+                    JOIN receta r ON r.materia_id = mp.id
+                    SET mp.cantidad = mp.cantidad + (r.cantidad_usada * ?)
+                    WHERE r.producto_id = ? AND mp.estado != 'Inactivo'
+                ")->execute([$cant, $prod_id]);
+
+                actualizarEstadoProducto($pdo, $prod_id);
+            }
+
+            $pdo->prepare("UPDATE detalle_venta SET estado = 'Cancelado' WHERE venta_id = ?")
+                ->execute([$id]);
+        }
+
+        $campos = [];
+        $vals   = [];
+        if ($estado) { $campos[] = 'estado = ?'; $vals[] = $estado; }
+        if ($metodo) { $campos[] = 'metodo_pago = ?'; $vals[] = $metodo; }
+        $vals[] = $id;
+        $pdo->prepare("UPDATE venta SET " . implode(', ', $campos) . " WHERE id = ?")->execute($vals);
+
+        $pdo->commit();
+        jsonResponse(['success' => true]);
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        jsonResponse(['error' => $e->getMessage()], 422);
+    }
 }
 
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
-    $pdo->prepare("DELETE FROM venta WHERE id=?")->execute([$id]);
-    jsonResponse(['success' => true]);
+    $pdo->beginTransaction();
+    try {
+        $pdo->prepare("DELETE FROM detalle_venta WHERE venta_id = ?")->execute([$id]);
+        $pdo->prepare("DELETE FROM venta_promocion WHERE venta_id = ?")->execute([$id]);
+        $pdo->prepare("DELETE FROM venta WHERE id = ?")->execute([$id]);
+        $pdo->commit();
+        jsonResponse(['success' => true]);
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        jsonResponse(['error' => $e->getMessage()], 422);
+    }
 }
 
 jsonResponse(['error' => 'Método no permitido'], 405);

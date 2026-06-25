@@ -240,6 +240,37 @@ $navActivo = 'usuarios';
 
         .btn-cancelar-modal:hover { background: var(--surface-3); }
 
+        .btn-icon-del {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: #922; 
+            color: #fff; 
+        }
+
+         .btn-icon-det {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: rgb(19, 11, 74); 
+            color: #fff; 
+        }
+
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+        .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
+
         body.dark-mode .users-table { background: var(--surface); }
         body.dark-mode .users-table thead { background: #0e0500; }
         body.dark-mode .modal-box { background: var(--surface); }
@@ -423,8 +454,8 @@ function renderizarTabla(datos) {
             <td><span class="badge badge-estado-${estado}">${u.estado || 'Inactivo'}</span></td>
             <td><span class="badge badge-${rol}">${u.rol || 'Sin rol'}</span></td>
             <td>
-                <button class="btn-icon btn-icon-edit" onclick="abrirModal(${u.id},'${u.rol}','${u.estado}')" title="Editar">✏️</button>
-                <button class="btn-icon btn-icon-del" onclick="eliminarUsuario(${u.id})" title="Eliminar" style="margin-left:6px;">🗑️</button>
+                <button class="btn-icon-det" onclick="abrirModal(${u.id},'${u.rol}','${u.estado}')" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                <button class="btn-icon-del" onclick="eliminarUsuario(${u.id})" title="Eliminar" style="margin-left:6px;"><img src="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"> </button>
             </td>
         </tr>`;
     }).join('');
@@ -448,6 +479,8 @@ function abrirModal(id, rol, estado) {
 
 function cerrarModal() { document.getElementById('modalEditar').classList.remove('activo'); }
 
+
+
 async function guardarCambios() {
     const id     = document.getElementById('modal-id').value;
     const rol    = document.getElementById('modal-rol').value;
@@ -456,9 +489,16 @@ async function guardarCambios() {
         const res  = await fetch(`${API}?id=${id}`, { method: 'PUT',
             headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rol, estado }) });
         const data = await res.json();
-        if (data.success) { cerrarModal(); fetchUsuarios(); }
-        else alert('Error: ' + (data.error || ''));
-    } catch (e) { alert('Error de red'); }
+        if (data.success) {
+            cerrarModal();
+            fetchUsuarios();
+            mostrarToastUsuario(' Usuario modificado.', 'ok');
+        } else {
+            mostrarToastUsuario('⚠ Error: ' + (data.error || 'Inténtalo de nuevo.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastUsuario('⚠ Error de red.', 'error');
+    }
 }
 
 async function eliminarUsuario(id) {
@@ -466,11 +506,57 @@ async function eliminarUsuario(id) {
     try {
         const res  = await fetch(`${API}?id=${id}`, { method: 'DELETE' });
         const data = await res.json();
-        if (data.success) fetchUsuarios();
-        else alert('Error: ' + (data.error || ''));
-    } catch (e) { alert('Error de red'); }
+        if (data.success) {
+            fetchUsuarios();
+            mostrarToastUsuario(' Usuario eliminado .', 'ok');
+        } else {
+            mostrarToastUsuario('⚠ Error: ' + (data.error || 'No se pudo eliminar.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastUsuario('⚠ Error de red.', 'error');
+    }
 }
 
+let _toastUsuarioTimer = null;
+
+function mostrarToastUsuario(mensaje, tipo = 'ok') {
+    let toast = document.getElementById('toastUsuario');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastUsuario';
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            padding: 18px 28px; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0; z-index: 99999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none; max-width: 90%; text-align: center;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    if (tipo === 'ok') {
+        toast.style.background = '#2f2a1f';
+        toast.style.color      = 'rgb(255, 255, 255)';
+        toast.style.border     = '2.5px solid #E8821A';
+    } else {
+        toast.style.background = '#2f1f1f';
+        toast.style.color      = '#e63946';
+        toast.style.border     = '1px solid #e63946';
+    }
+
+    toast.textContent = mensaje;
+    toast.style.opacity   = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    if (_toastUsuarioTimer) clearTimeout(_toastUsuarioTimer);
+    _toastUsuarioTimer = setTimeout(() => {
+        toast.style.opacity   = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3500);
+}
 document.getElementById('modalEditar').addEventListener('click', function(e) {
     if (e.target === this) cerrarModal();
 });

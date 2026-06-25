@@ -43,7 +43,6 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
             </p>
         <?php endif; ?>
 
-        
         <form method="POST" action="../procesar_recuperacion.php">
             <input id="rec-email" name="correo" type="email" class="input"
                    placeholder="Correo electrónico (obligatorio)" required>
@@ -90,6 +89,45 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 <button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        mostrarToastRecuperar('Ingresa tu correo para recuperar tu contraseña.');
+    });
+
+    let _toastRecTimer = null;
+
+    function mostrarToastRecuperar(mensaje) {
+        let toast = document.getElementById('toastRecuperar');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastRecuperar';
+            toast.style.cssText = `
+                position: fixed; top: 20px; left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                padding: 18px 2.5px; border-radius: 10px;
+                font-size: 14px; font-weight: 600;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+                opacity: 0; z-index: 99999;
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                pointer-events: none; max-width: 90%; text-align: center;
+                background: #2f2a1f; color: #f4f3f2;
+                border: 1px solid #E8821A;
+            `;
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = mensaje;
+        toast.style.opacity   = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+
+        if (_toastRecTimer) clearTimeout(_toastRecTimer);
+        _toastRecTimer = setTimeout(() => {
+            toast.style.opacity   = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        }, 3500);
+    }
+</script>
 
     <footer>
     <div class="footer-container">

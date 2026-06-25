@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 require_once __DIR__ . '/../includes/conexion.php';
@@ -23,8 +22,12 @@ $stmtPromo->execute([$hoy, $hoy]);
 $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
 
 function formatCOP($valor) {
-
     return '$' . number_format((float)$valor, 0, ',', '.');
+    
+}
+if (isset($_SESSION['logout_exitoso'])) {
+    echo "<script>alert('Sesión cerrada correctamente');</script>";
+    unset($_SESSION['logout_exitoso']);
 }
 ?>
 <!DOCTYPE html>
@@ -134,7 +137,7 @@ function formatCOP($valor) {
     </div>
 </footer>
 
-<!-- ─── SCRIPTS AL FINAL, EN ESTE ORDEN EXACTO ─── -->
+
 <script src="../js/accesibilidad.js"></script>
 <script src="/burguersoft/js/Menu.js"></script>
 <script>
@@ -144,20 +147,18 @@ function togglePanel() {
     document.getElementById('accPanel').classList.toggle('open');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    cargarPromociones();
-});
+document.addEventListener('DOMContentLoaded', () => { cargarPromociones(); });
 
 async function cargarPromociones() {
     const grid = document.getElementById('grid-promociones');
     try {
-        const res = await fetch('/burguersoft/controllers/promociones.php');
+        const res    = await fetch('/burguersoft/controllers/promociones.php');
         const promos = await res.json();
 
-        const hoy = new Date().toISOString().slice(0, 10);
+        const hoy     = new Date().toISOString().slice(0, 10);
         const activas = promos.filter(p => {
             if (p.estado !== 'Activa') return false;
-            if (p.fecha_fin && p.fecha_fin < hoy) return false;
+            if (p.fecha_fin    && p.fecha_fin    < hoy) return false;
             if (p.fecha_inicio && p.fecha_inicio > hoy) return false;
             return true;
         });
@@ -167,79 +168,61 @@ async function cargarPromociones() {
             return;
         }
 
-        grid.innerHTML = activas.map(p => {
-            const imgSrc = p.imagen || '../estilos/img/promocion.png';
+        grid.innerHTML = '';
+
+        activas.forEach(p => {
+            const imgSrc    = p.imagen || '../estilos/img/promocion.png';
             const fechaHtml = (p.fecha_inicio || p.fecha_fin)
                 ? `<div class="promo-fechas">
                        ${p.fecha_inicio ? 'Desde ' + p.fecha_inicio : ''}
-                       ${p.fecha_fin ? ' hasta ' + p.fecha_fin : ''}
+                       ${p.fecha_fin    ? ' hasta ' + p.fecha_fin   : ''}
                    </div>`
                 : '';
 
+            const card = document.createElement('div');
+            card.className = 'promo-card-pub';
+            card.innerHTML = `
+                <div class="promo-img-pub">
+                    <img src="${imgSrc}" alt="${p.nombre}"
+                         onerror="this.src='../estilos/img/promocion.png'">
+                    <span class="promo-badge-pub">PROMO</span>
+                </div>
+                <div class="promo-info-pub">
+                    <h3>${p.nombre}</h3>
+                    ${p.descripcion ? `<p>${p.descripcion}</p>` : ''}
+                    ${fechaHtml}
+                    <div class="promo-footer-pub">
+                        <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
+                        ${SESION_ACTIVA
+                            ? `<button class="btn-circular-add" title="Agregar al carrito">+</button>`
+                            : `<button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
+                                   onclick="window.location.href='/burguersoft/php/login.php'">
+                                   <img src="../estilos/img/bloquear.png"
+                                        style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                               </button>`
+                        }
+                    </div>
+                </div>`;
+
             if (SESION_ACTIVA) {
-                return `
-                <div class="promo-card-pub">
-                    <div class="promo-img-pub">
-                        <img src="${imgSrc}" alt="${p.nombre}" onerror="this.src='../estilos/img/promocion.png'">
-                        <span class="promo-badge-pub">PROMO</span>
-                    </div>
-                    <div class="promo-info-pub">
-                        <h3>${p.nombre}</h3>
-                        ${p.descripcion ? `<p>${p.descripcion}</p>` : ''}
-                        ${fechaHtml}
-                        <div class="promo-footer-pub">
-                            <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
-                            <button class="btn-circular-add" title="Agregar al carrito"
-                                onclick="agregarAlCarrito(${p.id}, ${JSON.stringify(p.nombre)}, ${p.precio}, ${JSON.stringify(imgSrc)}, 'promocion', this)">
-                                +
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
-            } else {
-                return `
-                <div class="promo-card-pub">
-                    <div class="promo-img-pub">
-                        <img src="${imgSrc}" alt="${p.nombre}" onerror="this.src='../estilos/img/promocion.png'">
-                        <span class="promo-badge-pub">PROMO</span>
-                    </div>
-                    <div class="promo-info-pub">
-                        <h3>${p.nombre}</h3>
-                        ${p.descripcion ? `<p>${p.descripcion}</p>` : ''}
-                        ${fechaHtml}
-                        <div class="promo-footer-pub">
-                            <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
-                            <button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
-                                onclick="window.location.href='/burguersoft/php/login.php'">
-                                <img src="../estilos/img/bloquear.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
+                card.querySelector('.btn-circular-add').addEventListener('click', function () {
+                    agregarAlCarrito(p.id, p.nombre, p.precio, imgSrc, 'promocion', this);
+                    this.textContent = '✓';
+                    this.style.background = '#27ae60';
+                    const btn = this;
+                    setTimeout(() => { btn.textContent = '+'; btn.style.background = ''; }, 900);
+                });
             }
-        }).join('');
+
+            grid.appendChild(card);
+        });
 
     } catch (e) {
         grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No se pudieron cargar las promociones.</p>';
-    }
-}
-
-function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
-    carrito.push({ id, nombre, precio: Number(precio), img, tipo });
-    actualizarCarrito();
-
-    // Feedback visual
-    if (btnElement) {
-        btnElement.textContent = '✓';
-        btnElement.style.background = '#27ae60';
-        setTimeout(() => {
-            btnElement.textContent = '+';
-            btnElement.style.background = '';
-        }, 800);
+        console.error(e);
     }
 }
 </script>
 
 </body>
 </html>
-

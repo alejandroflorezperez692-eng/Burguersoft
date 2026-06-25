@@ -66,11 +66,12 @@ $navActivo = 'backups';
         }
 
         .action-card p {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-400);
             line-height: 1.5;
             margin: 0;
             flex: 1;
+            font-weight: 700;
         }
 
         .action-btn {
@@ -179,6 +180,22 @@ $navActivo = 'backups';
         .tipo-restore { background: #dbeafe; color: #1a3f7e; }
         .tipo-manual  { background: #fef3cd; color: #8a6200; }
 
+        .btn-icon-del {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: #922; 
+            color: #fff; 
+        }
+
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+
         body.dark-mode .action-card { background: var(--surface); }
         body.dark-mode .historial-table { background: var(--surface); }
         body.dark-mode .historial-table thead { background: #0e0500; }
@@ -206,16 +223,16 @@ $navActivo = 'backups';
             <button class="action-btn" style="--btn-color:#E8821A;--btn-shadow:rgba(232,130,26,0.3);" onclick="crearBackup()">Crear registro</button>
         </div>
 
-        <div class="action-card" style="--card-accent:#2d89ef;--icon-bg:rgba(45,137,239,0.1);">
+        <div class="action-card" style="--card-accent:#E8821A;--icon-bg:rgba(45,137,239,0.1);">
             <h3>Exportar base de datos</h3>
             <p>Descarga un archivo JSON con todos los datos actuales del sistema.</p>
-            <button class="action-btn" style="--btn-color:#2d89ef;--btn-shadow:rgba(45,137,239,0.3);" onclick="exportarBackup()">Exportar JSON</button>
+            <button class="action-btn" style="--btn-color:#E8821A;--btn-shadow:rgba(232,130,26,0.3);" onclick="exportarBackup()">Exportar JSON</button>
         </div>
 
-        <div class="action-card" style="--card-accent:#9b59b6;--icon-bg:rgba(155,89,182,0.1);">
+        <div class="action-card" style="--card-accent:#E8821A;--icon-bg:rgba(155,89,182,0.1);">
             <h3>Restaurar desde archivo</h3>
             <p>Carga un backup JSON previo para restaurar datos en la base de datos.</p>
-            <button class="action-btn" style="--btn-color:#9b59b6;--btn-shadow:rgba(155,89,182,0.3);" onclick="document.getElementById('fileInput').click()">Importar y restaurar</button>
+            <button class="action-btn" style="--btn-color:#E8821A;--btn-shadow:rgba(232,130,26,0.3);" onclick="document.getElementById('fileInput').click()">Importar y restaurar</button>
             <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importarBackup(event)">
         </div>
     </div>
@@ -310,10 +327,10 @@ async function cargarHistorial() {
             <tr>
                 <td style="color:var(--text-400);font-size:12px;">#${r.id}</td>
                 <td>${tipoBadge(r.nombre_tabla)}</td>
-                <td style="color:var(--text-600);font-size:13px;">${r.fecha ? r.fecha.replace('T',' ').substring(0,19) : '—'}</td>
+                <td style="color:var(--text-600);font-size:15px;font-weight:600;">${r.fecha ? r.fecha.replace('T',' ').substring(0,19) : '—'}</td>
                 <td style="font-weight:600;">${r.usuario_nombre ? r.usuario_nombre + ' ' + r.usuario_apellido : 'Sistema'}</td>
                 <td>
-                    <button class="btn-icon btn-icon-del" onclick="eliminarRegistro(${r.id})" title="Eliminar registro">🗑️</button>
+                    <button class="btn-icon-del" onclick="eliminarRegistro(${r.id})" title="Eliminar registro"><img src="../estilos/img/trash.png"; style="filter:invert(1);pointer-events:none;width:18px;height:18px;";></button>
                 </td>
             </tr>
         `).join('');

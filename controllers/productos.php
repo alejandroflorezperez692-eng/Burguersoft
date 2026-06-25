@@ -17,10 +17,9 @@ $categorias_enum = [
     'Arepas','Picada','Bebidas Frias','Bebidas Calientes','Pizza'
 ];
 
-function calcularEstado(int $cantidad): string {
-    if ($cantidad === 0)  return 'Agotado';
-    if ($cantidad <= 5)   return 'Por agotarse';
-    return 'Disponible';
+function requerirAdminApi(): void {
+    if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador')
+        jsonResponse(['error' => 'No autorizado'], 403);
 }
 
 if ($accion === 'categorias' && $method === 'GET') {
@@ -47,6 +46,7 @@ if ($accion === 'productos') {
     }
 
     if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
+    if (in_array($method, ['POST', 'PUT', 'DELETE'])) requerirAdminApi();
 
     if ($method === 'POST') {
         $nombre      = limpiar($_POST['nombre']      ?? '');
@@ -55,7 +55,7 @@ if ($accion === 'productos') {
         $categoria   = limpiar($_POST['categoria']   ?? '');
         $cantidad    = limpiar($_POST['cantidad']    ?? '0');
         $cantidad_int = (int)$cantidad;
-        $estado      = calcularEstado($cantidad_int);
+        $estado      = calcularEstadoStock($cantidad_int);
 
         if (!$nombre || $valor <= 0 || !$categoria)
             jsonResponse(['error' => 'Nombre, precio y categoría son obligatorios'], 400);
@@ -90,7 +90,7 @@ if ($accion === 'productos') {
         $categoria   = limpiar($_POST['categoria']   ?? '');
         $cantidad    = limpiar($_POST['cantidad']    ?? '0');
         $cantidad_int = (int)$cantidad;
-        $estado      = calcularEstado($cantidad_int);
+        $estado      = calcularEstadoStock($cantidad_int);
 
         if ($valor <= 0 || !$categoria || (int)$cantidad < 0)
             jsonResponse(['error' => 'Precio y categoría son obligatorios'], 400);
@@ -143,6 +143,7 @@ if ($accion === 'receta') {
     }
 
     if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
+    if (in_array($method, ['POST', 'DELETE'])) requerirAdminApi();
 
     if ($method === 'POST') {
         $body        = json_decode(file_get_contents('php://input'), true);
@@ -159,7 +160,6 @@ if ($accion === 'receta') {
     }
 
     if ($method === 'DELETE') {
-        if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
         if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
         $pdo->prepare("DELETE FROM receta WHERE id = ?")->execute([$id]);
         jsonResponse(['success' => true]);
