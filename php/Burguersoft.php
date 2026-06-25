@@ -23,6 +23,11 @@ $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
 
 function formatCOP($valor) {
     return '$' . number_format((float)$valor, 0, ',', '.');
+    
+}
+if (isset($_SESSION['logout_exitoso'])) {
+    echo "<script>alert('Sesión cerrada correctamente');</script>";
+    unset($_SESSION['logout_exitoso']);
 }
 ?>
 <!DOCTYPE html>
