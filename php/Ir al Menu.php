@@ -46,6 +46,7 @@ if (!function_exists('formatCOP')) {
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css">
     <link rel="stylesheet" href="../estilos/factura-estilos.css">
+    
     <style>
         :root {
             --primario:   #3d2111;
@@ -251,7 +252,14 @@ if (!function_exists('formatCOP')) {
 $paginaActiva = 'menu';
 include __DIR__ . '/../includes/header_publico.php';
 ?>
-
+<section class="hero">
+    <div class="carousel-container">
+        <div class="carousel-slide active" style="background-image:url('https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/4e4293857c03d819e4ae51de1e86d66a.jpg');"></div>
+        <div class="carousel-slide" style="background-image:url('https://ranchera.com.co/wp-content/uploads/2022/11/perro-colombiano-1.jpg');"></div>
+        <div class="carousel-slide" style="background-image:url('https://chefstv.net/wp-content/uploads/2024/03/0045-empanadas-saltenas-fritas-wide-web.webp');"></div>
+        <div class="carousel-slide" style="background-image:url('https://www.elespectador.com/resizer/v2/4YMEEW2QBVGALOUC7LSPUFNKMU.jpg?auth=1913090d3e141e8a3ccce35509259201363e9dddf853024e2f30ac71ce6383a9&width=1110&height=739&smart=true&quality=60');"></div>
+    </div>
+</section>
 
 <h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
 
@@ -301,7 +309,6 @@ include __DIR__ . '/../includes/header_publico.php';
         <?php endforeach; ?>
 
     <?php endif; ?>
-
 </div>
 
 <div id="mesa-modal" role="dialog" aria-modal="true" aria-label="Número de mesa">
@@ -316,9 +323,8 @@ include __DIR__ . '/../includes/header_publico.php';
     </div>
 </div>
 
-<script src="/burguersoft/js/Menu.js"></script>
+<script src="/burguersoft/js/Menu.js?v=<?= time(); ?>"></script>
 
-<!-- Accesibilidad -->
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">

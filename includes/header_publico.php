@@ -780,10 +780,6 @@ function mpSwitchTab(tab) {
     }
 }
 
-function abrirCheckout() {
-    enviarPedido();
-}
-
 function togglePanel() {
     document.getElementById('accPanel').classList.toggle('open');
 }
