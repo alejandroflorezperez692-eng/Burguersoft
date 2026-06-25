@@ -4,9 +4,6 @@ $logueado = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : false;
 $modalError   = '';
 $modalSuccess = '';
 $modalTab     = 'datos';
-
-
-
 if ($logueado) {
     if (!function_exists('getPDO')) {
         require_once __DIR__ . '/../includes/conexion.php';
@@ -92,9 +89,9 @@ if (!function_exists('hv')) {
 }
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
-?>
 
-<div id="toastGlobal" class="toast-global"></div>
+include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php'; 
+?>
 
 <header>
     <div class="header-left">
@@ -126,8 +123,6 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
             </div>
         </button>
 
-        
-        
         <div class="cart-panel" id="cartPanel">
             <div class="cart-header-title">
                 <span> MI CARRITO</span>
@@ -155,14 +150,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     </button>
                     <button type="button" class="btn-cart-action" onclick="verFactura()">
                         Ver Factura
-                    </button>
-                    <select class="btn-cart-action btn-pago" id="pago">
-                        <option value="">Método de Pago</option>
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Tarjeta">Tarjeta</option>
-                        <option value="Nequi">Nequi</option>
-                        <option value="Daviplata">Daviplata</option>
-                    </select>
+                     </button>
                 </div>
 
                 <button class="btn-checkout" id="btnCheckout" disabled onclick="abrirCheckout()">
@@ -472,36 +460,95 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
 
 <?php endif; ?>
 
+<div id="modalFacturaOverlay" onclick="cerrarFactura()"></div>
+<div id="modalFactura">
+    <div style="background:#1a090d;color:white;padding:20px 24px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+            <div style="font-size:18px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:8px;">
+                <img src="/burguersoft/estilos/img/factura.png" style="width:22px;height:22px;object-fit:contain;filter:invert(1);">
+                FACTURA
+            </div>
+            <div style="font-size:11px;opacity:.6;margin-top:2px;">El Oriente — BurguerSoft</div>
+        </div>
+        <button onclick="cerrarFactura()" style="background:rgba(255,255,255,.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div style="padding:24px;">
+        <div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px dashed #E0D5C5;">
+            <img src="/burguersoft/estilos/img/icono.png" alt="Logo"
+                style="width:64px;height:64px;object-fit:contain;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;">
+            <div style="font-size:20px;font-weight:900;color:#1C1410;letter-spacing:1px;font-family:'Playfair Display',serif;">El Oriente</div>
+            <div style="font-size:11px;color:#7A6855;margin-top:4px;letter-spacing:.5px;text-transform:uppercase;" id="factura-fecha"></div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;">
+            <thead>
+                <tr style="background:#F7F2EA;">
+                    <th style="padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#7A6855;border-radius:6px 0 0 6px;">Producto</th>
+                    <th style="padding:8px 10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#7A6855;">Cantidad</th>
+                    <th style="padding:8px 10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#7A6855;">Precio Unitario</th>
+                    <th style="padding:8px 10px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#7A6855;border-radius:0 6px 6px 0;">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="factura-filas" style="color:#1C1410;"></tbody>
+        </table>
+        <div style="border-top:2px dashed #E0D5C5;padding-top:14px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:14px;font-weight:700;color:#7A6855;text-transform:uppercase;letter-spacing:.5px;">Total a pagar</span>
+            <span id="factura-total" style="font-size:22px;font-weight:900;color:#EF9F27;"></span>
+        </div>
+        <div style="margin-top:16px;padding:10px 14px;background:#FFF8EE;border:1px solid #FAEEDA;border-radius:8px;font-size:11px;color:#7A6855;text-align:center;">
+            ¡Gracias por tu compra! Este es un resumen antes de confirmar tu pedido.
+        </div>
+    </div>
+    <div style="padding:0 24px 24px;display:flex;gap:10px;">
+        <button onclick="cerrarFactura()" style="flex:1;padding:11px;border-radius:10px;border:1px solid #E0D5C5;background:#F0EAE0;color:#7A6855;font-weight:600;font-family:inherit;font-size:13px;cursor:pointer;">Cerrar</button>
+        <button onclick="imprimirFactura()" style="flex:1;padding:11px;border-radius:10px;border:none;background:#EF9F27;color:#412402;font-weight:700;font-family:inherit;font-size:13px;cursor:pointer;box-shadow:0 2px 12px rgba(239,159,39,.3);display:flex;align-items:center;justify-content:center;gap:8px;">
+            <img src="/burguersoft/estilos/img/impresora.png" style="width:18px;height:18px;object-fit:contain;">
+            Imprimir
+        </button>
+    </div>
+</div>
+
 <style>
-body {
-    overflow-x: hidden;
-    width: 100%;
-}
+body { overflow-x: hidden; width: 100%; }
 
-.toast-global {
+#modalFacturaOverlay {
+    display: none;
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background: #2f2a1f;
-    color: #f9f8f7;
-    border: 2.5px solid #E8821A;
-    padding: 18px 28px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-    opacity: 0;
-    z-index: 99999;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    pointer-events: none;
-    max-width: 90%;
-    text-align: center;
+    inset: 0;
+    background: rgba(26,9,13,.6);
+    backdrop-filter: blur(4px);
+    z-index: 10002;
 }
+#modalFacturaOverlay.fac-show { display: block; }
 
-.toast-global.mostrar {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+#modalFactura {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(520px, 94vw);
+    max-height: 85vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(26,9,13,.35);
+    z-index: 10003;
+    font-family: 'Lato', sans-serif;
+}
+#modalFactura.fac-show { display: block; }
+
+@media print {
+    body > *:not(#modalFactura) { display: none !important; }
+    #modalFactura {
+        display: block !important;
+        position: static !important;
+        transform: none !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        max-height: none !important;
+    }
+    #modalFacturaOverlay { display: none !important; }
+    button { display: none !important; }
 }
 
 .mp-tabs-container{display:flex;justify-content:space-around;margin-bottom:25px;border-bottom:1px solid #eee;padding-bottom:10px;}
@@ -528,56 +575,14 @@ body {
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
 
-
-.cart-actions-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-.btn-pago {
-    grid-column: 1 / -1;
-}
-.btn-cart-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 12px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-    border: 1px solid #E0D5C5;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: #817e78;
-    color: #7A6855;
-    transition: all 0.2s ease;
-}
-.btn-cart-action:hover {
-    background-color: #817e78;
-    color: #1C1410;
-    transform: translateY(-1px);
-}
-.btn-vaciar:hover {
-    background-color: #FFF0EE;
-    border-color: #F0A090;
-    color: #C0392B;
-}
-.btn-pago {
-    background-color: #817e78;
-    border-color: #E0D5C5;
-    color: #BA7517;
-}
-.btn-pago:hover {
-    background-color: #FAEEDA;
-    border-color: #EF9F27;
-    color: #412402;
-}
-.btn-checkout {
-    margin-top: 5px;
-    background-color:  #EF9F27;
-}
+.cart-actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.btn-pago{grid-column:1 / -1;}
+.btn-cart-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;font-family:inherit;font-size:12px;font-weight:600;border:1px solid #E0D5C5;border-radius:8px;cursor:pointer;background-color:#817e78;color:#7A6855;transition:all 0.2s ease;}
+.btn-cart-action:hover{background-color:#817e78;color:#1C1410;transform:translateY(-1px);}
+.btn-vaciar:hover{background-color:#FFF0EE;border-color:#F0A090;color:#C0392B;}
+.btn-pago{background-color:#817e78;border-color:#E0D5C5;color:#BA7517;}
+.btn-pago:hover{background-color:#FAEEDA;border-color:#EF9F27;color:#412402;}
+.btn-checkout{margin-top:5px;background-color:#EF9F27;}
 
 .mp-panel { opacity: 0; pointer-events: none; }
 .mp-panel.mp-show { opacity: 1; pointer-events: all; }
@@ -642,39 +647,18 @@ body {
 
 #mp-panel-pwd .mp-field{margin-bottom:16px}
 
+.dropdown-menu { display: none; }
+.dropdown-menu.abierto { display: block !important; }
+
 @media(max-width:480px){
     .mp-grid{grid-template-columns:1fr}
     .mp-full{grid-column:1}
     .mp-body,.mp-head{padding:16px}
 }
 </style>
-<style>
-.dropdown-menu { display: none; }
-.dropdown-menu.abierto { display: block !important; }
-</style>
-<div id="toastGlobal" class="toast-global"></div>
-<?php include __DIR__ . '/../php/checkout_modal.php'; ?>
+
 <script src="/burguersoft/js/Menu.js"></script>
 <script>
-    
-let toastTimeoutId = null;
-
-function mostrarToast(mensaje, duracion = 3500) {
-    const toast = document.getElementById('toastGlobal');
-    if (!toast) return;
-
-    if (toastTimeoutId) {
-        clearTimeout(toastTimeoutId);
-    }
-
-    toast.textContent = mensaje;
-    toast.classList.add('mostrar');
-
-    toastTimeoutId = setTimeout(() => {
-        toast.classList.remove('mostrar');
-    }, duracion);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const toggleCartBtn = document.getElementById('toggleCart');
     const closeCartBtn = document.getElementById('closeCart');
@@ -703,43 +687,58 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
 function verFactura() {
-    console.log("Abriendo visualización de factura...");
     if (!carrito || carrito.length === 0) {
-        mostrarToast("Tu carrito no tiene ningún producto, para efectuar una factura de venta");
-    return;
-    }
-}
-
-
-function vaciarCarrito() {
-    // Si el carrito está vacío
-    if (!carrito || carrito.length === 0) {
-        mostrarToast(' Tu carrito no tiene ningún producto.');
+        alert('El carrito está vacío.');
         return;
     }
 
-    // Si tiene productos, pedir confirmación
-    if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
-        carrito = [];
-        if (typeof actualizarCarrito === 'function') {
-            actualizarCarrito();
-        }
-        mostrarToast('✓ tu carrito ha sido vaciado exitosamente.');
+    const map = new Map();
+    let total = 0;
+    carrito.forEach(item => {
+        total += item.precio;
+        if (!map.has(item.nombre)) map.set(item.nombre, { ...item, cantidad: 0 });
+        map.get(item.nombre).cantidad += 1;
+    });
+
+    let filas = '';
+    for (const [, item] of map.entries()) {
+        const subtotal = item.precio * item.cantidad;
+        filas += `<tr>
+            <td style="padding:8px 10px;">${item.nombre}</td>
+            <td style="padding:8px 10px;text-align:center;">${item.cantidad}</td>
+            <td style="padding:8px 10px;text-align:center;">$${item.precio.toLocaleString('es-CO')}</td>
+            <td style="padding:8px 10px;text-align:right;">$${subtotal.toLocaleString('es-CO')}</td>
+        </tr>`;
     }
+
+    document.getElementById('factura-filas').innerHTML = filas;
+    document.getElementById('factura-total').textContent = '$' + total.toLocaleString('es-CO');
+    document.getElementById('factura-fecha').textContent = new Date().toLocaleString('es-CO');
+
+    document.getElementById('modalFacturaOverlay').classList.add('fac-show');
+    document.getElementById('modalFactura').classList.add('fac-show');
 }
 
+function cerrarFactura() {
+    document.getElementById('modalFacturaOverlay').classList.remove('fac-show');
+    document.getElementById('modalFactura').classList.remove('fac-show');
+}
 
-function seleccionarMetodoPago() {
-    console.log("Abriendo opciones de método de pago...");
-    mostrarToast("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
+function imprimirFactura() {
+    window.print();
+}
+
+function vaciarCarrito() {
+    if (!confirm('¿Estás seguro de que deseas vaciar el carrito?')) return;
+    carrito = [];
+    if (typeof actualizarCarrito === 'function') actualizarCarrito();
 }
 
 function abrirModalPerfil() {
     const overlay = document.getElementById('mpOverlay');
     const panel = document.getElementById('mpPanel');
-    if(overlay && panel) {
+    if (overlay && panel) {
         overlay.classList.add('mp-show');
         panel.classList.add('mp-show');
     }
@@ -748,7 +747,7 @@ function abrirModalPerfil() {
 function cerrarModalPerfil() {
     const overlay = document.getElementById('mpOverlay');
     const panel = document.getElementById('mpPanel');
-    if(overlay && panel) {
+    if (overlay && panel) {
         overlay.classList.remove('mp-show');
         panel.classList.remove('mp-show');
     }
@@ -758,69 +757,31 @@ function mpSwitchTab(tab) {
     const panelDatos = document.getElementById('mp-panel-datos');
     const panelPwd = document.getElementById('mp-panel-pwd');
     const panelInfo = document.getElementById('mp-panel-info');
-    
     const tabDatos = document.getElementById('mpTabDatos');
     const tabPwd = document.getElementById('mpTabPwd');
     const tabInfo = document.getElementById('mpTabInfo');
 
-    if(panelDatos) panelDatos.classList.add('mp-hidden');
-    if(panelPwd) panelPwd.classList.add('mp-hidden');
-    if(panelInfo) panelInfo.classList.add('mp-hidden');
-
-    if(tabDatos) tabDatos.classList.remove('mp-tab-active');
-    if(tabPwd) tabPwd.classList.remove('mp-tab-active');
-    if(tabInfo) tabInfo.classList.remove('mp-tab-active');
+    if (panelDatos) panelDatos.classList.add('mp-hidden');
+    if (panelPwd) panelPwd.classList.add('mp-hidden');
+    if (panelInfo) panelInfo.classList.add('mp-hidden');
+    if (tabDatos) tabDatos.classList.remove('mp-tab-active');
+    if (tabPwd) tabPwd.classList.remove('mp-tab-active');
+    if (tabInfo) tabInfo.classList.remove('mp-tab-active');
 
     if (tab === 'datos') {
-        if(panelDatos) panelDatos.classList.remove('mp-hidden');
-        if(tabDatos) tabDatos.classList.add('mp-tab-active');
+        if (panelDatos) panelDatos.classList.remove('mp-hidden');
+        if (tabDatos) tabDatos.classList.add('mp-tab-active');
     } else if (tab === 'pwd') {
-        if(panelPwd) panelPwd.classList.remove('mp-hidden');
-        if(tabPwd) tabPwd.classList.add('mp-tab-active');
+        if (panelPwd) panelPwd.classList.remove('mp-hidden');
+        if (tabPwd) tabPwd.classList.add('mp-tab-active');
     } else if (tab === 'info') {
-        if(panelInfo) panelInfo.classList.remove('mp-hidden');
-        if(tabInfo) tabInfo.classList.add('mp-tab-active');
+        if (panelInfo) panelInfo.classList.remove('mp-hidden');
+        if (tabInfo) tabInfo.classList.add('mp-tab-active');
     }
 }
 
-function abrirCheckout() {
-    if (!carrito || carrito.length === 0) return;
-    const overlay = document.getElementById('coOverlay');
-    const panel   = document.getElementById('coPanel');
-    if (overlay) overlay.classList.add('co-show');
-    if (panel)   panel.classList.add('co-show');
-    document.body.style.overflow = 'hidden';
-
-    const tot = document.getElementById('cartTotal');
-    if (!tot) return;
-    const val = tot.textContent.trim();
-    ['co-dom-subtotal', 'co-rec-total'].forEach(function(id) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val;
-    });
-    const raw = parseInt((tot.textContent || '0').replace(/[^0-9]/g, ''), 10);
-    const domTotal = document.getElementById('co-dom-total');
-    if (domTotal) domTotal.textContent = '$' + (raw + 3000).toLocaleString('es-CO');
+function togglePanel() {
+    document.getElementById('accPanel').classList.toggle('open');
 }
-document.addEventListener('DOMContentLoaded', function () {
-    const params = new URLSearchParams(window.location.search);
-    const toast  = params.get('toast');
 
-    if (toast === 'login_ok') {
-        mostrarToast('¡Has iniciado sesión correctamente!.');
-    } else if (toast === 'logout_ok') {
-        mostrarToast('Sesión cerrada correctamente.');
-    }
-
-    if (toast) {
-        const url = new URL(window.location.href);
-        url.searchParams.delete('toast');
-        window.history.replaceState({}, '', url);
-    }
-});
-<?php if ($modalSuccess): ?>
-document.addEventListener('DOMContentLoaded', function () {
-    mostrarToast('✓ <?= addslashes($modalSuccess) ?>');
-});
-<?php endif; ?>
 </script>
