@@ -9,6 +9,11 @@ $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
 $id     = (int)($_GET['id'] ?? 0);
 
+function requerirAdminApi(): void {
+    if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador')
+        jsonResponse(['error' => 'No autorizado'], 403);
+}
+
 if ($method === 'GET') {
     try {
         $datos = $pdo->query("
@@ -25,40 +30,24 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    $body     = json_decode(file_get_contents('php://input'), true) ?? [];
-    $nombre   = limpiar($body['nombre']        ?? '');
-    $tipo     = limpiar($body['tipo']          ?? '');
-    $valor    = (float)($body['valor']         ?? 0);
-    $cantidad = limpiar($body['cantidad']      ?? '0');
-    $unidad   = limpiar($body['unidad_medida'] ?? '');
-    $marca_id = !empty($body['marca_id']) ? (int)$body['marca_id'] : null;
-    
-    $estado   = 'Disponible'; 
-
-    if (!$nombre || !$tipo || !$unidad) jsonResponse(['error' => 'Faltan campos'], 400);
-    
-    try {
-        $stmt = $pdo->prepare("INSERT INTO materia_prima (nombre, tipo, valor, cantidad, unidad_medida, marca_id, estado) VALUES (?,?,?,?,?,?,?)");
-        $stmt->execute([$nombre, $tipo, $valor, $cantidad, $unidad, $marca_id, $estado]);
-        jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()]);
-    } catch (PDOException $e) {
-        jsonResponse(['error' => 'Error de Base de Datos: ' . $e->getMessage()], 500);
-    }
+    jsonResponse(['error' => 'Los insumos nuevos se registran desde Compras, no desde este módulo'], 405);
 }
 
 if ($method === 'PUT') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
+    requerirAdminApi();
     $body     = json_decode(file_get_contents('php://input'), true) ?? [];
     $nombre   = limpiar($body['nombre']        ?? '');
     $tipo     = limpiar($body['tipo']          ?? '');
     $unidad   = limpiar($body['unidad_medida'] ?? '');
     $valor    = (float)($body['valor']         ?? 0);
-    $cantidad = limpiar($body['cantidad']      ?? '0');
     $marca_id = !empty($body['marca_id']) ? (int)$body['marca_id'] : null;
-    
+
+    if (!$nombre || !$tipo) jsonResponse(['error' => 'Faltan campos'], 400);
+
     try {
-        $pdo->prepare("UPDATE materia_prima SET nombre=?, tipo=?, unidad_medida=?, valor=?, cantidad=?, marca_id=? WHERE id=?")
-            ->execute([$nombre, $tipo, $unidad, $valor, $cantidad, $marca_id, $id]);
+        $pdo->prepare("UPDATE materia_prima SET nombre=?, tipo=?, unidad_medida=?, valor=?, marca_id=? WHERE id=?")
+            ->execute([$nombre, $tipo, $unidad, $valor, $marca_id, $id]);
         jsonResponse(['success' => true]);
     } catch (PDOException $e) {
         jsonResponse(['error' => 'Error de Base de Datos: ' . $e->getMessage()], 500);
@@ -67,6 +56,7 @@ if ($method === 'PUT') {
 
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
+    requerirAdminApi();
     try {
         $pdo->prepare("UPDATE materia_prima SET estado = 'Inactivo' WHERE id=?")->execute([$id]);
         jsonResponse(['success' => true]);

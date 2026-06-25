@@ -14,11 +14,9 @@ $stmt = $pdo->prepare("
         ve.metodo_pago     AS metodo_pago,
         ve.valor_total     AS valor_total,
         p.nombre           AS producto,
-        p.img              AS producto_img,
         dv.cantidad        AS cantidad,
         dv.precio_unitario AS precio_unitario,
-        dv.subtotal        AS subtotal,
-        dv.estado          AS estado_item
+        dv.subtotal        AS subtotal
     FROM venta ve
     JOIN detalle_venta dv ON dv.venta_id = ve.id
     JOIN producto p       ON p.id = dv.producto_id
@@ -40,8 +38,8 @@ foreach ($filas as $f) {
             'total'  => 0,
         ];
     }
-    $pedidos[$vid]['items'][]  = $f;
-    $pedidos[$vid]['total']   += (float)$f['subtotal'];
+    $pedidos[$vid]['items'][] = $f;
+    $pedidos[$vid]['total']  += (float)$f['subtotal'];
 }
 ?>
 <!DOCTYPE html>
@@ -51,8 +49,7 @@ foreach ($filas as $f) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Pedidos – Burguersoft</title>
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
-    <link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700;900&display=swap">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
     <style>
@@ -62,7 +59,7 @@ foreach ($filas as $f) {
             --dark:    #f5f2f0;
             --mid:     #2e1f0a;
             --text:    #ecebe9;
-            --muted:   #353331;
+            --muted:   #6b5e52;
             --card-bg: #241609;
             --border:  rgba(232,130,26,.18);
             --radius:  12px;
@@ -79,62 +76,7 @@ foreach ($filas as $f) {
             flex-direction: column;
         }
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 32px;
-            background: #110b04;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .navbar-brand img {
-            width: 83px;
-            height: 83px;
-            object-fit: contain;
-        }
-        .navbar-brand span {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.7rem;
-            color: var(--brand);
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .navbar-divider {
-    display: inline-block;
-    width: 2px;
-    height: 40px;
-    background-color: var(--brand);
-    margin: 0 10px;
-}
-        .btn-regresar {
-            padding: 8px 22px;
-            border: 2px solid var(--brand);
-            color: var(--brand);
-            background: transparent;
-            border-radius: 8px;
-            font-family: 'Lato', sans-serif;
-            font-weight: 700;
-            font-size: .88rem;
-            letter-spacing: .5px;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: background .2s, color .2s;
-            cursor: pointer;
-        }
-        .btn-regresar:hover {
-            background: var(--brand);
-            color: #fff;
-        }
-
+        /* ── Layout principal ── */
         .pedidos-page {
             max-width: 900px;
             width: 100%;
@@ -143,42 +85,15 @@ foreach ($filas as $f) {
             flex: 1;
         }
 
-        .pedidos-header {
-            margin-bottom: 36px;
-            animation: fadeDown .5s ease both;
-        }
+        .pedidos-header { margin-bottom: 36px; animation: fadeDown .5s ease both; }
         .pedidos-header h1 {
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.8rem, 4vw, 2.6rem);
             color: var(--brand);
         }
-        .pedidos-header p {
-            color: var(--muted);
-            margin-top: 6px;
-            font-size: 1.04rem;
-        }
+        .pedidos-header p { color: var(--muted); margin-top: 6px; font-size: 1.04rem; }
 
-        .pedidos-empty {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--muted);
-            animation: fadeUp .5s ease both;
-        }
-        .pedidos-empty .icon { font-size: 3.5rem; margin-bottom: 16px; }
-        .pedidos-empty p { font-size: 1.05rem; }
-        .pedidos-empty a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 11px 28px;
-            background: var(--brand);
-            color: #fff;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: background .2s;
-        }
-        .pedidos-empty a:hover { background: var(--brand-d); }
-
+        /* ── Pedido card ── */
         .pedido-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -202,28 +117,120 @@ foreach ($filas as $f) {
             background: rgba(232,130,26,.06);
         }
         .pedido-head-left { display: flex; flex-direction: column; gap: 3px; }
-        .pedido-num {
+        .pedido-num  { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--brand); font-weight: 700; }
+        .pedido-fecha { font-size: .8rem; color: var(--muted); }
+
+        /* ── Barra de progreso ── */
+        .progreso-container {
+            padding: 20px 22px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .progreso-estado-label {
             font-family: 'Playfair Display', serif;
             font-size: 1rem;
             color: var(--brand);
             font-weight: 700;
+            margin-bottom: 4px;
         }
-        .pedido-fecha { font-size: .8rem; color: var(--muted); }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 999px;
-            font-size: .78rem;
-            font-weight: 700;
-            letter-spacing: .4px;
-            text-transform: uppercase;
+        .progreso-estado-label.cancelado {
+            color: #e06060;
         }
-        .badge-pagado    { background: rgba(50,180,80,.12);  color: #5ecb7a; border: 1px solid rgba(50,180,80,.3); }
-        .badge-cancelado { background: rgba(220,50,50,.12);  color: #e06060; border: 1px solid rgba(220,50,50,.3); }
-        .badge-reembolsada { background: rgba(100,160,220,.12); color: #7ab8f0; border: 1px solid rgba(100,160,220,.3); }
-        .badge-rechazada { background: rgba(180,60,60,.15);  color: #e08080; border: 1px solid rgba(180,60,60,.3); }
 
+        .progreso-barra-wrapper {
+            display: flex;
+            align-items: center;
+            margin: 20px 0 8px;
+            position: relative;
+        }
+
+        .progreso-linea-bg {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255,255,255,.1);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .progreso-linea-fill {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 4px;
+            background: var(--brand);
+            transform: translateY(-50%);
+            z-index: 1;
+            transition: width .4s ease;
+        }
+
+        .progreso-pasos {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progreso-paso {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .paso-circulo {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.1);
+            border: 2px solid rgba(255,255,255,.15);
+            transition: all .3s;
+            flex-shrink: 0;
+        }
+
+        .paso-circulo.activo {
+            background: var(--brand);
+            border-color: var(--brand);
+            box-shadow: 0 0 0 4px rgba(232,130,26,.25);
+        }
+
+        .paso-circulo.completado {
+            background: var(--brand);
+            border-color: var(--brand);
+        }
+
+        .paso-label {
+            font-size: .72rem;
+            color: rgba(255,255,255,.3);
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: .3px;
+            line-height: 1.3;
+        }
+
+        .paso-label.activo,
+        .paso-label.completado {
+            color: rgba(255,255,255,.85);
+        }
+
+        .progreso-cancelado {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: rgba(220,50,50,.1);
+            border: 1px solid rgba(220,50,50,.25);
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        .progreso-cancelado span { color: #e06060; font-size: .88rem; font-weight: 700; }
+
+        /* ── Tabla ── */
         .pedido-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
         .pedido-table thead tr { background: rgba(255,255,255,.03); }
         .pedido-table th {
@@ -240,11 +247,13 @@ foreach ($filas as $f) {
         .pedido-table td {
             padding: 11px 16px;
             border-top: 1px solid var(--border);
+            color: #d4c8bc;
         }
         .pedido-table tr:hover td { background: rgba(232,130,26,.04); }
-        .producto-nombre { font-weight: 700; }
+        .producto-nombre { font-weight: 700; color: #f0e8df; }
         .precio-unit { color: var(--muted); font-size: .82rem; }
 
+        /* ── Pie de pedido ── */
         .pedido-foot {
             display: flex;
             justify-content: flex-end;
@@ -261,6 +270,23 @@ foreach ($filas as $f) {
             font-weight: 700;
         }
 
+        .btn-cancelar-pedido {
+            margin-right: auto;
+            padding: 8px 18px;
+            background: transparent;
+            border: 1.5px solid rgba(220,50,50,.4);
+            color: #e06060;
+            border-radius: 8px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: .3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+        .btn-cancelar-pedido:hover { background: rgba(220,50,50,.12); color: #ff8080; }
+
         .acc-fab {
             position: fixed;
             bottom: 24px;
@@ -268,105 +294,157 @@ foreach ($filas as $f) {
             width: 52px;
             height: 52px;
             border-radius: 50%;
+         }
+        /* ── Estado vacío ── */
+        .pedidos-empty {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--muted);
+            animation: fadeUp .5s ease both;
+        }
+        .pedidos-empty .icon { font-size: 3.5rem; margin-bottom: 16px; }
+        .pedidos-empty p { font-size: 1.05rem; }
+        .pedidos-empty a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 11px 28px;
             background: var(--brand);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(232,130,26,.4);
-            z-index: 999;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
             transition: background .2s;
         }
-        .acc-fab:hover { background: var(--brand-d); }
+        .pedidos-empty a:hover { background: var(--brand-d); }
 
-        @keyframes fadeDown {
-            from { opacity: 0; transform: translateY(-16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeUp   { from { opacity:0; transform:translateY(18px);  } to { opacity:1; transform:translateY(0); } }
 
         @media (max-width: 540px) {
             .pedido-table th:nth-child(2),
             .pedido-table td:nth-child(2) { display: none; }
-            .navbar { padding: 12px 16px; }
+            .paso-label { font-size: .65rem; }
         }
     </style>
 </head>
 <body>
-<link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css">
+
 <?php include __DIR__ . '/../includes/header_publico.php'; ?>
 
 <div class="pedidos-page">
 
     <div class="pedidos-header">
         <h1>Mis Pedidos</h1>
-        <p>Hola, <?php echo htmlspecialchars($_SESSION['nombre']); ?>. Aquí están todos tus pedidos realizados.</p>
+        <p>Hola, <?= htmlspecialchars($_SESSION['nombre']) ?>. Aquí puedes ver el estado de tus pedidos.</p>
     </div>
 
     <?php if (empty($pedidos)): ?>
         <div class="pedidos-empty">
-            <div class="icon"></div>
+            <div class="icon">🍔</div>
             <p>Aún no tienes pedidos registrados.</p>
             <a href="/burguersoft/php/Ir al Menu.php">Ver el menú</a>
         </div>
 
     <?php else: ?>
-        <?php foreach ($pedidos as $p): ?>
-            <?php
-                $estado = strtolower($p['estado'] ?? 'pendiente');
-                $badgeClass = match($estado) {
-                    'pagado'      => 'badge-pagado',
-                    'cancelado'   => 'badge-cancelado',
-                    'reembolsada' => 'badge-reembolsada',
-                    'rechazada'   => 'badge-rechazada',
-                    default       => 'badge-cancelado',
-                };
-                $fechaFormato = !empty($p['fecha'])
-                    ? date('d/m/Y H:i', strtotime($p['fecha']))
-                    : '—';
-            ?>
-            <div class="pedido-card">
-                <div class="pedido-head">
-                    <div class="pedido-head-left">
-                        <span class="pedido-num">Pedido #<?php echo $p['id']; ?></span>
-                        <span class="pedido-fecha"><?php echo $fechaFormato; ?></span>
-                    </div>
-                    <span class="badge <?php echo $badgeClass; ?>">
-                        <?php echo htmlspecialchars(ucfirst($p['estado'] ?? 'Pendiente')); ?>
-                    </span>
-                </div>
 
-                <table class="pedido-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio unit.</th>
-                            <th>Cantidad</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($p['items'] as $item): ?>
-                        <tr>
-                            <td><span class="producto-nombre"><?php echo htmlspecialchars($item['producto']); ?></span></td>
-                            <td><span class="precio-unit">$<?php echo number_format((float)$item['precio_unitario'], 0, ',', '.'); ?></span></td>
-                            <td><?php echo (int)$item['cantidad']; ?></td>
-                            <td>$<?php echo number_format((float)$item['subtotal'], 0, ',', '.'); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+        <?php
+        $pasos = ['Pendiente de pago', 'En cocina', 'En barra', 'Entregado'];
 
-                <div class="pedido-foot">
-                    <span class="label">Total del pedido:</span>
-                    <span class="total">$<?php echo number_format($p['total'], 0, ',', '.'); ?></span>
+        foreach ($pedidos as $p):
+            $estado    = $p['estado'] ?? 'Pendiente de pago';
+            $cancelado = strtolower($estado) === 'cancelado';
+
+            $paso_actual = array_search($estado, $pasos);
+            if ($paso_actual === false) $paso_actual = 0;
+
+            $porcentaje = $cancelado ? 0 : round(($paso_actual / (count($pasos) - 1)) * 100);
+
+            $fechaFormato = !empty($p['fecha'])
+                ? date('d/m/Y H:i', strtotime($p['fecha']))
+                : '—';
+        ?>
+
+        <div class="pedido-card">
+
+            <!-- Encabezado -->
+            <div class="pedido-head">
+                <div class="pedido-head-left">
+                    <span class="pedido-num">Pedido #<?= $p['id'] ?></span>
+                    <span class="pedido-fecha"><?= $fechaFormato ?></span>
                 </div>
             </div>
+
+            <!-- Barra de progreso -->
+            <div class="progreso-container">
+                <div class="progreso-estado-label <?= $cancelado ? 'cancelado' : '' ?>">
+                    <?= $cancelado ? '✗ Pedido cancelado' : htmlspecialchars($estado) ?>
+                </div>
+
+                <?php if (!$cancelado): ?>
+                <div class="progreso-barra-wrapper">
+                    <div class="progreso-linea-bg"></div>
+                    <div class="progreso-linea-fill" style="width: <?= $porcentaje ?>%"></div>
+
+                    <div class="progreso-pasos">
+                        <?php foreach ($pasos as $i => $paso):
+                            $clase = '';
+                            if ($i < $paso_actual)      $clase = 'completado';
+                            elseif ($i === $paso_actual) $clase = 'activo';
+                        ?>
+                        <div class="progreso-paso">
+                            <div class="paso-circulo <?= $clase ?>"></div>
+                            <span class="paso-label <?= $clase ?>"><?= $paso ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <div class="pedido-foot">
+                    <?php if (strtolower($p['estado'] ?? '') === 'pagado'): ?>
+                        <button type="button" class="btn-cancelar-pedido" onclick="cancelarPedido(<?php echo (int)$p['id']; ?>)">
+                            Cancelar pedido
+                        </button>
+                    <?php endif; ?>
+                    <span class="label">Total del pedido:</span>
+                    <span class="total">$<?php echo number_format($p['total'], 0, ',', '.'); ?></span>
+                <?php else: ?>
+                <div class="progreso-cancelado">
+                    <span>Este pedido fue cancelado.</span>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Tabla de productos -->
+            <table class="pedido-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio unit.</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($p['items'] as $item): ?>
+                    <tr>
+                        <td><span class="producto-nombre"><?= htmlspecialchars($item['producto']) ?></span></td>
+                        <td><span class="precio-unit">$<?= number_format((float)$item['precio_unitario'], 0, ',', '.') ?></span></td>
+                        <td><?= (int)$item['cantidad'] ?></td>
+                        <td>$<?= number_format((float)$item['subtotal'], 0, ',', '.') ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <!-- Total -->
+            <div class="pedido-foot">
+                <span class="label">Total del pedido:</span>
+                <span class="total">$<?= number_format($p['total'], 0, ',', '.') ?></span>
+            </div>
+
+        </div>
         <?php endforeach; ?>
+
     <?php endif; ?>
 
 </div>
@@ -376,7 +454,7 @@ foreach ($filas as $f) {
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;margin-top:-30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono.png" alt="Logo" class="footer-logo">
                     <hr>
                     <h3 style="margin:6px;">El Oriente</h3>
                 </div>
@@ -386,9 +464,9 @@ foreach ($filas as $f) {
         <div class="footer-section">
             <h4>Horarios de atención</h4>
             <ul class="footer-horarios">
-                <li><span>Lunes – Viernes:</span> <span>3:30 PM – 10:00 PM</span></li>
-                <li><span>Sábado:</span> <span>3:00 PM – 11:00 PM</span></li>
-                <li><span>Domingo:</span> <span>3:00 PM – 10:00 PM</span></li>
+                <li><span>Lunes – Viernes:</span><span>3:30 PM – 10:00 PM</span></li>
+                <li><span>Sábado:</span><span>3:00 PM – 11:00 PM</span></li>
+                <li><span>Domingo:</span><span>3:00 PM – 10:00 PM</span></li>
             </ul>
         </div>
     </div>
@@ -429,5 +507,25 @@ foreach ($filas as $f) {
 </button>
 
 <script src="../js/accesibilidad.js"></script>
+<script>
+async function cancelarPedido(id) {
+    if (!confirm(`¿Cancelar el pedido #${id}? Esta acción no se puede deshacer.`)) return;
+    try {
+        const res = await fetch(`/burguersoft/controllers/ventas.php?id=${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ estado: 'Cancelado' })
+        });
+        const data = await res.json();
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('No se pudo cancelar el pedido: ' + (data.error || 'Error desconocido'));
+        }
+    } catch (e) {
+        alert('Error de conexión al cancelar el pedido.');
+    }
+}
+</script>
 </body>
 </html>

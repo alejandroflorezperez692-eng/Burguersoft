@@ -83,6 +83,28 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="estilos/estilos-login.css">
     <link rel="icon" href="estilos/img/icono.png" type="image/x-icon">
     <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        footer {
+            margin-top: 0 !important;
+        }
+
         .codigo-inputs {
             display: flex;
             justify-content: center;
@@ -248,7 +270,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
     </script>
 
-    <footer>
+    <footer style="margin-top: 70px !important;">
         <div class="footer-container">
             <div class="footer-brand">
                 <div class="footer-brand-text">

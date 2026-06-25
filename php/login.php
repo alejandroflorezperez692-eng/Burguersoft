@@ -86,6 +86,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>BURGUERSOFT - Iniciar Sesión</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+
 </head>
 <style>
     .input-password-wrapper {
@@ -93,6 +94,11 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         width: 100%;
         margin-bottom: 20px;
     }
+        .input-password-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
 
     .input-password-wrapper .input {
         margin-bottom: 0;
@@ -102,6 +108,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     body.modo-oscuro-accesible .btn-toggle-password {
         color: var(--color-acento);
     }
+
 
     body.modo-oscuro-accesible .btn-toggle-password:hover {
         color: #fff;
@@ -124,13 +131,35 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         margin-bottom: 10px;
     }
 </style>
+
+        body.modo-oscuro-accesible .btn-toggle-password:hover {
+            color: #fff;
+        }
+
+        .contenedor-login {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding-bottom: 60px;
+        }
+
+        footer {
+            margin-top: 0 !important;
+        }
+    </style>
+</head>
+
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
         <a href="../php/Burguersoft.php" class="btn-regresar"> [ Regresar ]</a>
     </div>
 
-    <div class="header-bar"> INICIAR SESIÓN </div>
+    <div class="contenedor-login">
+
 
     <div class="card">
         <?php if ($error): ?>
@@ -139,7 +168,13 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             </p>
         <?php endif; ?>
 
-        <form id="loginForm" method="POST" action="login.php">
+        <div class="header-bar"> INICIAR SESIÓN </div>
+
+
+        <div class="card">
+            <?php if ($error): ?>
+                <p style="color:red;text-align:center;margin-bottom:10px;"><?= htmlspecialchars($error) ?></p>
+            <?php endif; ?>
 
             <h2>CORREO*</h2>
             <input type="email" name="correo" id="email" class="input"
@@ -168,20 +203,46 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 INICIAR SESIÓN
             </button>
 
-            <a href="recuperar_contrasena.php" class="link">¿Recuperar tu contraseña?</a>
+            <form id="loginForm" method="POST" action="login.php">
 
-            <div class="separador-contenedor">
-                <div class="linea"></div>
-                <span class="circulo">o</span>
-                <div class="linea"></div>
-            </div>
+                <h2>CORREO*</h2>
+                <input type="email" name="correo" id="email" class="input"
+                       placeholder="ejemplo@gmail.com" required
+                       value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>">
 
-            <div class="enlace-externo">
-                ¿No tienes una cuenta?
-                <a href="Registro.php">Crear cuenta</a>
-            </div>
+                <h2>CONTRASEÑA*</h2>
+                <div class="input-password-wrapper">
+                    <input type="password" name="contrasena" id="password" class="input"
+                           placeholder="Ingresa tu contraseña" required>
+                    <button type="button" id="btnToggle" onclick="togglePassword()"
+                        onmouseover="this.style.color='#000000'"
+                        onmouseout="this.style.color='#E8821A'"
+                        style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                            background:none; border:none; cursor:pointer; font-size:13px;
+                            font-weight:700; color:#E8821A;">
+                        Mostrar
+                    </button>
+                </div>
 
-        </form>
+
+                <button type="submit" id="botonEntrar" class="btn-primario">INICIAR SESIÓN</button>
+
+                <a href="recuperar_contrasena.php" class="link">¿Recuperar tu contraseña?</a>
+
+                <div class="separador-contenedor">
+                    <div class="linea"></div>
+                    <span class="circulo">o</span>
+                    <div class="linea"></div>
+                </div>
+
+                <div class="enlace-externo">
+                    ¿No tienes una cuenta?
+                    <a href="Registro.php">Crear cuenta</a>
+                </div>
+
+            </form>
+        </div>
+
     </div>
 
 <div class="acc-panel" id="accPanel">
@@ -216,6 +277,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 </button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
+
 <footer>
     <div class="footer-container">
         <div class="footer-brand">
@@ -242,6 +304,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
     </div>
 </footer>
+
 <script>
     alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
 
