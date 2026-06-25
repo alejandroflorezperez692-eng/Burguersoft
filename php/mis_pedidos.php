@@ -294,6 +294,7 @@ foreach ($filas as $f) {
             width: 52px;
             height: 52px;
             border-radius: 50%;
+         }
         /* ── Estado vacío ── */
         .pedidos-empty {
             text-align: center;
