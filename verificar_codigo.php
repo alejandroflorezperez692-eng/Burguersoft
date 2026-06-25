@@ -187,7 +187,8 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <p style="color:#2c1810;margin-top:16px;font-size:14px;text-align:center;">
             ¿No recibiste el código?
-          <a href="../php/recuperar_contrasena.php" style="color:#2c1810;font-weight:bold;">Enviar de nuevo</a>
+            <a href="php/recuperar_contrasena.php" style="color:#2c1810;font-weight:bold;">Enviar de nuevo</a>
+
         </p>
     </div>
 
@@ -247,6 +248,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             if (inputs[pegado.length - 1]) inputs[pegado.length - 1].focus();
         });
     });
+    
 
     if (!<?= $bloqueado ? 'true' : 'false' ?>) {
         inputs[0].focus();
@@ -269,6 +271,45 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     })();
     <?php endif; ?>
     </script>
+    <script>
+    // Mostrar toast al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+        mostrarToastCodigo(' El codigo ha sido enviado a tu correo, insertalo para crear tu nueva contraseña');
+    });
+
+    let _toastTimer = null;
+
+    function mostrarToastCodigo(mensaje) {
+        let toast = document.getElementById('toastCodigo');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastCodigo';
+            toast.style.cssText = `
+                position: fixed; top: 20px; left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                padding: 18px 28px; border-radius: 10px;
+                font-size: 14px; font-weight: 600;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+                opacity: 0; z-index: 99999;
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                pointer-events: none; max-width: 90%; text-align: center;
+                background: #2f2a1f; color: #f6f5f2;
+                border: 2.5px solid #E8821A;
+            `;
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = mensaje;
+        toast.style.opacity   = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => {
+            toast.style.opacity   = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        }, 3500);
+    }
+</script>
 
     <footer style="margin-top: 70px !important;">
         <div class="footer-container">
