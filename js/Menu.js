@@ -20,14 +20,11 @@ var pedidoRealizado = false;
 
 document.addEventListener('DOMContentLoaded', actualizarCarrito);
 
-// ─── CARRITO ─────────────────────────────────────────────
-// DESPUÉS:
 function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
     carrito.push({ id, nombre, precio: Number(precio), img, tipo });
     guardarCarrito();
     actualizarCarrito();
 
-    // Feedback visual
     if (btnElement) {
         btnElement.textContent = '✓';
         btnElement.style.background = '#27ae60';
@@ -37,25 +34,23 @@ function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
         }, 800);
     }
 }
+
 function actualizarCarrito() {
-    const badge      = document.getElementById('badge-carrito');
-    const cartItems  = document.getElementById('cartItems');
-    const cartTotal  = document.getElementById('cartTotal');
+    const badge       = document.getElementById('badge-carrito');
+    const cartItems   = document.getElementById('cartItems');
+    const cartTotal   = document.getElementById('cartTotal');
     const btnCheckout = document.getElementById('btnCheckout');
-    const emptyCart  = document.getElementById('emptyCart');
+    const emptyCart   = document.getElementById('emptyCart');
 
     if (badge) badge.textContent = carrito.length;
     if (!cartItems) return;
 
-    // Agrupar por nombre
     const map = new Map();
     let total = 0;
 
     carrito.forEach(item => {
         total += item.precio;
-        if (!map.has(item.nombre)) {
-            map.set(item.nombre, { ...item, cantidad: 0 });
-        }
+        if (!map.has(item.nombre)) map.set(item.nombre, { ...item, cantidad: 0 });
         map.get(item.nombre).cantidad += 1;
     });
 
@@ -85,7 +80,7 @@ function actualizarCarrito() {
                     </div>
                 </div>
                 <button onclick="quitarDelCarrito('${item.nombre}')"
-                    style="background:none;border:none;color:#e63946;font-size:18px;cursor:pointer;padding:4px">✕</button>
+                    style="background:none;border:none;color:#e63946;font-size:18px;cursor:pointer;padding:4px">×</button>
             `;
             cartItems.appendChild(div);
         }
@@ -108,38 +103,118 @@ function vaciarCarrito() {
     actualizarCarrito();
 }
 
-// ─── PEDIDO / WHATSAPP ───────────────────────────────────
-function enviarPedido() {
-    if (carrito.length === 0) { alert('El carrito está vacío'); return; }
+// ─── PEDIDO ───────────────────────────────────────────────
+let ultimaVentaId = null;
 
-    const map = new Map();
-    let total = 0;
+async function enviarPedido(datos) {
+    if (carrito.length === 0) return;
+
+    const metodoPago = (datos?.pago || '').trim();
+    if (!metodoPago) return;
+
+    const mapProductos = new Map();
+    const mapPromos    = new Map();
+
     carrito.forEach(item => {
-        total += item.precio;
-        if (!map.has(item.nombre)) map.set(item.nombre, { ...item, cantidad: 0 });
-        map.get(item.nombre).cantidad += 1;
+        const destino = item.tipo === 'promocion' ? mapPromos : mapProductos;
+        if (!destino.has(item.id)) destino.set(item.id, { ...item, cantidad: 0 });
+        destino.get(item.id).cantidad += 1;
     });
 
-    const metodoPago = document.getElementById('pago')?.value || '-';
-    let mensaje = ' Pedido BurgerSoft%0A%0A';
-    for (const [, v] of map.entries()) {
-        mensaje += `• ${v.nombre} x${v.cantidad} — $${(v.precio * v.cantidad).toLocaleString('es-CO')}%0A`;
+    const items = Array.from(mapProductos.values()).map(item => ({
+        producto_id:     item.id,
+        cantidad:        item.cantidad,
+        precio_unitario: item.precio
+    }));
+
+    const promociones = [];
+    mapPromos.forEach(item => {
+        for (let i = 0; i < item.cantidad; i++) {
+            promociones.push({ promocion_id: item.id, precio: item.precio });
+        }
+    });
+
+    const subtotal = items.reduce((s, it) => s + (it.precio_unitario * it.cantidad), 0)
+                   + promociones.reduce((s, p) => s + p.precio, 0);
+
+    const btnCheckout = document.getElementById('btnCheckout');
+    if (btnCheckout) { btnCheckout.disabled = true; btnCheckout.textContent = 'Procesando...'; }
+
+    try {
+        const res = await fetch('/burguersoft/controllers/ventas.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                metodo_pago: metodoPago,
+                items,
+                promociones
+            })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || !data.success) {
+            alert('No se pudo registrar la venta: ' + (data.error || 'Error desconocido'));
+            return;
+        }
+
+        ultimaVentaId   = data.venta_id;
+        pedidoRealizado = true;
+
+        const todosLosItems = [...mapProductos.values(), ...mapPromos.values()];
+        const mensajeWa     = construirMensajeWhatsapp(todosLosItems, subtotal, datos);
+        window.open('https://wa.me/573224548294?text=' + mensajeWa);
+
+        carrito = [];
+        guardarCarrito();
+        actualizarCarrito();
+
+        alert('¡Compra confirmada! Tu pedido #' + ultimaVentaId + ' fue registrado.');
+    } catch (e) {
+        console.error('Error al enviar el pedido', e);
+        alert('Error de conexión al confirmar la compra. Intenta de nuevo.');
+    } finally {
+        if (btnCheckout) {
+            btnCheckout.disabled  = carrito.length === 0;
+            btnCheckout.textContent = 'Finalizar Compra';
+        }
     }
-    mensaje += `%0A*TOTAL:* $${total.toLocaleString('es-CO')}`;
-    mensaje += `%0A*Método de pago:* ${metodoPago}`;
+}
 
-    window.open('https://wa.me/573224548294?text=' + mensaje);
-    pedidoRealizado = true;
+function construirMensajeWhatsapp(items, subtotal, datos) {
+    let msg = 'Pedido BurgerSoft%0A%0A';
 
-    const btn = document.getElementById('btn-ver-factura');
-    if (btn) btn.style.display = 'block';
+    items.forEach(v => {
+        msg += `• ${v.nombre} x${v.cantidad} — $${(v.precio * v.cantidad).toLocaleString('es-CO')}%0A`;
+    });
+
+    msg += `%0A*TOTAL:* $${subtotal.toLocaleString('es-CO')}`;
+    msg += `%0A*Pago:* ${datos.pago}`;
+
+    if (datos.modo === 'domicilio') {
+        msg += `%0A*Entrega:* Domicilio`;
+        msg += `%0A*Dirección:* ${datos.dir || ''}`;
+        if (datos.notas) msg += `%0A*Indicaciones:* ${datos.notas}`;
+        msg += `%0A*Tel:* ${datos.tel || ''}`;
+        msg += `%0A*Nombre:* ${datos.nombre || ''}`;
+    } else if (datos.modo === 'restaurante') {
+        msg += `%0A*Entrega:* Restaurante`;
+        msg += `%0A*Mesa:* ${datos.mesa || ''}`;
+        msg += `%0A*Nombre:* ${datos.nombre || ''}`;
+    } else {
+        msg += `%0A*Entrega:* Para llevar`;
+        msg += `%0A*Nombre:* ${datos.nombre || ''}`;
+        if (datos.tel) msg += `%0A*Tel:* ${datos.tel}`;
+    }
+
+    return msg;
 }
 
 function mostrarFactura() {
     if (typeof actualizarFactura === 'function') actualizarFactura();
 }
 
-// ─── INGREDIENTES (menú antiguo) ─────────────────────────
+// ─── INGREDIENTES ─────────────────────────────────────────
 const ingredientesDB = {
     hamburguesa: {
         Sencilla: "Pan artesanal, carne 120g, queso, lechuga, tomate y salsas.",

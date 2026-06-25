@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/funciones.php';
-requerirLogin();
+requerirAdmin();
 $navActivo = 'materia';
 ?>
 <!DOCTYPE html>
@@ -196,7 +196,7 @@ $navActivo = 'materia';
             font-weight: 700;
         }
 
-        .btn-edit-mp {
+        .btn-icon-del {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -205,15 +205,12 @@ $navActivo = 'materia';
             border: none;
             border-radius: var(--r-sm);
             cursor: pointer;
-            font-size: 14px;
-            background: #dbeafe;
-            color: #1a3f7e;
-            transition: all 0.18s;
+            font-size: 13px;
+            background: #922; 
+            color: #fff; 
         }
 
-        .btn-edit-mp:hover { background: var(--info); color: #fff; transform: scale(1.1); }
-
-        .btn-del-mp {
+         .btn-icon-det {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -222,14 +219,13 @@ $navActivo = 'materia';
             border: none;
             border-radius: var(--r-sm);
             cursor: pointer;
-            font-size: 14px;
-            background: #fde8e8;
-            color: #922;
-            transition: all 0.18s;
-            margin-left: 6px;
+            font-size: 13px;
+            background: rgb(19, 11, 74); 
+            color: #fff; 
         }
 
-        .btn-del-mp:hover { background: var(--danger); color: #fff; transform: scale(1.1); }
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+        .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
 
         body.dark-mode .mp-table { background: var(--surface); }
         body.dark-mode .mp-table thead { background: #0e0500; }
@@ -266,7 +262,8 @@ $navActivo = 'materia';
         </div>
     </div>
 
-    <div class="form-panel">
+    <div class="form-panel" id="form-panel-mp" style="display:none;">
+        <div class="form-panel-title" id="form-mp-title">Editar insumo</div>
         <div class="form-grid">
             <div class="field">
                 <label>Nombre *</label>
@@ -278,7 +275,7 @@ $navActivo = 'materia';
                 <input type="text" id="tipo" onkeypress="sololetras(event)" placeholder="Ej: Cereal">
             </div >
             <div class="field">
-                <label>Unidad de medida *</label>
+                <label>Unidad de medida</label>
                 <input type="text" id="unidad_medida" onkeypress="sololetras(event)" placeholder="Ej: Kg, L, Unidades">
             </div>
             <div class="field">
@@ -286,18 +283,24 @@ $navActivo = 'materia';
                 <input type="number" id="valor" onkeypress="solonumeros(event)" placeholder="0">
             </div>
             <div class="field">
-                <label>Cantidad *</label>
-                <input type="number" id="cantidad" onkeypress="solonumeros(event)" placeholder="0">
-            </div>
-            <div class="field">
-                <label>ID de marca</label>
-                <input type="text" id="marca" onkeypress="solonumeros(event)" placeholder="Número">
+                <label>Marca</label>
+                <select id="marca">
+                    <option value="">Sin especificar</option>
+                </select>
             </div>
         </div>
         <div class="form-actions">
-            <button class="btn-guardar-mp" id="btn-guardar" onclick="guardar()">Guardar</button>
-            <button class="btn-limpiar-mp" onclick="limpiar()">Limpiar</button>
+            <button class="btn-guardar-mp" id="btn-guardar" onclick="guardar()">Actualizar insumo</button>
+            <button class="btn-limpiar-mp" onclick="limpiar()">Cancelar</button>
         </div>
+    </div>
+
+    <div class="form-panel" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+        <div>
+            <div style="font-weight:700;color:var(--text-900);margin-bottom:4px;">Registro de nuevos insumos</div>
+            <div style="font-size:13px;color:var(--text-600);">Los insumos nuevos se crean desde el módulo de Compras al registrar su primera compra.</div>
+        </div>
+        <a href="compras.php" class="btn-guardar-mp" style="text-decoration:none;display:inline-flex;align-items:center;">Ir a Compras</a>
     </div>
 
     <div class="table-toolbar">
@@ -356,14 +359,30 @@ $navActivo = 'materia';
 <script src="../js/accesibilidad.js"></script>
 
 <script>
-const API_MP = '/burguersoft/controllers/materiaprima.php';
+const API_MP     = '/burguersoft/controllers/materiaprima.php';
+const API_MARCAS = '/burguersoft/controllers/marcas.php';
 let editId = null;
 let materiasGlobal = [];
+let marcasGlobal    = [];
 const fmt = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
 
 function togglePanel() { document.getElementById('accPanel').classList.toggle('open'); }
 document.getElementById('buscar').addEventListener('input', filtrar);
-window.onload = listar;
+window.onload = async () => {
+    await cargarMarcas();
+    await listar();
+};
+
+async function cargarMarcas() {
+    try {
+        const res = await fetch(API_MARCAS);
+        const data = await res.json();
+        marcasGlobal = Array.isArray(data) ? data.filter(m => (m.estado || '').toLowerCase() !== 'inactivo') : [];
+        const sel = document.getElementById('marca');
+        sel.innerHTML = '<option value="">Sin especificar</option>' +
+            marcasGlobal.map(m => `<option value="${m.id}">${m.nombre}</option>`).join('');
+    } catch (e) { marcasGlobal = []; }
+}
 
 async function listar() {
     try {
@@ -407,8 +426,8 @@ function mostrarTabla(datos) {
             <td>${estadoBadge(m.estado, m.cantidad)}</td>
             <td style="color:var(--text-400);">${m.nombre_marca || '—'}</td>
             <td>
-                <button class="btn-edit-mp" onclick="editar(${m.id},'${encodeURIComponent(m.nombre)}','${encodeURIComponent(m.tipo)}','${encodeURIComponent(m.cantidad)}','${encodeURIComponent(m.valor)}','${encodeURIComponent(m.unidad_medida)}',${m.marca_id||0})" title="Editar">✏️</button>
-                <button class="btn-del-mp" onclick="eliminar(${m.id})" title="Eliminar">🗑️</button>
+                <button class="btn-icon-det" onclick="editar(${m.id},'${encodeURIComponent(m.nombre)}','${encodeURIComponent(m.tipo)}','${encodeURIComponent(m.valor)}','${encodeURIComponent(m.unidad_medida || '')}',${m.marca_id||0})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                <button class="btn-icon-del" onclick="eliminar(${m.id})" title="Eliminar"><img src ="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
             </td>
         </tr>`;
     });
@@ -478,15 +497,16 @@ function mostrarToastMp(mensaje, tipo = 'ok') {
 
 // ── Guardar / Actualizar ─────────────────────────────────
 async function guardar() {
-    const nombre   = document.getElementById('nombre').value.trim();
-    const tipo     = document.getElementById('tipo').value.trim();
-    const unidad   = document.getElementById('unidad_medida').value.trim();
-    const valor    = document.getElementById('valor').value.trim();
-    const cantidad = document.getElementById('cantidad').value.trim();
-    const marca    = document.getElementById('marca').value.trim();
+    if (!editId) return;
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const tipo   = document.getElementById('tipo').value.trim();
+    const unidad = document.getElementById('unidad_medida').value.trim();
+    const valor  = document.getElementById('valor').value.trim();
+    const marca  = document.getElementById('marca').value.trim();
 
     if (!nombre || !tipo || !cantidad || !unidad) {
-        mostrarToastMp('⚠ Nombre, tipo, cantidad y unidad son obligatorios.', 'error');
+        mostrarToastMp(' Nombre, tipo, cantidad y unidad son obligatorios.', 'error');
         return;
     }
 
@@ -495,10 +515,15 @@ async function guardar() {
                    cantidad, marca_id: marca || null };
     const url    = editId ? `${API_MP}?id=${editId}` : API_MP;
     const method = editId ? 'PUT' : 'POST';
+    if (!nombre || !tipo)
+        return alert('Nombre y tipo son obligatorios.');
+
+    const data = { nombre, tipo, unidad_medida: unidad, valor: valor === '' ? 0 : parseFloat(valor), marca_id: marca || null };
 
     try {
-        const res  = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+        const res  = await fetch(`${API_MP}?id=${editId}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
         const resp = await res.json();
+
         if (res.ok) {
             const msg = editId
                 ? ' Materia prima modificada .'
@@ -507,11 +532,21 @@ async function guardar() {
             listar();
             mostrarToastMp(msg, 'ok');
         } else {
-            mostrarToastMp('⚠ Error: ' + (resp.error || 'Inténtalo de nuevo.'), 'error');
+            mostrarToastMp(' Error: ' + (resp.error || 'Inténtalo de nuevo.'), 'error');
         }
     } catch (e) {
-        mostrarToastMp('⚠ Error de conexión.', 'error');
+        mostrarToastMp(' Error de conexión.', 'error');
     }
+function editar(id, nombre, tipo, valor, unidad, marca) {
+    editId = id;
+    document.getElementById('nombre').value = decodeURIComponent(nombre);
+    document.getElementById('tipo').value = decodeURIComponent(tipo);
+    document.getElementById('unidad_medida').value = decodeURIComponent(unidad);
+    document.getElementById('valor').value = decodeURIComponent(valor);
+    document.getElementById('marca').value = marca === 0 ? '' : marca;
+    document.getElementById('form-mp-title').textContent = 'Editando: ' + decodeURIComponent(nombre);
+    document.getElementById('form-panel-mp').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function eliminar(id) {
@@ -531,10 +566,9 @@ async function eliminar(id) {
 
 function limpiar() {
     editId = null;
-    ['nombre','tipo','unidad_medida','valor','cantidad','marca'].forEach(id =>
+    ['nombre','tipo','unidad_medida','valor','marca'].forEach(id =>
         document.getElementById(id).value = '');
-    document.getElementById('form-mp-title').textContent = '➕ Agregar insumo';
-    document.getElementById('btn-guardar').textContent = 'Guardar insumo';
+    document.getElementById('form-panel-mp').style.display = 'none';
 }
 
 function sololetras(e) {

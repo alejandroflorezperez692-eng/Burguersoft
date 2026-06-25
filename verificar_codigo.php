@@ -9,8 +9,25 @@ if (empty($_SESSION['correo_recuperacion'])) {
 
 $correo = $_SESSION['correo_recuperacion'];
 $error  = '';
+$bloqueado = false;
+$segundos_restantes = 0;
+$LIMITE_INTENTOS = 3;
+$TIEMPO_BLOQUEO  = 60; 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+if (isset($_SESSION['codigo_bloqueado_hasta'])) {
+    $restante = $_SESSION['codigo_bloqueado_hasta'] - time();
+    if ($restante > 0) {
+        $bloqueado          = true;
+        $segundos_restantes = $restante;
+        $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
+    } else {
+    
+        unset($_SESSION['codigo_bloqueado_hasta'], $_SESSION['codigo_intentos']);
+    }
+}
+
+if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $codigo = '';
     for ($i = 1; $i <= 6; $i++) {
@@ -22,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $stmt = $conn->prepare(
             "SELECT id FROM usuario
-             WHERE correo     = ?
+             WHERE correo              = ?
                AND token_recuperacion  = ?
                AND expiracion_token    > NOW()"
         );
@@ -31,8 +48,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->store_result();
 
         if ($stmt->num_rows === 0) {
-            $error = 'Código incorrecto o expirado. Solicita uno nuevo.';
+     
+            $_SESSION['codigo_intentos'] = ($_SESSION['codigo_intentos'] ?? 0) + 1;
+            $intentos_restantes = $LIMITE_INTENTOS - $_SESSION['codigo_intentos'];
+
+            if ($_SESSION['codigo_intentos'] >= $LIMITE_INTENTOS) {
+                $_SESSION['codigo_bloqueado_hasta'] = time() + $TIEMPO_BLOQUEO;
+                $bloqueado          = true;
+                $segundos_restantes = $TIEMPO_BLOQUEO;
+                $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
+            } else {
+                $error = 'Código incorrecto o expirado. Te quedan ' . $intentos_restantes . ' intento(s).';
+            }
         } else {
+          
+            unset($_SESSION['codigo_intentos'], $_SESSION['codigo_bloqueado_hasta']);
             $_SESSION['codigo_verificado'] = true;
             $stmt->close();
             redirigir('restablecer_contrasena.php');
@@ -53,6 +83,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="estilos/estilos-login.css">
     <link rel="icon" href="estilos/img/icono.png" type="image/x-icon">
     <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        footer {
+            margin-top: 0 !important;
+        }
+
         .codigo-inputs {
             display: flex;
             justify-content: center;
@@ -76,12 +128,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-color: #2c1810;
             background: #fff;
         }
+        .error-bloqueo {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #856404;
+            text-align: center;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+        .error-normal {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="navbar">
         <img src="estilos/img/icono.png" class="logo" alt="Logo">
-        <a href="recuperar_contrasena.php" class="btn-regresar">Regresar</a>
+        <a href="php/recuperar_contrasena.php" class="btn-regresar">Regresar</a>
     </div>
 
     <div class="header-bar">INGRESA TU CÓDIGO</div>
@@ -97,8 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </p>
 
         <?php if ($error): ?>
-            <p style="color:red;text-align:center;margin-bottom:10px;">
-                <?= htmlspecialchars($error) ?>
+            <p class="<?= $bloqueado ? 'error-bloqueo' : 'error-normal' ?>">
+                <?= $error ?>
             </p>
         <?php endif; ?>
 
@@ -107,53 +174,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php for ($i = 1; $i <= 6; $i++): ?>
                     <input type="text" name="d<?= $i ?>" id="d<?= $i ?>"
                            maxlength="1" inputmode="numeric" pattern="[0-9]"
-                           autocomplete="off" required>
+                           autocomplete="off" required
+                           <?= $bloqueado ? 'disabled' : '' ?>>
                 <?php endfor; ?>
             </div>
 
-            <button type="submit" class="btn-primario">Verificar código</button>
+            <button type="submit" class="btn-primario"
+                <?= $bloqueado ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : '' ?>>
+                VERIFICAR CÓDIGO
+            </button>
         </form>
 
         <p style="color:#2c1810;margin-top:16px;font-size:14px;text-align:center;">
             ¿No recibiste el código?
             <a href="php/recuperar_contrasena.php" style="color:#2c1810;font-weight:bold;">Enviar de nuevo</a>
+
         </p>
     </div>
 
-   <div class="acc-panel" id="accPanel">
-    <div class="acc-panel-title">Accesibilidad</div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tema</div>
-        <div class="acc-row-btns">
-            <button class="acc_tema" onclick="setTema('claro')">Claro</button>
-            <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
+    <div class="acc-panel" id="accPanel">
+        <div class="acc-panel-title">Accesibilidad</div>
+        <div class="acc-row">
+            <div class="acc-row-label">Tema</div>
+            <div class="acc-row-btns">
+                <button class="acc_tema" onclick="setTema('claro')">Claro</button>
+                <button class="acc_tema" onclick="setTema('oscuro')">Oscuro</button>
+            </div>
         </div>
-    </div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tamaño de letra</div>
-        <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
-            <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
+        <div class="acc-row">
+            <div class="acc-row-label">Tamaño de letra</div>
+            <div class="acc-row-btns">
+                <button class="acc-btn-option" onclick="cambiarFuente(-1)">A−</button>
+                <button class="acc-btn-option" onclick="cambiarFuente(1)">A+</button>
+            </div>
         </div>
-    </div>
-    <div class="acc-row">
-        <div class="acc-row-label">Tipo de letra</div>
-        <div class="acc-row-btns">
-            <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
-            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
+        <div class="acc-row">
+            <div class="acc-row-label">Tipo de letra</div>
+            <div class="acc-row-btns">
+                <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
+                <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
+            </div>
         </div>
+        <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
     </div>
-    <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
-</div>
-<button class="acc-fab" id="accFab" onclick="togglePanel()">
-    <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="estilos/img/accesibilidad.png" alt="Accesibilidad">
-</button>
-<link rel="stylesheet" href="estilos/accesibilidad.css">
-<script src="js/accesibilidad.js"></script>
-
+    <button class="acc-fab" id="accFab" onclick="togglePanel()">
+        <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="estilos/img/accesibilidad.png" alt="Accesibilidad">
+    </button>
+    <link rel="stylesheet" href="estilos/accesibilidad.css">
+    <script src="js/accesibilidad.js"></script>
 
     <script>
-    // Auto-avance entre cajitas al escribir
     const inputs = document.querySelectorAll('.codigo-inputs input');
 
     inputs.forEach((input, i) => {
@@ -180,7 +250,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
     
 
-    inputs[0].focus();
+    if (!<?= $bloqueado ? 'true' : 'false' ?>) {
+        inputs[0].focus();
+    }
+
+
+    <?php if ($bloqueado && $segundos_restantes > 0): ?>
+    (function() {
+        let segundos = <?= $segundos_restantes ?>;
+        const el  = document.getElementById('countdown');
+
+        const intervalo = setInterval(() => {
+            segundos--;
+            if (el) el.textContent = segundos;
+            if (segundos <= 0) {
+                clearInterval(intervalo);
+                window.location.reload();
+            }
+        }, 1000);
+    })();
+    <?php endif; ?>
     </script>
     <script>
     // Mostrar toast al cargar la página
@@ -222,31 +311,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 </script>
 
-    <footer>
-    <div class="footer-container">
-        <div class="footer-brand">
-            <div class="footer-brand-text">
-                <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                    <img src="estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
-                    <hr>
-                    <h3 style="margin: 6px;">El Oriente</h3>
+    <footer style="margin-top: 70px !important;">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-brand-text">
+                    <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
+                        <img src="estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                        <hr>
+                        <h3 style="margin: 6px;">El Oriente</h3>
+                    </div>
+                    <p>El sabor auténtico de El Oriente. Calidad y servicio en cada mordida.</p>
                 </div>
-                <p>El sabor auténtico de El Oriente. Calidad y servicio en cada mordida.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Horarios de atención</h4>
+                <ul class="footer-horarios">
+                    <li><span>Lunes – Viernes:</span> <span>3:30 PM – 10:00 PM</span></li>
+                    <li><span>Sábado:</span> <span>3:00 PM – 11:00 PM</span></li>
+                    <li><span>Domingo:</span> <span>3:00 PM – 10:00 PM</span></li>
+                </ul>
             </div>
         </div>
-
-        <div class="footer-section">
-            <h4>Horarios de atención</h4>
-            <ul class="footer-horarios">
-                <li><span>Lunes – Viernes:</span> <span>3:30 PM – 10:00 PM</span></li>
-                <li><span>Sábado:</span> <span>3:00 PM – 11:00 PM</span></li>
-                <li><span>Domingo:</span> <span>3:00 PM – 10:00 PM</span></li>
-            </ul>
+        <div class="footer-bottom">
+            <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
         </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
-    </div>
-</footer>
+    </footer>
 </body>
 </html>

@@ -43,7 +43,6 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
             </p>
         <?php endif; ?>
 
-        
         <form method="POST" action="../procesar_recuperacion.php">
             <input id="rec-email" name="correo" type="email" class="input"
                    placeholder="Correo electrónico (obligatorio)" required>

@@ -240,6 +240,37 @@ $navActivo = 'usuarios';
 
         .btn-cancelar-modal:hover { background: var(--surface-3); }
 
+        .btn-icon-del {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: #922; 
+            color: #fff; 
+        }
+
+         .btn-icon-det {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 13px;
+            background: rgb(19, 11, 74); 
+            color: #fff; 
+        }
+
+        .btn-icon-del:hover { background: var(--danger); color: #fff;}
+        .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
+
         body.dark-mode .users-table { background: var(--surface); }
         body.dark-mode .users-table thead { background: #0e0500; }
         body.dark-mode .modal-box { background: var(--surface); }
@@ -423,8 +454,8 @@ function renderizarTabla(datos) {
             <td><span class="badge badge-estado-${estado}">${u.estado || 'Inactivo'}</span></td>
             <td><span class="badge badge-${rol}">${u.rol || 'Sin rol'}</span></td>
             <td>
-                <button class="btn-icon btn-icon-edit" onclick="abrirModal(${u.id},'${u.rol}','${u.estado}')" title="Editar">✏️</button>
-                <button class="btn-icon btn-icon-del" onclick="eliminarUsuario(${u.id})" title="Eliminar" style="margin-left:6px;">🗑️</button>
+                <button class="btn-icon-det" onclick="abrirModal(${u.id},'${u.rol}','${u.estado}')" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                <button class="btn-icon-del" onclick="eliminarUsuario(${u.id})" title="Eliminar" style="margin-left:6px;"><img src="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"> </button>
             </td>
         </tr>`;
     }).join('');

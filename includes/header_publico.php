@@ -100,7 +100,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
     <div class="header-left">
         <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
         <hr>
-        <a href="/burguersoft/php/El Oriente.php" class="nom-local">El Oriente</a>
+        <a href="/burguersoft/php/el_oriente.php" class="nom-local">El Oriente</a>
     </div>
 
     <nav class="header-center">
@@ -156,12 +156,12 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
                     <button type="button" class="btn-cart-action" onclick="verFactura()">
                         Ver Factura
                     </button>
-                    <select class="btn-cart-action btn-pago">
+                    <select class="btn-cart-action btn-pago" id="pago">
                         <option value="">Método de Pago</option>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="tarjeta">Tarjeta</option>
-                        <option value="nequi">Nequi</option>
-                        <option value="daviplata">Daviplata</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                        <option value="Nequi">Nequi</option>
+                        <option value="Daviplata">Daviplata</option>
                     </select>
                 </div>
 
@@ -550,12 +550,12 @@ body {
     border: 1px solid #E0D5C5;
     border-radius: 8px;
     cursor: pointer;
-    background-color: #F7F2EA;
+    background-color: #817e78;
     color: #7A6855;
     transition: all 0.2s ease;
 }
 .btn-cart-action:hover {
-    background-color: #E0D5C5;
+    background-color: #817e78;
     color: #1C1410;
     transform: translateY(-1px);
 }
@@ -565,7 +565,7 @@ body {
     color: #C0392B;
 }
 .btn-pago {
-    background-color: #fff;
+    background-color: #817e78;
     border-color: #E0D5C5;
     color: #BA7517;
 }
@@ -576,6 +576,7 @@ body {
 }
 .btn-checkout {
     margin-top: 5px;
+    background-color:  #EF9F27;
 }
 
 .mp-panel { opacity: 0; pointer-events: none; }
@@ -648,11 +649,11 @@ body {
 }
 </style>
 <style>
-
 .dropdown-menu { display: none; }
 .dropdown-menu.abierto { display: block !important; }
 </style>
 <div id="toastGlobal" class="toast-global"></div>
+<?php include __DIR__ . '/../php/checkout_modal.php'; ?>
 <script src="/burguersoft/js/Menu.js"></script>
 <script>
     
@@ -783,7 +784,23 @@ function mpSwitchTab(tab) {
 }
 
 function abrirCheckout() {
-    enviarPedido();
+    if (!carrito || carrito.length === 0) return;
+    const overlay = document.getElementById('coOverlay');
+    const panel   = document.getElementById('coPanel');
+    if (overlay) overlay.classList.add('co-show');
+    if (panel)   panel.classList.add('co-show');
+    document.body.style.overflow = 'hidden';
+
+    const tot = document.getElementById('cartTotal');
+    if (!tot) return;
+    const val = tot.textContent.trim();
+    ['co-dom-subtotal', 'co-rec-total'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    });
+    const raw = parseInt((tot.textContent || '0').replace(/[^0-9]/g, ''), 10);
+    const domTotal = document.getElementById('co-dom-total');
+    if (domTotal) domTotal.textContent = '$' + (raw + 3000).toLocaleString('es-CO');
 }
 document.addEventListener('DOMContentLoaded', function () {
     const params = new URLSearchParams(window.location.search);
