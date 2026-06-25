@@ -290,7 +290,7 @@ include __DIR__ . '/../includes/header_publico.php';
                                 this
                             )">+</button>
                         <?php else: ?>
-                        <a href="/burguersoft/php/login.php">
+                        <a href="/burguersoft/php/login.php? motivo=producto">
                             <button type="button" class="btn-add" title="Inicia sesión para agregar">🔒</button>
                         </a>
                         <?php endif; ?>

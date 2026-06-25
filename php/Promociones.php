@@ -624,7 +624,7 @@ function mostrarToastMp(mensaje, tipo = 'ok') {
         toast.style.cssText = `
             position: fixed; top: 20px; left: 50%;
             transform: translateX(-50%) translateY(-20px);
-            padding: 14px 24px; border-radius: 10px;
+            padding: 18px 28px; border-radius: 10px;
             font-size: 14px; font-weight: 600;
             box-shadow: 0 8px 20px rgba(0,0,0,0.25);
             opacity: 0; z-index: 99999;
@@ -636,8 +636,8 @@ function mostrarToastMp(mensaje, tipo = 'ok') {
 
     if (tipo === 'ok') {
         toast.style.background = '#2f2a1f';
-        toast.style.color      = '#F2A93B';
-        toast.style.border     = '1px solid #E8821A';
+        toast.style.color      = '#ffffff';
+        toast.style.border     = '2.5px solid #E8821A';
     } else {
         toast.style.background = '#2f1f1f';
         toast.style.color      = '#e63946';
@@ -689,7 +689,7 @@ async function eliminarPromo(id) {
         const data = await res.json();
         if (data.success) {
             cargarPromos();
-            mostrarToastPromo(' Promoción eliminada exitosamente.', 'ok');
+            mostrarToastPromo(' Promoción eliminada.');
         } else {
             mostrarToastPromo('⚠ Error: ' + (data.error || 'No se pudo eliminar.'), 'error');
         }
@@ -739,8 +739,8 @@ if (data.success || data.id) {
     cargarPromos();
     
     const msg = eraEdicion
-        ? ' Promoción actualizada exitosamente.'
-        : ' Promoción guardada exitosamente.';
+        ? ' Promoción actualizada.'
+        : ' Promoción guardada.';
     mostrarToastPromo(msg, 'ok');
 }else {
             mostrarToastPromo('⚠ Error: ' + (data.error || 'Inténtalo de nuevo.'), 'error');

@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script>
     // Mostrar toast al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
-        mostrarToastCodigo('✓ Código enviado a tu correo exitosamente.');
+        mostrarToastCodigo(' El codigo ha sido enviado a tu correo, insertalo para crear tu nueva contraseña');
     });
 
     let _toastTimer = null;
@@ -198,14 +198,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             toast.style.cssText = `
                 position: fixed; top: 20px; left: 50%;
                 transform: translateX(-50%) translateY(-20px);
-                padding: 14px 24px; border-radius: 10px;
+                padding: 18px 28px; border-radius: 10px;
                 font-size: 14px; font-weight: 600;
                 box-shadow: 0 8px 20px rgba(0,0,0,0.25);
                 opacity: 0; z-index: 99999;
                 transition: opacity 0.4s ease, transform 0.4s ease;
                 pointer-events: none; max-width: 90%; text-align: center;
-                background: #2f2a1f; color: #F2A93B;
-                border: 1px solid #E8821A;
+                background: #2f2a1f; color: #f6f5f2;
+                border: 2.5px solid #E8821A;
             `;
             document.body.appendChild(toast);
         }

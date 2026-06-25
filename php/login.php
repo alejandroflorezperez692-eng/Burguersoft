@@ -8,6 +8,7 @@ if (isset($_SESSION['id_usuario'])) {
 }
 
 $error = '';
+$motivo = $_GET['motivo'] ?? ''; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -83,9 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 50%;
             transform: translateX(-50%) translateY(-20px);
             background: #2f2a1f;
-            color: #F2A93B;
-            border: 1px solid #E8821A;
-            padding: 14px 24px;
+            color: #f4f3f2;
+            border: 2.5px solid #E8821A;
+            padding: 18px 28px;
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
@@ -111,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="header-bar"> INICIAR SESIÓN </div>
 
-    <div id="toastBienvenida" class="toast-bienvenida">¡Bienvenido a BurguerSoft! Inicia sesión para continuar.</div>
+    <div id="toastBienvenida" class="toast-bienvenida">¡Inicia sesión para continuar.</div>
 
     <div class="card">
         <?php if ($error): ?>
@@ -215,20 +216,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
     window.addEventListener('DOMContentLoaded', function() {
         const toast = document.getElementById('toastBienvenida');
-        if (toast) {
-            // Mostrar
-            setTimeout(() => toast.classList.add('mostrar'), 100);
-            // Ocultar después de 3.5s
-            setTimeout(() => toast.classList.remove('mostrar'), 3500);
-        }
+
+        <?php if ($motivo === 'promocion'): ?>          // ← NUEVO
+            mostrarToastNaranja('Inicia sesión para comprar una promoción.');
+
+        <?php elseif ($motivo=== 'producto'): ?>
+            mostrarToastNaranja('Inicia sesión para comprar una producto del menu.');
+
+        <?php elseif (!empty($_SESSION['mensaje']) && $_SESSION['tipo_mensaje'] === 'exito'): ?>
+            mostrarToastExito('<?= htmlspecialchars($_SESSION['mensaje']) ?>');
+            <?php unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']); ?>
+
+        <?php else: ?>
+            if (toast && !sessionStorage.getItem('toastLoginMostrado')) {
+                setTimeout(() => toast.classList.add('mostrar'), 100);
+                setTimeout(() => toast.classList.remove('mostrar'), 3500);
+                sessionStorage.setItem('toastLoginMostrado', '1');
+            }
+        <?php endif; ?>
     });
 
-    function togglePassword() {
-        const input  = document.getElementById('password');
-        const btn    = document.getElementById('btnToggle');
-        const visible = input.type === 'text';
+    function mostrarToastExito(mensaje) {
+        const t = document.createElement('div');
+        t.textContent = mensaje;
+        t.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #1a3a1a; color: #4caf50;
+            border: 2px solid #4caf50;
+            padding: 14px 28px; border-radius: 10px;
+            font-size: 14px; font-weight: 700;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            z-index: 99999; text-align: center;
+            opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+        `;
+        document.body.appendChild(t);
+        setTimeout(() => {
+            t.style.opacity = '1';
+            t.style.transform = 'translateX(-50%) translateY(0)';
+        }, 100);
+        setTimeout(() => {
+            t.style.opacity = '0';
+            t.style.transform = 'translateX(-50%) translateY(-20px)';
+        }, 3600);
+        setTimeout(() => t.remove(), 4100);
+    }
 
-        input.type   = visible ? 'password' : 'text';
+    function mostrarToastNaranja(mensaje) {
+    const t = document.createElement('div');
+    t.textContent = mensaje;
+    t.style.cssText = `
+        position: fixed; top: 20px; left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background: #2f2a1f; color: #ffffff;
+        border: 2.5px solid #E8821A;
+        padding: 18px 28px; border-radius: 10px;
+        font-size: 14px; font-weight: 600;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        z-index: 99999; text-align: center;
+        opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease;
+        pointer-events: none; max-width: 90%;
+    `;
+    document.body.appendChild(t);
+    setTimeout(() => {
+        t.style.opacity = '1';
+        t.style.transform = 'translateX(-50%) translateY(0)';
+    }, 100);
+    setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3600);
+    setTimeout(() => t.remove(), 4100);
+}
+
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const btn   = document.getElementById('btnToggle');
+        const visible = input.type === 'text';
+        input.type      = visible ? 'password' : 'text';
         btn.textContent = visible ? 'Mostrar' : 'Ocultar';
     }
 </script>

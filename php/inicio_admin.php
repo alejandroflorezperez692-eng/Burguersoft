@@ -38,15 +38,15 @@ $navActivo = 'inicio';
             overflow: hidden;
         }
 
-                .toast-bienvenida {
+            .toast-bienvenida {
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(-20px);
             background: #2f2a1f;
-            color: #F2A93B;
-            border: 1px solid #E8821A;
-            padding: 14px 24px;
+            color: #ffffff;
+            border: 2.5px solid #E8821A;
+            padding: 18px 28px;
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;

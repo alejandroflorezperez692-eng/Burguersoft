@@ -215,7 +215,7 @@ async function cargarPromociones() {
                         <div class="promo-footer-pub">
                             <div class="promo-precio-pub">$${Number(p.precio).toLocaleString('es-CO')}</div>
                             <button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
-                                onclick="window.location.href='/burguersoft/php/login.php'">
+                                onclick="window.location.href='/burguersoft/php/login.php?motivo=promocion'">
                                 <img src="../estilos/img/bloquear.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
                             </button>
                         </div>

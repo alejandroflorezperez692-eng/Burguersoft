@@ -484,9 +484,9 @@ body {
     left: 50%;
     transform: translateX(-50%) translateY(-20px);
     background: #2f2a1f;
-    color: #F2A93B;
-    border: 1px solid #E8821A;
-    padding: 14px 24px;
+    color: #f9f8f7;
+    border: 2.5px solid #E8821A;
+    padding: 18px 28px;
     border-radius: 10px;
     font-size: 14px;
     font-weight: 600;
@@ -790,9 +790,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const toast  = params.get('toast');
 
     if (toast === 'login_ok') {
-        mostrarToast('¡Bienvenido! Has iniciado sesión correctamente.');
+        mostrarToast('¡Has iniciado sesión correctamente!.');
     } else if (toast === 'logout_ok') {
-        mostrarToast('Sesión cerrada correctamente. ¡Hasta pronto!');
+        mostrarToast('Sesión cerrada correctamente.');
     }
 
     if (toast) {
