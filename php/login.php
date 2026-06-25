@@ -7,9 +7,26 @@ if (isset($_SESSION['id_usuario'])) {
     redirigir('/burguersoft/php/inicio_admin.php');
 }
 
-$error = '';
+$error       = '';
+$bloqueado   = false;
+$segundos_restantes = 0;
+$LIMITE_INTENTOS    = 3;
+$TIEMPO_BLOQUEO     = 60; 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+if (isset($_SESSION['login_bloqueado_hasta'])) {
+    $restante = $_SESSION['login_bloqueado_hasta'] - time();
+    if ($restante > 0) {
+        $bloqueado          = true;
+        $segundos_restantes = $restante;
+        $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
+    } else {
+       
+        unset($_SESSION['login_bloqueado_hasta'], $_SESSION['login_intentos']);
+    }
+}
+
+if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $correo     = limpiar($_POST['correo']     ?? '');
     $contrasena = $_POST['contrasena'] ?? '';
@@ -26,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuario = $stmt->fetch();
 
         if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
+           
+            unset($_SESSION['login_intentos'], $_SESSION['login_bloqueado_hasta']);
+
             $_SESSION['id_usuario']  = $usuario['id'];
             $_SESSION['nombre']      = $usuario['nombre'];
             $_SESSION['apellido']    = $usuario['apellido'];
@@ -34,13 +54,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($usuario['nombre_rol'] === 'Administrador') {
                 $_SESSION['es_admin'] = true;
                 redirigir('/burguersoft/php/inicio_admin.php');
-            }
-            else {
+            } else {
                 redirigir('/burguersoft/php/Burguersoft.php');
-            };
+            }
 
         } else {
-            $error = 'Correo o contraseña incorrectos.';
+           
+            $_SESSION['login_intentos'] = ($_SESSION['login_intentos'] ?? 0) + 1;
+
+            $intentos_restantes = $LIMITE_INTENTOS - $_SESSION['login_intentos'];
+
+            if ($_SESSION['login_intentos'] >= $LIMITE_INTENTOS) {
+                $_SESSION['login_bloqueado_hasta'] = time() + $TIEMPO_BLOQUEO;
+                $bloqueado          = true;
+                $segundos_restantes = $TIEMPO_BLOQUEO;
+                $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
+            } else {
+                $error = 'Correo o contraseña incorrectos. Te quedan ' . $intentos_restantes . ' intento(s).';
+            }
         }
     } else {
         $error = 'Por favor completa todos los campos.';
@@ -57,25 +88,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
 </head>
 <style>
-        .input-password-wrapper {
-            position: relative;
-            width: 100%;
-            margin-bottom: 20px;
-        }
+    .input-password-wrapper {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+    }
 
-        .input-password-wrapper .input {
-            margin-bottom: 0;
-            padding-right: 90px;
-        }
+    .input-password-wrapper .input {
+        margin-bottom: 0;
+        padding-right: 90px;
+    }
 
-        body.modo-oscuro-accesible .btn-toggle-password {
-            color: var(--color-acento);
-        }
+    body.modo-oscuro-accesible .btn-toggle-password {
+        color: var(--color-acento);
+    }
 
-        body.modo-oscuro-accesible .btn-toggle-password:hover {
-            color: #fff;
-        }
-    </style>
+    body.modo-oscuro-accesible .btn-toggle-password:hover {
+        color: #fff;
+    }
+
+    .error-bloqueo {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 10px 14px;
+        color: #856404;
+        text-align: center;
+        margin-bottom: 14px;
+        font-weight: 600;
+    }
+
+    .error-normal {
+        color: red;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+</style>
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
@@ -86,7 +134,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="card">
         <?php if ($error): ?>
-            <p style="color:red;text-align:center;margin-bottom:10px;"><?= htmlspecialchars($error) ?></p>
+            <p class="<?= $bloqueado ? 'error-bloqueo' : 'error-normal' ?>">
+                <?= $error ?>
+            </p>
         <?php endif; ?>
 
         <form id="loginForm" method="POST" action="login.php">
@@ -94,23 +144,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>CORREO*</h2>
             <input type="email" name="correo" id="email" class="input"
                    placeholder="ejemplo@gmail.com" required
-                   value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>">
+                   value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>"
+                   <?= $bloqueado ? 'disabled' : '' ?>>
 
             <h2>CONTRASEÑA*</h2>
             <div class="input-password-wrapper">
                 <input type="password" name="contrasena" id="password" class="input"
-                       placeholder="Ingresa tu contraseña" required>
+                       placeholder="Ingresa tu contraseña" required
+                       <?= $bloqueado ? 'disabled' : '' ?>>
                 <button type="button" id="btnToggle" onclick="togglePassword()"
                     onmouseover="this.style.color='#000000'"
                     onmouseout="this.style.color='#E8821A'"
                     style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
                         background:none; border:none; cursor:pointer; font-size:13px;
-                        font-weight:700; color:#E8821A;">
+                        font-weight:700; color:#E8821A;"
+                    <?= $bloqueado ? 'disabled' : '' ?>>
                     Mostrar
                 </button>
             </div>
 
-            <button type="submit" id="botonEntrar" class="btn-primario">INICIAR SESIÓN</button>
+            <button type="submit" id="botonEntrar" class="btn-primario"
+                <?= $bloqueado ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : '' ?>>
+                INICIAR SESIÓN
+            </button>
 
             <a href="recuperar_contrasena.php" class="link">¿Recuperar tu contraseña?</a>
 
@@ -154,14 +210,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>
 </div>
 
-<button class="acc-fab" id="accFab" onclick="togglePanel()"> <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"  onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad"></button>
+<button class="acc-fab" id="accFab" onclick="togglePanel()">
+    <img style="width: 24px; height: 24px; filter: invert(1); pointer-events: none;"
+         onclick="togglePanel()" src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
+</button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
 <footer>
     <div class="footer-container">
         <div class="footer-brand">
             <div class="footer-brand-text">
-                <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
+                <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
                     <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>
@@ -184,15 +243,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </footer>
 <script>
-        alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
+    alert('¡Bienvenido a BurguerSoft! Inicia sesión para continuar.');
+
     function togglePassword() {
         const input  = document.getElementById('password');
         const btn    = document.getElementById('btnToggle');
         const visible = input.type === 'text';
-
-        input.type   = visible ? 'password' : 'text';
+        input.type      = visible ? 'password' : 'text';
         btn.textContent = visible ? 'Mostrar' : 'Ocultar';
     }
+
+    <?php if ($bloqueado && $segundos_restantes > 0): ?>
+    (function() {
+        let segundos = <?= $segundos_restantes ?>;
+        const el = document.getElementById('countdown');
+        const btn = document.getElementById('botonEntrar');
+
+        const intervalo = setInterval(() => {
+            segundos--;
+            if (el) el.textContent = segundos;
+            if (segundos <= 0) {
+                clearInterval(intervalo);
+                window.location.reload();
+            }
+        }, 1000);
+    })();
+    <?php endif; ?>
 </script>
 </body>
 </html>
