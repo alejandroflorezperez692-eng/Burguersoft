@@ -5,6 +5,8 @@ $modalError   = '';
 $modalSuccess = '';
 $modalTab     = 'datos';
 
+
+
 if ($logueado) {
     if (!function_exists('getPDO')) {
         require_once __DIR__ . '/../includes/conexion.php';
@@ -91,6 +93,8 @@ if (!function_exists('hv')) {
 
 $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 ?>
+
+<div id="toastGlobal" class="toast-global"></div>
 
 <header>
     <div class="header-left">
@@ -474,6 +478,32 @@ body {
     width: 100%;
 }
 
+.toast-global {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: #2f2a1f;
+    color: #f9f8f7;
+    border: 2.5px solid #E8821A;
+    padding: 18px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    opacity: 0;
+    z-index: 99999;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+
+.toast-global.mostrar {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 .mp-tabs-container{display:flex;justify-content:space-around;margin-bottom:25px;border-bottom:1px solid #eee;padding-bottom:10px;}
 .mp-tab{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:10px 15px;border-radius:12px;transition:all 0.3s ease;color:#7A6855;font-weight:600;font-family:inherit;font-size:12px;}
 .mp-tab-active{background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.08);color:#BA7517;}
@@ -622,10 +652,28 @@ body {
 .dropdown-menu { display: none; }
 .dropdown-menu.abierto { display: block !important; }
 </style>
+<div id="toastGlobal" class="toast-global"></div>
 <?php include __DIR__ . '/../php/checkout_modal.php'; ?>
 <script src="/burguersoft/js/Menu.js"></script>
 <script>
+    
+let toastTimeoutId = null;
 
+function mostrarToast(mensaje, duracion = 3500) {
+    const toast = document.getElementById('toastGlobal');
+    if (!toast) return;
+
+    if (toastTimeoutId) {
+        clearTimeout(toastTimeoutId);
+    }
+
+    toast.textContent = mensaje;
+    toast.classList.add('mostrar');
+
+    toastTimeoutId = setTimeout(() => {
+        toast.classList.remove('mostrar');
+    }, duracion);
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const toggleCartBtn = document.getElementById('toggleCart');
@@ -658,23 +706,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function verFactura() {
     console.log("Abriendo visualización de factura...");
-    alert("Aquí podrás visualizar el desglose e impresión de tu factura de compra.");
+    if (!carrito || carrito.length === 0) {
+        mostrarToast("Tu carrito no tiene ningún producto, para efectuar una factura de venta");
+    return;
+    }
 }
 
 
 function vaciarCarrito() {
-    if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+    // Si el carrito está vacío
+    if (!carrito || carrito.length === 0) {
+        mostrarToast(' Tu carrito no tiene ningún producto.');
+        return;
+    }
+
+    // Si tiene productos, pedir confirmación
+    if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
         carrito = [];
         if (typeof actualizarCarrito === 'function') {
             actualizarCarrito();
         }
+        mostrarToast('✓ tu carrito ha sido vaciado exitosamente.');
     }
 }
 
 
 function seleccionarMetodoPago() {
     console.log("Abriendo opciones de método de pago...");
-    alert("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
+    mostrarToast("Selecciona tu método de pago preferido (Efectivo, Transferencia o Datáfono).");
 }
 
 function abrirModalPerfil() {
@@ -743,4 +802,25 @@ function abrirCheckout() {
     const domTotal = document.getElementById('co-dom-total');
     if (domTotal) domTotal.textContent = '$' + (raw + 3000).toLocaleString('es-CO');
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    const toast  = params.get('toast');
+
+    if (toast === 'login_ok') {
+        mostrarToast('¡Has iniciado sesión correctamente!.');
+    } else if (toast === 'logout_ok') {
+        mostrarToast('Sesión cerrada correctamente.');
+    }
+
+    if (toast) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('toast');
+        window.history.replaceState({}, '', url);
+    }
+});
+<?php if ($modalSuccess): ?>
+document.addEventListener('DOMContentLoaded', function () {
+    mostrarToast('✓ <?= addslashes($modalSuccess) ?>');
+});
+<?php endif; ?>
 </script>
