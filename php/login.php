@@ -141,9 +141,8 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="contenedor-login">
-        <div class="card">
-            <div class="header-bar"> INICIAR SESIÓN </div>
-
+  <div class="header-bar"> INICIAR SESIÓN </div>
+<div class="card">
             <?php if ($error): ?>
                 <p class="<?= $bloqueado ? 'error-bloqueo' : 'error-normal' ?>">
                     <?= $error ?>
