@@ -54,7 +54,7 @@ foreach ($pedidos as $vid => $datos) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Pedidos – BURGUERSOFT</title>
+    <title>BURGUERSOFT – Mis Pedidos</title>
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <link rel="stylesheet" href="../estilos/estilos-paginas-clientes.css">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
@@ -363,7 +363,7 @@ foreach ($pedidos as $vid => $datos) {
     <?php else: ?>
 
         <?php
-        $pasos = ['En cocina', 'En barra','Pendiente de pago', 'Entregado' ];
+        $pasos = ['En cocina', 'En barra','Entregado', 'Pendiente de pago', 'Pagado' ];
 
         foreach ($pedidos as $p):
             $estado    = $p['estado'] ?? 'En cocina';
@@ -440,7 +440,8 @@ foreach ($pedidos as $vid => $datos) {
             </table>
 
             <div class="pedido-foot">
-                <?php if (strtolower($p['estado'] ?? '') === 'pagado'): ?>
+                <?php $cancelables = ['Pagado','En cocina','En barra','Pendiente de pago'];
+                    if (in_array($p['estado'] ?? '', $cancelables)): ?>
                     <button type="button" class="btn-cancelar-pedido" onclick="cancelarPedido(<?php echo (int)$p['id']; ?>)">
                         Cancelar pedido
                     </button>

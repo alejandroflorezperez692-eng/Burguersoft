@@ -39,7 +39,7 @@ if ($method === 'GET') {
                v.usuario_id
         FROM venta v
         LEFT JOIN usuario u ON u.id = v.usuario_id
-        ORDER BY v.fecha DESC
+        ORDER BY v.id DESC  
     ")->fetchAll());
 }
 
@@ -117,7 +117,7 @@ if ($method === 'POST') {
         }
 
         $pdo->prepare("INSERT INTO venta (valor_total, metodo_pago, estado, usuario_id) VALUES (?,?,?,?)")
-            ->execute([$total, $metodo, 'Pagado', $usuario_id]);
+            ->execute([$total, $metodo, 'En cocina', $usuario_id]);
         $venta_id = (int)$pdo->lastInsertId();
 
         $insDetalle = $pdo->prepare("
@@ -204,7 +204,7 @@ if ($method === 'PUT') {
 
     if (!$estado && !$metodo) jsonResponse(['error' => 'Sin datos para actualizar'], 400);
 
-    $estados_validos = ['Pagado', 'Cancelado', 'Reembolsada', 'Rechazada'];
+    $estados_validos = ['En cocina','En barra','Pendiente de pago','Entregado','Pagado'];
     if ($estado && !in_array($estado, $estados_validos))
         jsonResponse(['error' => 'Estado inválido'], 400);
 
@@ -220,7 +220,7 @@ if ($method === 'PUT') {
             jsonResponse(['error' => 'No autorizado'], 403);
         if ($estado !== 'Cancelado' || $metodo)
             jsonResponse(['error' => 'Solo puedes cancelar tu pedido'], 403);
-        if ($estadoActual !== 'Pagado')
+        if ($estadoActual !== 'En cocina')
             jsonResponse(['error' => 'Este pedido ya no se puede cancelar'], 409);
     }
 
