@@ -538,6 +538,7 @@ body.dark-mode .section-text {
     background-color: transparent !important;
 }
 
+
 /* ====================================================================
    MODO OSCURO - PANEL DE REGISTRO (#registroForm)
    Solo afecta este formulario, no toca footer ni modo claro
@@ -674,4 +675,25 @@ body.dark-mode #loginForm .enlace-externo a:hover {
     background-image: none !important;
     opacity: 0.85 !important; 
     border-bottom: none !important;
+}
+body.dark-mode .sidebar-header{
+    background-color: #000000 !important;
+}
+
+body.dark-mode .nom-local{
+    color: #E8821A !important;
+}
+
+/* Modo claro: muestra logo claro, oculta logo oscuro */
+.logo-oscuro {
+    display: none;
+}
+
+/* Modo oscuro: muestra logo oscuro, oculta logo claro */
+body.dark-mode .logo-claro {
+    display: none;
+}
+body.dark-mode .logo-oscuro {
+    display: block;
+
 }
