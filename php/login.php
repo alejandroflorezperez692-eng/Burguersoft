@@ -8,7 +8,6 @@ if (isset($_SESSION['id_usuario'])) {
 }
 
 $error              = '';
-$motivo             = $_GET['motivo'] ?? ''; 
 $bloqueado          = false;
 $segundos_restantes = 0;
 $LIMITE_INTENTOS    = 3;
@@ -48,15 +47,13 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['apellido']    = $usuario['apellido'];
             $_SESSION['correo']      = $usuario['correo'];
             $_SESSION['rol_usuario'] = $usuario['nombre_rol'];
-            $_SESSION['login_exitoso'] = true; 
+
             if ($usuario['nombre_rol'] === 'Administrador') {
                 $_SESSION['es_admin'] = true;
-                redirigir('/burguersoft/php/inicio_admin.php?toast=login_ok');
+                redirigir('/burguersoft/php/inicio_admin.php');
+            } else {
+                redirigir('/burguersoft/php/Burguersoft.php');
             }
-            else {
-                redirigir('/burguersoft/php/Burguersoft.php?toast=login_ok');
-            };
-
         } else {
             $_SESSION['login_intentos'] = ($_SESSION['login_intentos'] ?? 0) + 1;
             $intentos_restantes = $LIMITE_INTENTOS - $_SESSION['login_intentos'];
@@ -104,30 +101,6 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #fff;
         }
 
-        .toast-bienvenida {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: #2f2a1f;
-            color: #f4f3f2;
-            border: 2.5px solid #E8821A;
-            padding: 18px 28px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            opacity: 0;
-            z-index: 9999;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        .toast-bienvenida.mostrar {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
         .contenedor-login {
             flex: 1;
             display: flex;
@@ -171,12 +144,6 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="card">
             <div class="header-bar"> INICIAR SESIÓN </div>
 
-    <div id="toastBienvenida" class="toast-bienvenida">¡Inicia sesión para continuar.</div>
-
-    <div class="card">
-        <?php if ($error): ?>
-            <p style="color:red;text-align:center;margin-bottom:10px;"><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
             <?php if ($error): ?>
                 <p class="<?= $bloqueado ? 'error-bloqueo' : 'error-normal' ?>">
                     <?= $error ?>
@@ -281,95 +248,12 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 </ul>
             </div>
         </div>
-      
         <div class="footer-bottom">
             <p>&copy; 2026 BURGUERSOFT - EL ORIENTE. Todos los derechos reservados.</p>
         </div>
+    </footer>
 
-<script>
-    window.addEventListener('DOMContentLoaded', function() {
-        const toast = document.getElementById('toastBienvenida');
-
-        <?php if ($motivo === 'promocion'): ?>          // ← NUEVO
-            mostrarToastNaranja('Inicia sesión para comprar una promoción.');
-
-        <?php elseif ($motivo=== 'producto'): ?>
-            mostrarToastNaranja('Inicia sesión para comprar una producto del menu.');
-
-        <?php elseif (!empty($_SESSION['mensaje']) && $_SESSION['tipo_mensaje'] === 'exito'): ?>
-            mostrarToastExito('<?= htmlspecialchars($_SESSION['mensaje']) ?>');
-            <?php unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']); ?>
-
-        <?php else: ?>
-            if (toast && !sessionStorage.getItem('toastLoginMostrado')) {
-                setTimeout(() => toast.classList.add('mostrar'), 100);
-                setTimeout(() => toast.classList.remove('mostrar'), 3500);
-                sessionStorage.setItem('toastLoginMostrado', '1');
-            }
-        <?php endif; ?>
-    });
-
-    function mostrarToastExito(mensaje) {
-        const t = document.createElement('div');
-        t.textContent = mensaje;
-        t.style.cssText = `
-            position: fixed; top: 20px; left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: #1a3a1a; color: #4caf50;
-            border: 2px solid #4caf50;
-            padding: 14px 28px; border-radius: 10px;
-            font-size: 14px; font-weight: 700;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            z-index: 99999; text-align: center;
-            opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease;
-            pointer-events: none;
-        `;
-        document.body.appendChild(t);
-        setTimeout(() => {
-            t.style.opacity = '1';
-            t.style.transform = 'translateX(-50%) translateY(0)';
-        }, 100);
-        setTimeout(() => {
-            t.style.opacity = '0';
-            t.style.transform = 'translateX(-50%) translateY(-20px)';
-        }, 3600);
-        setTimeout(() => t.remove(), 4100);
-    }
-
-    function mostrarToastNaranja(mensaje) {
-    const t = document.createElement('div');
-    t.textContent = mensaje;
-    t.style.cssText = `
-        position: fixed; top: 20px; left: 50%;
-        transform: translateX(-50%) translateY(-20px);
-        background: #2f2a1f; color: #ffffff;
-        border: 2.5px solid #E8821A;
-        padding: 18px 28px; border-radius: 10px;
-        font-size: 14px; font-weight: 600;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-        z-index: 99999; text-align: center;
-        opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease;
-        pointer-events: none; max-width: 90%;
-    `;
-    document.body.appendChild(t);
-    setTimeout(() => {
-        t.style.opacity = '1';
-        t.style.transform = 'translateX(-50%) translateY(0)';
-    }, 100);
-    setTimeout(() => {
-        t.style.opacity = '0';
-        t.style.transform = 'translateX(-50%) translateY(-20px)';
-    }, 3600);
-    setTimeout(() => t.remove(), 4100);
-}
-
-    function togglePassword() {
-        const input = document.getElementById('password');
-        const btn   = document.getElementById('btnToggle');
-        const visible = input.type === 'text';
-        input.type      = visible ? 'password' : 'text';
-        btn.textContent = visible ? 'Mostrar' : 'Ocultar';
-    }
+    <script>
         function togglePassword() {
             const input   = document.getElementById('password');
             const btn     = document.getElementById('btnToggle');
@@ -395,6 +279,5 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         })();
         <?php endif; ?>
     </script>
-
 </body>
 </html>
