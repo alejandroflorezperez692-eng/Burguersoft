@@ -265,7 +265,7 @@ $navActivo = 'inicio';
             <div class="welcome-text">
                 <h2>Bienvenido, <br>Administrador</h2>
             </div>
-            <img src="../estilos/img/usuario.png" alt="Admin" class="welcome-img">
+            <img src="../estilos/img/usuario..png" class="welcome-img" alt="">
         </div>
 
     </div>
