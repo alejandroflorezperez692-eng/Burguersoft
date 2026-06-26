@@ -558,3 +558,19 @@ body.dark-mode .logo-claro {
 body.dark-mode .logo-oscuro {
     display: block;
 }
+
+body.dark-mode .sidebar-header{
+    background-color: #1b0a00 !important;
+}
+
+body.dark-mode .header-nav{
+    background: linear-gradient( to right, var(--header-bg), #d27211);
+}
+
+body.dark-mode .nav-logout {
+    color: #1b0a00 !important;
+}
+
+body.dark-mode .sidebar-divider{
+    background: var(--color-primario) !important;
+}
