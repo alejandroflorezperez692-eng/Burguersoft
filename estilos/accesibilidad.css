@@ -537,3 +537,163 @@ body.dark-mode .section-text {
     background: transparent !important;
     background-color: transparent !important;
 }
+
+
+/* ====================================================================
+   MODO OSCURO - PANEL DE REGISTRO (#registroForm)
+   Solo afecta este formulario, no toca footer ni modo claro
+   ==================================================================== */
+body.dark-mode #registroForm {
+    background-color: #000000 !important;
+}
+
+body.dark-mode #registroForm .contenedor,
+body.dark-mode #registroForm .encabezado,
+body.dark-mode #registroForm .descripcion,
+body.dark-mode #registroForm .fila,
+body.dark-mode #registroForm .campo {
+    background-color: #000000 !important;
+}
+
+body.dark-mode #registroForm label,
+body.dark-mode #registroForm p,
+body.dark-mode #registroForm h2,
+body.dark-mode #registroForm li {
+    color: var(--dm-texto, #E8821A) !important;
+}
+
+body.dark-mode #registroForm input,
+body.dark-mode #registroForm select,
+body.dark-mode #registroForm textarea {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(232,130,26,0.4) !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff !important;
+}
+
+body.dark-mode #registroForm input::placeholder,
+body.dark-mode #registroForm textarea::placeholder {
+    color: #b0b0b0 !important;
+    opacity: 1 !important;
+}
+
+body.dark-mode #registroForm select option {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode #registroForm #progreso {
+    background-color: var(--dm-texto, #E8821A) !important;
+}
+
+body.dark-mode #registroForm #contenedor-barra {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode #registroForm .encabezado {
+    background-color: #2b1810 !important;
+    border-bottom: 1px solid rgba(232,130,26,0.35) !important;
+    padding-bottom: 18px;
+    margin-bottom: 4px;
+}
+
+/* ====================================================================
+   MODO OSCURO - PANEL RECUPERAR CONTRASEÑA
+   ==================================================================== */
+body.dark-mode .header-bar {
+    border-bottom: 1px solid rgba(232,130,26,0.35) !important;
+}
+
+body.dark-mode .btn-secundario {
+    color: var(--dm-texto, #E8821A) !important;
+    border-color: rgba(232,130,26,0.5) !important;
+    background-color: #000000 !important;
+}
+
+body.dark-mode .btn-secundario:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+body.dark-mode .icono {
+    display: inline-block;
+}
+
+body.dark-mode .icono img {
+    background: transparent !important;
+    background-color: transparent !important;
+    filter: invert(1) brightness(2);
+    opacity: 1 !important;
+}
+
+body.dark-mode .linea {
+    background: rgba(232,130,26,0.4) !important;
+}
+
+body.dark-mode .circulo {
+    color: var(--dm-texto-suave, #c8b09a) !important;
+}
+
+body.dark-mode .btn-regresar {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #E8821A !important;
+}
+
+body.dark-mode .btn-regresar:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* ====================================================================
+   CORRECCIÓN DEFINITIVA: ENLACES RECUPERAR CONTRASEÑA Y CREAR CUENTA
+   ==================================================================== */
+
+/* Estilo inicial para ambos enlaces: Se eliminan por completo las líneas y subrayados */
+body.dark-mode .card a.link,
+body.dark-mode .enlace-externo a,
+body.dark-mode #loginForm .link,
+body.dark-mode #loginForm .enlace-externo a {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: var(--dm-texto, #E8821A) !important;
+    text-decoration: none !important; /* Quita el subrayado por defecto */
+    border-bottom: none !important;       /* Elimina la línea naranja personalizada */
+    padding-bottom: 1px;
+    transition: background 0.2s ease, opacity 0.2s ease !important;
+    display: inline-block;
+}
+
+/* Efecto Hover: Solo un cambio sutil de brillo transparente sin alterar el fondo ni añadir líneas */
+body.dark-mode .card a.link:hover,
+body.dark-mode .enlace-externo a:hover,
+body.dark-mode #loginForm .link:hover,
+body.dark-mode #loginForm .enlace-externo a:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    opacity: 0.85 !important; 
+    border-bottom: none !important;
+}
+body.dark-mode .sidebar-header{
+    background-color: #000000 !important;
+}
+
+body.dark-mode .nom-local{
+    color: #E8821A !important;
+}
+
+/* Modo claro: muestra logo claro, oculta logo oscuro */
+.logo-oscuro {
+    display: none;
+}
+
+/* Modo oscuro: muestra logo oscuro, oculta logo claro */
+body.dark-mode .logo-claro {
+    display: none;
+}
+body.dark-mode .logo-oscuro {
+    display: block;
+
+}

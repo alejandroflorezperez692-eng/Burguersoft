@@ -7,7 +7,8 @@ $esAdmin     = $rolAdmin === 'Administrador';
 ?>
 <div class="sidebar">
     <div class="sidebar-header">
-        <img src="../estilos/img/icono1.png" alt="Logo" class="logo">
+        <img src="../estilos/img/icono1.png" alt="Logo" class="logo logo-claro">
+        <img src="../estilos/img/icono1-oscuro.png" alt="Logo" class="logo logo-oscuro">
         <hr class="sidebar-divider">
         <span class="nom-local">El Oriente</span>
     </div>

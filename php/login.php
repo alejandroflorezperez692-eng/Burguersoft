@@ -101,6 +101,33 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #fff;
         }
 
+
+        .toast-bienvenida {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #2f2a1f;
+            color: #f4f3f2;
+            border: 2.5px solid #E8821A;
+            padding: 18px 28px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0;
+            z-index: 9999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast-bienvenida.mostrar {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+
+}
         .contenedor-login {
             flex: 1;
             display: flex;
@@ -277,6 +304,11 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             }, 1000);
         })();
         <?php endif; ?>
+
+       
+</script>
+
     </script>
+
 </body>
 </html>

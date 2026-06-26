@@ -79,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <div class="navbar">
-        <img src="../estilos/img/icono.png" class="logon">
-        <button class="boton-regresar" onclick="history.back()">[ Regresar ]</button>
+        <img src="../estilos/img/icono.png" class="logo">
+        <a href="login.php" class="btn-regresar">[ Regresar ]</a>
     </div>
 
     <form id="registroForm">
