@@ -92,7 +92,8 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 
 include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php'; 
 ?>
-
+<link rel="stylesheet" href="../estilos/accesibilidad.css?v=2">
+<script src="../estilos/accesibilidad.js"></script>
 <header>
     <div class="header-left">
         <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
@@ -574,6 +575,52 @@ body { overflow-x: hidden; width: 100%; }
 .subtotal strong{color:#000;font-size:24px}
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
+
+.cart-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.btn-pago {
+    grid-column: 1 / -1;
+}
+.btn-cart-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #E0D5C5;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #412a2a;
+    color: #7A6855;
+    transition: all 0.2s ease;
+}
+.btn-cart-action:hover {
+    background-color: #665050;
+    color: #EF9F27;
+    transform: translateY(-1px);
+}
+.btn-vaciar:hover {
+    background-color: #665050;
+    color: #C0392B;
+}
+.btn-pago {
+    background-color: #412a2a;
+    color: #BA7517;
+}
+.btn-pago:hover {
+    background-color: #665050;
+    color: #412402;
+}
+.btn-checkout {
+    margin-top: 5px;
+}
 
 .cart-actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .btn-pago{grid-column:1 / -1;}
