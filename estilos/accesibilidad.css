@@ -537,3 +537,24 @@ body.dark-mode .section-text {
     background: transparent !important;
     background-color: transparent !important;
 }
+
+body.dark-mode .sidebar-header{
+    background-color: #000000 !important;
+}
+
+body.dark-mode .nom-local{
+    color: #E8821A !important;
+}
+
+/* Modo claro: muestra logo claro, oculta logo oscuro */
+.logo-oscuro {
+    display: none;
+}
+
+/* Modo oscuro: muestra logo oscuro, oculta logo claro */
+body.dark-mode .logo-claro {
+    display: none;
+}
+body.dark-mode .logo-oscuro {
+    display: block;
+}
