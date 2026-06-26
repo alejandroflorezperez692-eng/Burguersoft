@@ -147,8 +147,8 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="navbar">
-        <img src="estilos/img/icono.png" class="logo" alt="Logo">
-        <a href="php/recuperar_contrasena.php" class="btn-regresar">Regresar</a>
+        <img src="estilos/img/icono.png" class="logo">
+        <a href="php/login.php" class="btn-regresar">[ Regresar ]</a>
     </div>
 
     <div class="header-bar">INGRESA TU CÓDIGO</div>
@@ -185,7 +185,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
         </form>
 
-        <p style="color:#2c1810;margin-top:16px;font-size:14px;text-align:center;">
+        <p style="color:#ffc107;margin-top:16px;font-size:14px;text-align:center;">
             ¿No recibiste el código?
             <a href="php/recuperar_contrasena.php" style="color:#2c1810;font-weight:bold;">Enviar de nuevo</a>
 

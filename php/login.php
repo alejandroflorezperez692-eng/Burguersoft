@@ -128,6 +128,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         .toast-bienvenida.mostrar {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
+
         .contenedor-login {
             flex: 1;
             display: flex;
@@ -394,7 +395,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             }, 1000);
         })();
         <?php endif; ?>
-    </script>
-
+        
+</script>
 </body>
 </html>
