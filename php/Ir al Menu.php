@@ -5,9 +5,9 @@ require_once __DIR__ . '/../includes/conexion.php';
 global $pdo;
 
 $stmtProd = $pdo->query(
-    "SELECT id, nombre, valor, descripcion, img, categoria
+    "SELECT id, nombre, valor, descripcion, img, categoria, estado
      FROM producto
-     WHERE estado IN ('Disponible','Por agotarse')
+     WHERE estado IN ('Disponible','Por agotarse','Agotado')
      ORDER BY categoria, nombre"
 );
 $productos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
@@ -181,6 +181,31 @@ if (!function_exists('formatCOP')) {
             box-shadow: 0 12px 30px rgba(61,33,17,.15);
             border-color: var(--secundario);
         }
+
+        /* Producto agotado: tarjeta en gris, sin interacción */
+        .prod-card.agotado {
+            filter: grayscale(1);
+            opacity: 0.6;
+        }
+        .prod-card.agotado:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #e8e0d4;
+        }
+        .prod-card.agotado .btn-add {
+            cursor: not-allowed;
+        }
+        .badge-agotado {
+            display: inline-block;
+            background: #888;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
         .prod-card-img {
             width: 100%; height: 160px;
             object-fit: cover;
@@ -267,8 +292,8 @@ include __DIR__ . '/../includes/header_publico.php';
         <?php foreach ($grupos as $categoria => $items): ?>
             <h3 class="cat-titulo"><?= hv($categoria) ?></h3>
             <div class="productos-grid">
-                <?php foreach ($items as $p): ?>
-                <div class="prod-card">
+                <?php foreach ($items as $p): $agotado = ($p['estado'] === 'Agotado'); ?>
+                <div class="prod-card<?= $agotado ? ' agotado' : '' ?>">
                     <img class="prod-card-img"
                          src="<?= hv($p['img']) ?>"
                          alt="<?= hv($p['nombre']) ?>"  
@@ -279,7 +304,9 @@ include __DIR__ . '/../includes/header_publico.php';
                     </div>
                     <div class="prod-card-footer">
                         <span class="prod-card-precio"><?= formatCOP($p['valor']) ?></span>
-                        <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <?php if ($agotado): ?>
+                        <span class="badge-agotado">Agotado</span>
+                        <?php elseif (isset($_SESSION['id_usuario'])): ?>
                         <button type="button" class="btn-add" title="Agregar al carrito"
                             onclick="agregarAlCarrito(
                                 <?= (int)$p['id'] ?>,
@@ -291,9 +318,7 @@ include __DIR__ . '/../includes/header_publico.php';
                             )">+</button>
                         <?php else: ?>
                         <a href="/burguersoft/php/login.php">
-                            <button type="button" class="btn-add" title="Inicia sesión para agregar"><img src="../estilos/img/bloquear.png"
-                                        style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
-                            </button>
+                            <button type="button" class="btn-add" title="Inicia sesión para agregar">🔒</button>
                         </a>
                         <?php endif; ?>
                     </div>
