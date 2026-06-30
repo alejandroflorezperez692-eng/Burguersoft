@@ -499,9 +499,8 @@ function mostrarToastMp(mensaje, tipo = 'ok') {
 async function guardar() {
     if (!editId) return;
 
-    const nombre = document.getElementById('nombre').value.trim();
-    const tipo   = document.getElementById('tipo').value.trim();
-    const unidad = document.getElementById('unidad_medida').value.trim();
+
+async function guardar() {
     const valor  = document.getElementById('valor').value.trim();
     const marca  = document.getElementById('marca').value.trim();
 
@@ -518,11 +517,14 @@ async function guardar() {
     if (!nombre || !tipo)
         return alert('Nombre y tipo son obligatorios.');
 
-    const data = { nombre, tipo, unidad_medida: unidad, valor: valor === '' ? 0 : parseFloat(valor), marca_id: marca || null };
 
     try {
         const res  = await fetch(`${API_MP}?id=${editId}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
         const resp = await res.json();
+        if (res.ok) { limpiar(); listar(); }
+        else alert('Error: ' + (resp.error || ''));
+    } catch (e) { alert('Error de conexión'); }
+}
 
         if (res.ok) {
             const msg = editId
@@ -533,20 +535,12 @@ async function guardar() {
             mostrarToastMp(msg, 'ok');
         } else {
             mostrarToastMp(' Error: ' + (resp.error || 'Inténtalo de nuevo.'), 'error');
-        }
-    } catch (e) {
+        } catch (e) {
         mostrarToastMp(' Error de conexión.', 'error');
     }
 function editar(id, nombre, tipo, valor, unidad, marca) {
     editId = id;
     document.getElementById('nombre').value = decodeURIComponent(nombre);
-    document.getElementById('tipo').value = decodeURIComponent(tipo);
-    document.getElementById('unidad_medida').value = decodeURIComponent(unidad);
-    document.getElementById('valor').value = decodeURIComponent(valor);
-    document.getElementById('marca').value = marca === 0 ? '' : marca;
-    document.getElementById('form-mp-title').textContent = 'Editando: ' + decodeURIComponent(nombre);
-    document.getElementById('form-panel-mp').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function eliminar(id) {
@@ -562,6 +556,9 @@ async function eliminar(id) {
     } catch (e) {
         mostrarToastMp('⚠ Error de conexión.', 'error');
     }
+    const res = await fetch(`${API_MP}?id=${id}`, { method: 'DELETE' });
+    if (res.ok) listar();
+    else alert('No se pudo eliminar.');
 }
 
 function limpiar() {
