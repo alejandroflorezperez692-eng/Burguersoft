@@ -44,15 +44,16 @@ function iniciarSesionSegura(): void {
 
 function requerirLogin(): void {
     iniciarSesionSegura();
-    // ✅ Corregido: ruta correcta con /php/
     if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/php/login.php');
 }
 
 function requerirAdmin(): void {
     requerirLogin();
-    // ✅ Corregido: redirige al cliente, no al admin (evita bucle infinito)
     if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador') {
-        redirigir('/burguersoft/php/Menu.php');
+        // ⚠️ AJUSTA ESTA RUTA: debe apuntar a la página del CLIENTE
+        // (la que muestra "Mis Pedidos"), NUNCA a Menu.php ni a otra
+        // página que también llame a requerirAdmin().
+        redirigir('/burguersoft/php/login.php');
     }
 }
 
@@ -76,5 +77,4 @@ function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
     $estado   = calcularEstadoStock($cantidad);
     $pdo->prepare("UPDATE producto SET estado = ? WHERE id = ?")
         ->execute([$estado, $producto_id]);
-}
-?>
+}   

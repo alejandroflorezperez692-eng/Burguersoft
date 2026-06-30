@@ -450,6 +450,19 @@
                 cursor:default;
                 min-width:120px;
             }
+            .estado-final-cancelado{
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+                padding:8px 18px;
+                border-radius:20px;
+                background:#fee2e2;
+                color:#991b1b;
+                font-weight:700;
+                border:2px solid #ef4444;
+                cursor:default;
+                min-width:120px;
+            }
         </style>
     </head>
     <body>
@@ -785,13 +798,16 @@
         return `<span class="estado-final">✔ Pagado</span>`;
     }
 
-    const estados = [
-        "En cocina",
-        "En barra",
-        "Entregado",
-        "Pendiente de pago",
-        "Pagado"
-    ];
+    if (v.estado === "Cancelado") {
+        return `<span class="estado-final-cancelado">✗ Cancelado</span>`;
+    }
+
+    const pasosPorTipo = {
+        'Domicilio': ["En cocina", "Listo", "En camino", "Entregado", "Pagado"],
+        'Recoger':   ["En cocina", "Listo para recoger", "Entregado", "Pagado"],
+        'Consumir':  ["En cocina", "En barra", "Entregado", "Pendiente de pago", "Pagado"]
+    };
+    const estados = pasosPorTipo[v.tipo_entrega] || pasosPorTipo['Consumir'];
 
     const actual = estados.indexOf(v.estado);
 

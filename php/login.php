@@ -4,7 +4,11 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 if (isset($_SESSION['id_usuario'])) {
-    redirigir('/burguersoft/php/inicio_admin.php');
+    if (($_SESSION['rol_usuario'] ?? '') === 'Administrador') {
+        redirigir('/burguersoft/php/inicio_admin.php');
+    } else {
+        redirigir('/burguersoft/php/Burguersoft.php');
+    }
 }
 
 $error = '';

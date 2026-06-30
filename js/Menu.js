@@ -135,8 +135,13 @@ async function enviarPedido(datos) {
         }
     });
 
-    const subtotal = items.reduce((s, it) => s + (it.precio_unitario * it.cantidad), 0)
+   const subtotal = items.reduce((s, it) => s + (it.precio_unitario * it.cantidad), 0)
                    + promociones.reduce((s, p) => s + p.precio, 0);
+
+    let tipoEntrega = 'Recoger'; 
+    if (datos.modo === 'domicilio')    tipoEntrega = 'Domicilio';
+    else if (datos.modo === 'restaurante') tipoEntrega = 'Consumir';
+    else if (datos.modo === 'recoger') tipoEntrega = 'Recoger';
 
     const btnCheckout = document.getElementById('btnCheckout');
     if (btnCheckout) { btnCheckout.disabled = true; btnCheckout.textContent = 'Procesando...'; }
@@ -148,7 +153,8 @@ async function enviarPedido(datos) {
             body: JSON.stringify({
                 metodo_pago: metodoPago,
                 items,
-                promociones
+                promociones,
+                tipo_entrega: tipoEntrega   // ✅ NUEVO
             })
         });
 
