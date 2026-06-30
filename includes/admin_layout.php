@@ -89,7 +89,7 @@ $esAdmin     = $rolAdmin === 'Administrador';
 <nav class="header-nav">
 
     <a href="../php/config_cuenta.php" class="nav-item <?= $navActivo === 'config_cuenta' ? 'active' : '' ?> admin-name ">
-        <img src="../estilos/img/usuario.png" class="icono-sidebar" alt="perfil">
+        <img src="../estilos/img/usuario..png" class="icono-sidebar" alt="perfil">
         <span><?= htmlspecialchars($nombreAdmin) ?></span>
     </a>
     <a href="../php/logout.php" class="nav-item nav-logout">
