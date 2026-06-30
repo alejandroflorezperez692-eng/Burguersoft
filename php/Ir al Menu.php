@@ -290,11 +290,9 @@ include __DIR__ . '/../includes/header_publico.php';
                                 this
                             )">+</button>
                         <?php else: ?>
-                        <a href="/burguersoft/php/login.php">
-                            <button type="button" class="btn-add" title="Inicia sesión para agregar"><img src="../estilos/img/bloquear.png"
-                                        style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                            <button type="button" class="btn-add" title="Inicia sesión para agregar" onclick="irLoginConAviso('producto')">
+                                <img src="../estilos/img/bloquear.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
                             </button>
-                        </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -317,6 +315,12 @@ include __DIR__ . '/../includes/header_publico.php';
         </div>
     </div>
 </div>
+
+<script>
+function irLoginConAviso(tipo) {
+    window.location.href = '/burguersoft/php/login.php?aviso=' + tipo;
+}
+</script>
 
 <script src="/burguersoft/js/Menu.js"></script>
 

@@ -25,6 +25,8 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
         <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
 
+    <div class="contenedor-login">
+
     <div class="header-bar">¿TIENES PROBLEMAS?</div>
 
     <div class="card">
@@ -58,6 +60,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
         </div>
 
         <a href="/burguersoft/php/registro.php" class="btn-secundario">Crear cuenta nueva</a>
+    </div>
     </div>
 
 <div class="acc-panel" id="accPanel">

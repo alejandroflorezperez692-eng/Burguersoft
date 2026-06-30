@@ -5,6 +5,8 @@ require_once 'includes/funciones.php';
 if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificado'])) {
     redirigir('recuperar_contrasena.php');
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -143,6 +145,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
         <a href="php/login.php" class="btn-regresar">Regresar</a>
     </div>
 
+    <div class="contenedor-login">
     <div class="header-bar">NUEVA CONTRASEÑA</div>
 
     <div class="card" style="padding: 20px;"> <div class="icono" style="margin-bottom: 10px;">
@@ -189,6 +192,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 
             <button type="submit" class="btn-primario">Cambiar contraseña</button>
         </form>
+    </div>
     </div>
 
     <div class="acc-panel" id="accPanel">
