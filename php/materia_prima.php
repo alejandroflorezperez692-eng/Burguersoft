@@ -440,62 +440,6 @@ function filtrar() {
     ));
 }
 
-
-function editar(id, nombre, tipo, stock, valor, unidad, marca) {
-    editId = id;
-    document.getElementById('nombre').value = decodeURIComponent(nombre);
-    document.getElementById('tipo').value = decodeURIComponent(tipo);
-    document.getElementById('unidad_medida').value = decodeURIComponent(unidad);
-    document.getElementById('cantidad').value = decodeURIComponent(stock);
-    document.getElementById('valor').value = decodeURIComponent(valor);
-    document.getElementById('marca').value = marca === 0 ? '' : marca;
-    document.getElementById('form-mp-title').textContent = '✏️ Editar insumo';
-    document.getElementById('btn-guardar').textContent = 'Actualizar insumo';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-let _toastMpTimer = null;
-
-function mostrarToastMp(mensaje, tipo = 'ok') {
-    let toast = document.getElementById('toastMp');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'toastMp';
-        toast.style.cssText = `
-            position: fixed; top: 20px; left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            padding: 18px 28px; border-radius: 10px;
-            font-size: 14px; font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            opacity: 0; z-index: 99999;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            pointer-events: none; max-width: 90%; text-align: center;
-        `;
-        document.body.appendChild(toast);
-    }
-
-    if (tipo === 'ok') {
-        toast.style.background = '#2f2a1f';
-        toast.style.color      = '#ffffff';
-        toast.style.border     = '2.5px solid #E8821A';
-    } else {
-        toast.style.background = '#2f1f1f';
-        toast.style.color      = '#e63946';
-        toast.style.border     = '1px solid #e63946';
-    }
-
-    toast.textContent = mensaje;
-    toast.style.opacity   = '1';
-    toast.style.transform = 'translateX(-50%) translateY(0)';
-
-    if (_toastMpTimer) clearTimeout(_toastMpTimer);
-    _toastMpTimer = setTimeout(() => {
-        toast.style.opacity   = '0';
-        toast.style.transform = 'translateX(-50%) translateY(-20px)';
-    }, 3500);
-}
-
-// ── Guardar / Actualizar ─────────────────────────────────
 async function guardar() {
     if (!editId) return;
 
@@ -504,16 +448,6 @@ async function guardar() {
     const valor  = document.getElementById('valor').value.trim();
     const marca  = document.getElementById('marca').value.trim();
 
-    if (!nombre || !tipo || !cantidad || !unidad) {
-        mostrarToastMp(' Nombre, tipo, cantidad y unidad son obligatorios.', 'error');
-        return;
-    }
-
-    const data = { nombre, tipo, unidad_medida: unidad,
-                   valor: valor === '' ? 0 : parseFloat(valor),
-                   cantidad, marca_id: marca || null };
-    const url    = editId ? `${API_MP}?id=${editId}` : API_MP;
-    const method = editId ? 'PUT' : 'POST';
     if (!nombre || !tipo)
         return alert('Nombre y tipo son obligatorios.');
 
@@ -538,6 +472,8 @@ async function guardar() {
         } catch (e) {
         mostrarToastMp(' Error de conexión.', 'error');
     }
+}
+
 function editar(id, nombre, tipo, valor, unidad, marca) {
     editId = id;
     document.getElementById('nombre').value = decodeURIComponent(nombre);
