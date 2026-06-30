@@ -151,6 +151,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="php/login.php" class="btn-regresar">[ Regresar ]</a>
     </div>
 
+    <div class="contenedor-login">
     <div class="header-bar">INGRESA TU CÓDIGO</div>
 
     <div class="card">
@@ -190,6 +191,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="php/recuperar_contrasena.php" style="color:#2c1810;font-weight:bold;">Enviar de nuevo</a>
 
         </p>
+    </div>
     </div>
 
     <div class="acc-panel" id="accPanel">

@@ -196,10 +196,10 @@ async function cargarPromociones() {
                         ${SESION_ACTIVA
                             ? `<button class="btn-circular-add" title="Agregar al carrito">+</button>`
                             : `<button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
-                                   onclick="window.location.href='/burguersoft/php/login.php'">
-                                   <img src="../estilos/img/bloquear.png"
-                                        style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
-                               </button>`
+                                onclick="irLoginConAviso('promo')">
+                                <img src="../estilos/img/bloquear.png"
+                                style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                            </button>`
                         }
                     </div>
                 </div>`;
@@ -221,6 +221,9 @@ async function cargarPromociones() {
         grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No se pudieron cargar las promociones.</p>';
         console.error(e);
     }
+}
+function irLoginConAviso(tipo) {
+    window.location.href = '/burguersoft/php/login.php?aviso=' + tipo;
 }
 </script>
 

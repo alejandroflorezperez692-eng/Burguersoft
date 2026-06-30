@@ -441,60 +441,77 @@ function filtrar() {
 }
 
 async function guardar() {
-    if (!editId) return;
+    const nombre        = document.getElementById('nombre').value.trim();
+    const tipo           = document.getElementById('tipo').value.trim();
+    const unidad_medida  = document.getElementById('unidad_medida').value.trim();
+    const valor          = document.getElementById('valor').value.trim();
+    const marca          = document.getElementById('marca').value.trim();
 
+    if (!nombre || !tipo) {
+        mostrarToastMp(' Nombre y tipo son obligatorios.', 'error');
+        return;
+    }
 
-async function guardar() {
-    const valor  = document.getElementById('valor').value.trim();
-    const marca  = document.getElementById('marca').value.trim();
+    if (!editId) {
+        mostrarToastMp(' No hay un insumo seleccionado para editar.', 'error');
+        return;
+    }
 
-    if (!nombre || !tipo)
-        return alert('Nombre y tipo son obligatorios.');
-
+    const data = {
+        nombre,
+        tipo,
+        unidad_medida,
+        valor: valor ? parseFloat(valor) : 0,
+        marca_id: marca ? parseInt(marca) : null
+    };
 
     try {
-        const res  = await fetch(`${API_MP}?id=${editId}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+        const res  = await fetch(`${API_MP}?id=${editId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
         const resp = await res.json();
-        if (res.ok) { limpiar(); listar(); }
-        else alert('Error: ' + (resp.error || ''));
-    } catch (e) { alert('Error de conexión'); }
-}
 
         if (res.ok) {
-            const msg = editId
-                ? ' Materia prima modificada .'
-                : ' Materia prima agregada .';
             limpiar();
             listar();
-            mostrarToastMp(msg, 'ok');
+            mostrarToastMp(' Materia prima modificada.', 'ok');
         } else {
             mostrarToastMp(' Error: ' + (resp.error || 'Inténtalo de nuevo.'), 'error');
-        } catch (e) {
+        }
+    } catch (e) {
         mostrarToastMp(' Error de conexión.', 'error');
     }
 }
 
 function editar(id, nombre, tipo, valor, unidad, marca) {
     editId = id;
-    document.getElementById('nombre').value = decodeURIComponent(nombre);
+    document.getElementById('nombre').value         = decodeURIComponent(nombre);
+    document.getElementById('tipo').value            = decodeURIComponent(tipo);
+    document.getElementById('unidad_medida').value   = decodeURIComponent(unidad);
+    document.getElementById('valor').value           = decodeURIComponent(valor);
+    document.getElementById('marca').value           = marca || '';
+
+    document.getElementById('form-mp-title').textContent = 'Editar insumo';
+    document.getElementById('form-panel-mp').style.display = 'block';
+    document.getElementById('form-panel-mp').scrollIntoView({ behavior: 'smooth' });
 }
 
 async function eliminar(id) {
     if (!confirm('¿Eliminar este insumo?')) return;
+
     try {
         const res = await fetch(`${API_MP}?id=${id}`, { method: 'DELETE' });
         if (res.ok) {
             listar();
-            mostrarToastMp(' Materia prima eliminada .');
+            mostrarToastMp(' Materia prima eliminada.', 'ok');
         } else {
-            mostrarToastMp('⚠ No se pudo eliminar el insumo.', 'error');
+            mostrarToastMp(' No se pudo eliminar el insumo.', 'error');
         }
     } catch (e) {
-        mostrarToastMp('⚠ Error de conexión.', 'error');
+        mostrarToastMp(' Error de conexión.', 'error');
     }
-    const res = await fetch(`${API_MP}?id=${id}`, { method: 'DELETE' });
-    if (res.ok) listar();
-    else alert('No se pudo eliminar.');
 }
 
 function limpiar() {

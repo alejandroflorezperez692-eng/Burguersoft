@@ -12,6 +12,14 @@ $bloqueado          = false;
 $segundos_restantes = 0;
 $LIMITE_INTENTOS    = 3;
 $TIEMPO_BLOQUEO     = 60;
+$avisos_login = [
+    'promo'    => 'Debes iniciar sesión para comprar una promoción.',
+    'producto' => 'Debes iniciar sesión para comprar un producto.',
+];
+$mensaje_aviso = $avisos_login[$_GET['aviso'] ?? ''] ?? '';
+$mensaje_exito = $_SESSION['mensaje'] ?? '';
+$tipo_exito    = $_SESSION['tipo_mensaje'] ?? '';
+unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 
 if (isset($_SESSION['login_bloqueado_hasta'])) {
     $restante = $_SESSION['login_bloqueado_hasta'] - time();
@@ -50,9 +58,9 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($usuario['nombre_rol'] === 'Administrador') {
                 $_SESSION['es_admin'] = true;
-                redirigir('/burguersoft/php/inicio_admin.php');
+                redirigir('/burguersoft/php/inicio_admin.php?toast=login_ok');
             } else {
-                redirigir('/burguersoft/php/Burguersoft.php');
+                redirigir('/burguersoft/php/Burguersoft.php?toast=login_ok');
             }
         } else {
             $_SESSION['login_intentos'] = ($_SESSION['login_intentos'] ?? 0) + 1;
@@ -80,7 +88,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>BURGUERSOFT - Iniciar Sesión</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <style>
         .input-password-wrapper {
             position: relative;
@@ -287,6 +295,28 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             input.type      = visible ? 'password' : 'text';
             btn.textContent = visible ? 'Mostrar' : 'Ocultar';
         }
+        
+        <?php if ($mensaje_exito): ?>
+window.addEventListener('DOMContentLoaded', () => {
+    mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
+});
+<?php endif; ?>
+
+function mostrarToastBienvenida(mensaje) {
+    let toast = document.querySelector('.toast-bienvenida');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast-bienvenida';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = mensaje;
+    toast.classList.add('mostrar');
+
+    setTimeout(() => {
+        toast.classList.remove('mostrar');
+    }, 3500);
+}
+
 
         <?php if ($bloqueado && $segundos_restantes > 0): ?>
         (function () {
@@ -305,10 +335,18 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         })();
         <?php endif; ?>
 
+        <?php if ($mensaje_exito): ?>
+window.addEventListener('DOMContentLoaded', () => {
+    mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
+});
+<?php elseif ($mensaje_aviso): ?>
+window.addEventListener('DOMContentLoaded', () => {
+    mostrarToastBienvenida(<?= json_encode($mensaje_aviso) ?>);
+});
+<?php endif; ?>
+
        
 </script>
-
-    </script>
 
 </body>
 </html>
