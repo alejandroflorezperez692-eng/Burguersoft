@@ -5,6 +5,8 @@ require_once 'includes/funciones.php';
 if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificado'])) {
     redirigir('recuperar_contrasena.php');
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -91,6 +93,14 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
             user-select: none;
             transition: color .2s;
         }
+
+        .btn-toggle-pass:hover {
+            color: var(--color-oscuro, #2c1810);
+        }
+
+        body.dark-mode .btn-toggle-pass:hover {
+            color: #ffffff;
+        }
         
         #requisitos {
             list-style: none;
@@ -132,9 +142,10 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 <body>
     <div class="navbar">
         <img src="estilos/img/icono.png" class="logo" alt="Logo">
-        <a href="php/login.php" class="btn-regresar">[ Regresar ]</a>
+        <a href="php/login.php" class="btn-regresar">Regresar</a>
     </div>
 
+    <div class="contenedor-login">
     <div class="header-bar">NUEVA CONTRASEÑA</div>
 
     <div class="card" style="padding: 20px;"> <div class="icono" style="margin-bottom: 10px;">
@@ -150,8 +161,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
                 <div class="input-wrapper">
                     <input type="password" id="password" name="nueva_contrasena" required
                            placeholder="Mínimo 8 caracteres">
-                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('password', this)"
-                            onmouseover="this.style.color='#000000'" onmouseout="this.style.color='#E8821A'">
+                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('password', this)">
                         Mostrar
                     </button>
                 </div>
@@ -173,8 +183,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
                 <div class="input-wrapper">
                     <input type="password" id="confirmar-password" name="confirmar_contrasena"  required
                            placeholder="Repite tu contraseña">
-                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('confirmar-password', this)"
-                            onmouseover="this.style.color='#000000'" onmouseout="this.style.color='#E8821A'">
+                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('confirmar-password', this)">
                         Mostrar
                     </button>
                 </div>
@@ -183,6 +192,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 
             <button type="submit" class="btn-primario">Cambiar contraseña</button>
         </form>
+    </div>
     </div>
 
     <div class="acc-panel" id="accPanel">

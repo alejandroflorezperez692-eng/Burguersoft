@@ -303,6 +303,20 @@ body.dark-mode select:not(.btn-pago) {
     border-color: rgba(232,130,26,0.3) !important;
 }
 
+body.dark-mode input:-webkit-autofill,
+body.dark-mode input:-webkit-autofill:hover,
+body.dark-mode input:-webkit-autofill:focus,
+body.dark-mode input:-webkit-autofill:active,
+body.dark-mode textarea:-webkit-autofill,
+body.dark-mode textarea:-webkit-autofill:hover,
+body.dark-mode textarea:-webkit-autofill:focus,
+body.dark-mode textarea:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #121212 inset !important;
+    -webkit-text-fill-color: var(--dm-texto-input, #f0e8dc) !important;
+    caret-color: var(--dm-texto-input, #f0e8dc) !important;
+    transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
+}
+
 
 body.big-cursor,
 body.big-cursor * {
@@ -556,26 +570,39 @@ body.dark-mode #registroForm .campo {
 }
 
 body.dark-mode #registroForm label,
+body.dark-mode #registroForm h2 {
+    color: var(--dm-texto-titulo, #f5c98a) !important;
+}
+
 body.dark-mode #registroForm p,
-body.dark-mode #registroForm h2,
 body.dark-mode #registroForm li {
-    color: var(--dm-texto, #E8821A) !important;
+    color: var(--dm-texto-suave, #c8b09a) !important;
 }
 
 body.dark-mode #registroForm input,
 body.dark-mode #registroForm select,
 body.dark-mode #registroForm textarea {
     background-color: #000000 !important;
-    color: #ffffff !important;
+    color: var(--dm-texto-input, #f0e8dc) !important;
     border: 1px solid rgba(232,130,26,0.4) !important;
-    -webkit-text-fill-color: #ffffff !important;
-    caret-color: #ffffff !important;
+    -webkit-text-fill-color: var(--dm-texto-input, #f0e8dc) !important;
+    caret-color: var(--dm-texto-input, #f0e8dc) !important;
 }
 
 body.dark-mode #registroForm input::placeholder,
 body.dark-mode #registroForm textarea::placeholder {
     color: #b0b0b0 !important;
     opacity: 1 !important;
+}
+
+body.dark-mode #registroForm input:-webkit-autofill,
+body.dark-mode #registroForm input:-webkit-autofill:hover,
+body.dark-mode #registroForm input:-webkit-autofill:focus,
+body.dark-mode #registroForm input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
+    -webkit-text-fill-color: var(--dm-texto-input, #f0e8dc) !important;
+    caret-color: var(--dm-texto-input, #f0e8dc) !important;
+    transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
 }
 
 body.dark-mode #registroForm select option {

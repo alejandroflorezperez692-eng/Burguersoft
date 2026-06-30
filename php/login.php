@@ -12,6 +12,14 @@ $bloqueado          = false;
 $segundos_restantes = 0;
 $LIMITE_INTENTOS    = 3;
 $TIEMPO_BLOQUEO     = 60;
+$avisos_login = [
+    'promo'    => 'Debes iniciar sesión para comprar una promoción.',
+    'producto' => 'Debes iniciar sesión para comprar un producto.',
+];
+$mensaje_aviso = $avisos_login[$_GET['aviso'] ?? ''] ?? '';
+$mensaje_exito = $_SESSION['mensaje'] ?? '';
+$tipo_exito    = $_SESSION['tipo_mensaje'] ?? '';
+unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 
 if (isset($_SESSION['login_bloqueado_hasta'])) {
     $restante = $_SESSION['login_bloqueado_hasta'] - time();
@@ -50,9 +58,9 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($usuario['nombre_rol'] === 'Administrador') {
                 $_SESSION['es_admin'] = true;
-                redirigir('/burguersoft/php/inicio_admin.php');
+                redirigir('/burguersoft/php/inicio_admin.php?toast=login_ok');
             } else {
-                redirigir('/burguersoft/php/Burguersoft.php');
+                redirigir('/burguersoft/php/Burguersoft.php?toast=login_ok');
             }
         } else {
             $_SESSION['login_intentos'] = ($_SESSION['login_intentos'] ?? 0) + 1;
@@ -80,7 +88,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>BURGUERSOFT - Iniciar Sesión</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <style>
         .input-password-wrapper {
             position: relative;
@@ -93,12 +101,12 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             padding-right: 90px;
         }
 
-        body.modo-oscuro-accesible .btn-toggle-password {
-            color: var(--color-acento);
+        .btn-toggle-password:hover {
+            color: var(--color-oscuro);
         }
 
-        body.modo-oscuro-accesible .btn-toggle-password:hover {
-            color: #fff;
+        body.dark-mode .btn-toggle-password:hover {
+            color: #ffffff;
         }
 
 
@@ -164,7 +172,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
-        <a href="../php/Burguersoft.php" class="btn-regresar"> [ Regresar ]</a>
+        <a href="../php/Burguersoft.php" class="btn-regresar">Regresar</a>
     </div>
 
     <div class="contenedor-login">
@@ -179,7 +187,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             <form id="loginForm" method="POST" action="login.php">
                 <h2>CORREO*</h2>
                 <input type="email" name="correo" id="email" class="input"
-                       placeholder="ejemplo@gmail.com" required
+                       placeholder="ejemplo@gmail.com" required autocomplete="off"
                        value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>"
                        <?= $bloqueado ? 'disabled' : '' ?>>
 
@@ -188,12 +196,10 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" name="contrasena" id="password" class="input"
                            placeholder="Ingresa tu contraseña" required
                            <?= $bloqueado ? 'disabled' : '' ?>>
-                    <button type="button" id="btnToggle" onclick="togglePassword()"
-                        onmouseover="this.style.color='#000000'"
-                        onmouseout="this.style.color='#E8821A'"
+                    <button type="button" id="btnToggle" class="btn-toggle-password" onclick="togglePassword()"
                         style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
                                background:none; border:none; cursor:pointer; font-size:13px;
-                               font-weight:700; color:#E8821A;"
+                               font-weight:700; color:#E8821A; transition: color 0.2s;"
                         <?= $bloqueado ? 'disabled' : '' ?>>
                         Mostrar
                     </button>
@@ -287,6 +293,28 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             input.type      = visible ? 'password' : 'text';
             btn.textContent = visible ? 'Mostrar' : 'Ocultar';
         }
+        
+        <?php if ($mensaje_exito): ?>
+window.addEventListener('DOMContentLoaded', () => {
+    mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
+});
+<?php endif; ?>
+
+function mostrarToastBienvenida(mensaje) {
+    let toast = document.querySelector('.toast-bienvenida');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast-bienvenida';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = mensaje;
+    toast.classList.add('mostrar');
+
+    setTimeout(() => {
+        toast.classList.remove('mostrar');
+    }, 3500);
+}
+
 
         <?php if ($bloqueado && $segundos_restantes > 0): ?>
         (function () {
@@ -305,10 +333,18 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         })();
         <?php endif; ?>
 
+        <?php if ($mensaje_exito): ?>
+window.addEventListener('DOMContentLoaded', () => {
+    mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
+});
+<?php elseif ($mensaje_aviso): ?>
+window.addEventListener('DOMContentLoaded', () => {
+    mostrarToastBienvenida(<?= json_encode($mensaje_aviso) ?>);
+});
+<?php endif; ?>
+
        
 </script>
-
-    </script>
 
 </body>
 </html>
