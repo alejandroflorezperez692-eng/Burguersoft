@@ -151,7 +151,7 @@ body {
 
 .descripcion {
     font-size: 15px;
-    color: var(--color-oscuro);
+    color: #6b4c38;
     margin: 15px auto 10px;
     font-weight: 600;
     line-height: 1.5;
@@ -373,6 +373,20 @@ body.modo-oscuro-accesible .campo select:focus {
     border-color: var(--color-primario) !important;
     background: #1e1e1e !important;
     box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.18) !important;
+}
+
+body.modo-oscuro-accesible input:-webkit-autofill,
+body.modo-oscuro-accesible input:-webkit-autofill:hover,
+body.modo-oscuro-accesible input:-webkit-autofill:focus,
+body.modo-oscuro-accesible input:-webkit-autofill:active,
+body.modo-oscuro-accesible .campo input:-webkit-autofill,
+body.modo-oscuro-accesible .campo input:-webkit-autofill:hover,
+body.modo-oscuro-accesible .campo input:-webkit-autofill:focus,
+body.modo-oscuro-accesible .campo input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
+    -webkit-text-fill-color: #E8821A !important;
+    caret-color: #E8821A !important;
+    transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
 }
 
 body.modo-oscuro-accesible .enlace-externo { color: #aaa !important; }
