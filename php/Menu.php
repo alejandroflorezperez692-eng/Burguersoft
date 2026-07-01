@@ -424,7 +424,7 @@ $cat_icons = [
             border-color: var(--border-strong);
         }
 
-        /* Producto agotado: tarjeta completa en gris */
+      
         .product-card.agotado {
             filter: grayscale(1);
             opacity: 0.6;
