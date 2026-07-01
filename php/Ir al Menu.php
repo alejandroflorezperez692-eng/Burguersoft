@@ -357,7 +357,6 @@ function irLoginConAviso(tipo) {
 
 <script src="/burguersoft/js/Menu.js"></script>
 
-<!-- Accesibilidad -->
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">

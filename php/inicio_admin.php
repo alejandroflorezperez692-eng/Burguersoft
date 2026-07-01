@@ -540,7 +540,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (toastEl && toast === 'login_ok') {
         toastEl.textContent = '¡Bienvenido a BurguerSoft, Administrador!'; 
         setTimeout(() => toastEl.classList.add('mostrar'), 100);
+
+      
         setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
+
+      
+
+        setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
+
 
         const url = new URL(window.location.href);
         url.searchParams.delete('toast');

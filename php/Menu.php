@@ -4,8 +4,8 @@ requerirAdmin();
 $navActivo = 'menu';
 
 $categorias_enum = [
-    'Hamburguesa','Perros Caliente','Salchipapa','Fritos',
-    'Arepas','Picada','Bebidas Frias','Bebidas Calientes','Pizza'
+    'Hamburguesa', 'Perros Calientes', 'Salchipapa', 'Fritos',
+    'Arepas', 'Picada', 'Bebidas Frias', 'Bebidas Calientes', 'Pizza'
 ];
 
 $cat_icons = [
@@ -31,7 +31,7 @@ $cat_icons = [
     <style>
         .menu-page { padding: 36px 40px 60px; }
 
-        /*  PANEL FORMULARIO (arriba, horizontal)  */
+      
         .form-panel {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -65,7 +65,7 @@ $cat_icons = [
             gap: 20px;
         }
 
-        /* Fila principal: campos en columnas */
+     
         .form-main-row {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -73,7 +73,7 @@ $cat_icons = [
             align-items: end;
         }
 
-        /* Fila secundaria: descripción + imagen + ingredientes */
+      
         .form-secondary-row {
             display: grid;
             grid-template-columns: 1fr 260px 1fr;
@@ -122,7 +122,7 @@ $cat_icons = [
         .field textarea { resize: vertical; min-height: 96px; }
         .field input::placeholder, .field textarea::placeholder { color: var(--text-400); }
 
-        /* Zona de imagen */
+        
         .img-upload-zone {
             border: 2px dashed var(--border-strong);
             border-radius: var(--r-md);
@@ -184,7 +184,7 @@ $cat_icons = [
 
         .btn-pick-img:hover { opacity: 0.75; transform: none; box-shadow: none; }
 
-        /* Ingredientes compacto */
+       
         .ingredientes-section {
             border: 1px solid var(--border);
             border-radius: var(--r-md);
@@ -279,7 +279,6 @@ $cat_icons = [
 
         .btn-del-ing:hover { background: var(--danger); color: #fff; transform: none; box-shadow: none; }
 
-        /* Footer del formulario */
         .form-panel-footer {
             padding: 14px 28px 22px;
             display: flex;
@@ -320,7 +319,6 @@ $cat_icons = [
 
         .btn-cancel-form:hover { background: var(--surface-3); transform: none; box-shadow: none; }
 
-        /*  BUSCADOR + CATÁLOGO  */
         .catalog-toolbar {
             display: flex;
             align-items: center;
@@ -426,7 +424,7 @@ $cat_icons = [
             border-color: var(--border-strong);
         }
 
-        /* Producto agotado: tarjeta completa en gris */
+      
         .product-card.agotado {
             filter: grayscale(1);
             opacity: 0.6;
@@ -527,7 +525,6 @@ $cat_icons = [
         .btn-del-p  { background: var(--danger); }
         .btn-edit-p:hover, .btn-del-p:hover { filter: brightness(0.87); transform: translateY(-1px); box-shadow: none; }
 
-        /* Modal confirmar eliminar */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -591,7 +588,6 @@ $cat_icons = [
 
         .btn-cancel-del:hover { background: var(--surface-3); transform: none; box-shadow: none; }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 28px;
@@ -656,7 +652,6 @@ $cat_icons = [
         </div>
     </div>
 
-    <!--  FORMULARIO HORIZONTAL ARRIBA  -->
     <div class="form-panel" id="form-panel">
 
         <form id="formProducto" novalidate>
@@ -665,7 +660,6 @@ $cat_icons = [
 
             <div class="form-panel-body">
 
-                <!-- Fila 1: campos principales en columnas -->
                 <div class="form-main-row">
                     <div class="field">
                         <label>Nombre *</label>
@@ -691,7 +685,6 @@ $cat_icons = [
                     <input type="hidden" id="estado" value="Disponible">
                 </div>
 
-                <!-- Fila 2: descripción + imagen + ingredientes -->
                 <div class="form-secondary-row">
                     <div class="field">
                         <label>Descripción</label>
@@ -744,7 +737,6 @@ $cat_icons = [
         </form>
     </div>
 
-    <!--  BUSCADOR + CATÁLOGO  -->
     <div class="catalog-toolbar">
         <div class="search-wrap">
             <input type="text" id="buscar" class="search-input" placeholder="Buscar por nombre o categoría...">
@@ -758,7 +750,6 @@ $cat_icons = [
 </div>
 </div>
 
-<!-- Modal confirmar eliminar -->
 <div class="modal-overlay" id="modal-eliminar">
     <div class="modal-box">
         <p id="modal-texto">¿Eliminar este producto?</p>
