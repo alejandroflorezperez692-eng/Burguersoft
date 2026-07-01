@@ -210,10 +210,10 @@ if ($method === 'PUT') {
     if (!$estado && !$metodo) jsonResponse(['error' => 'Sin datos para actualizar'], 400);
 
   $estados_validos = [
-        'En cocina','En barra','Pendiente de pago','Entregado','Pagado','Cancelado',
-        'Listo','En camino',           // Domicilio
-        'Listo para recoger'           // Recoger
-    ];
+    'En cocina','En barra','Pendiente de pago','Entregado','Pagado','Cancelado',
+    'Listo','En camino',
+    'Listo para recoger'
+];
     if ($estado && !in_array($estado, $estados_validos))
         jsonResponse(['error' => 'Estado inválido'], 400);
 
@@ -221,9 +221,13 @@ if ($method === 'PUT') {
     $sVenta->execute([$id]);
     $venta = $sVenta->fetch();
     if (!$venta) jsonResponse(['error' => 'Venta no encontrada'], 404);
+    
     $estadoActual = $venta['estado'];
 
-    $esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
+$esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
+
+
+$esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
     if (!$esAdmin) {
         if ((int)$venta['usuario_id'] !== (int)$_SESSION['id_usuario'])
             jsonResponse(['error' => 'No autorizado'], 403);

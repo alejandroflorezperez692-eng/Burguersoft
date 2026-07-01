@@ -644,7 +644,6 @@ $cat_icons = [
         </div>
     </div>
 
-    <!--  FORMULARIO HORIZONTAL ARRIBA  -->
     <div class="form-panel" id="form-panel">
 
         <form id="formProducto" novalidate>
@@ -653,7 +652,6 @@ $cat_icons = [
 
             <div class="form-panel-body">
 
-                <!-- Fila 1: campos principales en columnas -->
                 <div class="form-main-row">
                     <div class="field">
                         <label>Nombre *</label>

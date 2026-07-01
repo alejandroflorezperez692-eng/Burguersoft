@@ -138,7 +138,6 @@ foreach ($filas as $f) {
             .pedido-num  { font-family: 'Lucida Sans', sans-serif; font-size: 16px; color: var(--secundario); font-weight: 700; }
             .pedido-fecha { font-size: 12px; color: #777; }
 
-            /* ── Barra de progreso ── */
             .progreso-container {
                 padding: 20px 22px 24px;
                 border-bottom: 1px solid var(--border);
@@ -364,7 +363,7 @@ foreach ($filas as $f) {
             <?php else: ?>
 
                 <?php
-                $pasos_domicilio = ['En cocina', 'Listo', 'En camino', 'Entregado', 'Pagado'];
+                $pasos_domicilio = ['En cocina', 'En barra', 'En camino', 'Entregado', 'Pagado'];
                 $pasos_recoger   = ['En cocina', 'Listo para recoger', 'Entregado', 'Pagado'];
                 $pasos_consumir  = ['En cocina', 'En barra', 'Entregado', 'Pendiente de pago', 'Pagado'];
 
@@ -453,6 +452,7 @@ foreach ($filas as $f) {
                <div class="pedido-foot">
                 <?php $cancelables = ['En cocina','En barra','Pendiente de pago'];
                     if (in_array($p['estado'] ?? '', $cancelables)): ?>
+                    
                     <button class="btn-cancelar-pedido" onclick="cancelarPedido(<?= (int)$p['id'] ?>)">
                         Cancelar pedido
                     </button>
@@ -527,24 +527,38 @@ foreach ($filas as $f) {
 
     <script src="../js/accesibilidad.js"></script>
     <script>
-    async function cancelarPedido(id) {
-        if (!confirm(`¿Cancelar el pedido? Esta acción no se puede deshacer.`)) return;
-        try {
-            const res = await fetch(`/burguersoft/controllers/ventas.php?id=${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ estado: 'Cancelado' })
-            });
-            const data = await res.json();
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('No se pudo cancelar el pedido: ' + (data.error || 'Error desconocido'));
-            }
-        } catch (e) {
-            alert('Error de conexión al cancelar el pedido.');
+async function cancelarPedido(id) {
+
+    if (!confirm("¿Cancelar el pedido?")) return;
+
+    let mensaje = encodeURIComponent("Hola, deseo cancelar mi pedido #" + id);
+    window.open("https://wa.me/573001234567?text=" + mensaje, "_blank");
+
+    try {
+
+        const res = await fetch(`/burguersoft/controllers/ventas.php?id=${id}`, {
+            method: 'PUT',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                estado:'Cancelado'
+            })
+        });
+
+        const data = await res.json();
+
+        if(data.success){
+            location.reload();
+        }else{
+            alert(data.error);
         }
+
+    } catch(e){
+        console.log(e);
     }
+
+}
     </script>
     </body>
     </html>

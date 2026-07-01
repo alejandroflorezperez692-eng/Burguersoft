@@ -803,7 +803,7 @@
     }
 
     const pasosPorTipo = {
-        'Domicilio': ["En cocina", "Listo", "En camino", "Entregado", "Pagado"],
+        'Domicilio': ["En cocina", "En barra", "En camino", "Entregado", "Pagado"],
         'Recoger':   ["En cocina", "Listo para recoger", "Entregado", "Pagado"],
         'Consumir':  ["En cocina", "En barra", "Entregado", "Pendiente de pago", "Pagado"]
     };
@@ -904,7 +904,7 @@
                     <td>${selectEstado(v)}</td>
                     <td>
                         <button class="btn-icon-det" onclick="prepararEdicion(${v.id})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
-                        ${v.estado !== 'Cancelado'
+                        ${v.estado !== 'Cancelado' && v.estado !== 'Pagado'
                             ? `<button class="btn-icon-can" onclick="cancelarVenta(${v.id})" title="Cancelar" style="margin-left:6px;"><img src="../estilos/img/cancel.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>`
                             : ''}
                         <button class="btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar" style="margin-left:6px;"><img src="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>

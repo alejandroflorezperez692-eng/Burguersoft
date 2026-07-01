@@ -154,7 +154,7 @@ async function enviarPedido(datos) {
                 metodo_pago: metodoPago,
                 items,
                 promociones,
-                tipo_entrega: tipoEntrega   // ✅ NUEVO
+                tipo_entrega: tipoEntrega   
             })
         });
 
