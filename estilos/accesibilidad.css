@@ -120,9 +120,19 @@ body:not(.dark-mode) .cart-panel .btn-checkout:not(:disabled):hover {
     border-color: #cf6f13 !important;
 }
 
+
 body:not(.dark-mode) .cart-panel .btn-cart-action {
-    color: #ffffff !important;
+    background-color: #6b4c38 !important; 
+    color: #ffffff !important;            
+    border-color: #6b4c38 !important;
     font-weight: 600 !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+body:not(.dark-mode) .cart-panel .btn-cart-action:hover {
+    background-color: #f5ede0 !important; 
+    color: #6b4c38 !important;            
+    border-color: #6b4c38 !important;
 }
 
 
