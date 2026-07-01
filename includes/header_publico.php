@@ -279,7 +279,7 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
                 <span>Contraseña</span>
             </button>
             <button class="mp-tab" id="mpTabInfo" onclick="mpSwitchTab('info')">
-                <img class="mp-tab-icon" src="/burguersoft/estilos/img/usuario.png" alt="">
+                <img class="mp-tab-icon" src="/burguersoft/estilos/img/usuario..png" alt="">
                 <span>Cuenta</span>
             </button>
         </div>

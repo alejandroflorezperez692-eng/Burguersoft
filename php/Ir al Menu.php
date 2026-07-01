@@ -56,12 +56,25 @@ if (!function_exists('formatCOP')) {
         body { background: var(--fondo); min-height: 100vh; }
 
         .titulo-seccion {
-            text-align: center;
-            font-size: 32px;
-            padding: 36px 20px 10px;
-            color: var(--primario);
-            font-family: 'Lucida Sans', sans-serif;
-            letter-spacing: 1px;
+            margin-top: 60px;
+            text-align: center !important;
+            font-family: var(--font-display);
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--color-primario);
+            margin-bottom: 28px;
+            line-height: 1.15;
+        }
+
+        .titulo-seccion::after {
+            margin-left: 640px;
+            content: '';
+            display: block;
+            width: 80px;
+            height: 5px;
+            background: var(--color-secundario);
+            border-radius: 2px;
+            margin-top: 12px;
         }
 
         #productos-container {
@@ -284,7 +297,7 @@ include __DIR__ . '/../includes/header_publico.php';
     <div class="carousel-slide" style="background-image:url('https://www.elespectador.com/resizer/v2/4YMEEW2QBVGALOUC7LSPUFNKMU.jpg?auth=1913090d3e141e8a3ccce35509259201363e9dddf853024e2f30ac71ce6383a9&width=1110&height=739&smart=true&quality=60');"></div>
 </div></section>
 
-<h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
+<h2 class="titulo-seccion">Nuestros Productos</h2>
 
 <div id="productos-container">
 

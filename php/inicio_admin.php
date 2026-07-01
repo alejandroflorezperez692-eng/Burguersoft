@@ -36,6 +36,7 @@ $navActivo = 'inicio';
             gap: 24px;
             position: relative;
             overflow: hidden;
+            margin-top: -25px;
         }
 
             .toast-bienvenida {
@@ -276,6 +277,36 @@ $navActivo = 'inicio';
             color: var(--text-900);
         }
 
+        .historial-columnas {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0 6px 10px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 6px;
+        }
+
+        .historial-col-apartado {
+            flex-shrink: 0;
+            min-width: 88px;
+            text-align: center;
+            font-size: 10.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-400);
+        }
+
+        .historial-col-accion {
+            flex: 1;
+            min-width: 0;
+            font-size: 10.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-400);
+        }
+
         .btn-ver-mas {
             border: 1.5px solid var(--border-strong);
             background: transparent;
@@ -298,6 +329,7 @@ $navActivo = 'inicio';
             gap: 14px;
             padding: 12px 6px;
             border-bottom: 1px solid var(--border);
+            margin-bottom: -10px !important;
         }
 
         .historial-item:last-child { border-bottom: none; }
@@ -392,14 +424,29 @@ $navActivo = 'inicio';
         body.dark-mode .historial-section { background: var(--surface); }
         body.dark-mode .modal-box { background: var(--surface); }
 
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            align-items: start;
+            margin-bottom: -35px;
+        }
+
+        @media (max-width: 860px) {
+            .dashboard-row { grid-template-columns: 1fr; }
+        }
+
         .kpi-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--r-lg);
-            padding: 22px 24px 18px;
+            padding: 28px 26px;
             box-shadow: var(--shadow-sm);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .kpi-card::before {
@@ -407,27 +454,33 @@ $navActivo = 'inicio';
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 3px;
-            background: var(--kpi-accent, var(--brand));
+            background: var(--brand);
+            border-radius: 3px 3px 0 0;
         }
 
         .kpi-label {
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: .8px;
-            color: var(--text-400);
-            margin-bottom: 10px;
+            letter-spacing: .9px;
+                color: var(--text-400);
         }
 
         .kpi-val {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text-900);
-            line-height: 1;
-            margin-bottom: 6px;
+            font-family: var(--font-sans);
+            font-size: 52px;
+            font-weight: 900;
+            color: var(--accent);
+                line-height: 1;
         }
 
-        .kpi-sub { font-size: 11.5px; color: var(--text-400); }
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-400);
+            margin-top: 4px;
+        }
+
+        body.dark-mode .kpi-card { background: var(--surface); }
     </style>
 </head>
 <body>
@@ -438,32 +491,47 @@ $navActivo = 'inicio';
 
         <div class="welcome-banner">
             <div class="welcome-text">
-                <h2>Bienvenido, <br>Administrador</h2>
+                <h2>Bienvenido Administrador</h2>
+                <div style="font-weight:700;" id="fecha">Cargando fecha...</div>
+                <div style="color: var(--brand); font-weight:900;" id="reloj">00:00:00</div>
             </div>
             <img src="../estilos/img/usuario..png" class="welcome-img" alt="">
         </div>
 
-        <div class="historial-section">
-            <div class="historial-header">
-                <h3>Tus Movimientos:</h3>
-                <button class="btn-ver-mas" onclick="abrirHistorialCompleto()">Ver más</button>
-            </div>
+        <div class="dashboard-row">
+            <div class="historial-section">
+                <div class="historial-header">
+                    <h3>Tus Movimientos:</h3>
+                    <button class="btn-ver-mas" onclick="abrirHistorialCompleto()">Ver más</button>
+                </div>
+               <div class="historial-columnas">
+                    <div class="historial-col-apartado">Apartado</div>
+                    <div class="historial-col-accion">Acción</div>
+                </div>
             <div class="historial-lista" id="historial-reciente">
-                <div class="historial-vacio">Cargando historial...</div>
+                    <div class="historial-vacio">Cargando historial...</div>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Total de movimientos</div>
+                <div class="kpi-val" id="kpi-total-movimientos">—</div>
+                <div class="kpi-sub">Acciones registradas en tu cuenta</div>
             </div>
         </div>
-        <div class="kpi-card" style="--kpi-accent:#E8821A;">
-            <div class="kpi-label">Total ventas</div>
-            <div class="kpi-val" id="kpi-total">—</div>
-            <div class="kpi-sub">Histórico acumulado</div>
-        </div>
+
+    </div>
 </div>
 
 <div class="modal-overlay" id="modalHistorial" onclick="if(event.target===this)cerrarHistorialCompleto()">
     <div class="modal-box">
         <div class="modal-header">
             <h2>Historial completo de movimientos</h2>
-            <button class="modal-close" onclick="cerrarHistorialCompleto()">X</button>
+            <button class="modal-close" onclick="cerrarHistorialCompleto()">×</button>
+        </div>
+        <div class="historial-columnas">
+            <div class="historial-col-apartado">Apartado</div>
+            <div class="historial-col-accion">Acción</div>
         </div>
         <div class="historial-lista" id="historial-completo">
             <div class="historial-vacio">Cargando historial...</div>
@@ -503,6 +571,24 @@ $navActivo = 'inicio';
 <script src="../js/accesibilidad.js"></script>
 <div id="toastBienvenida" class="toast-bienvenida"></div>
 <script>
+        function actualizarReloj() {
+            const ahora = new Date();
+            let horas = ahora.getHours();
+            let minutos = ahora.getMinutes();
+            let segundos = ahora.getSeconds();
+
+            horas = horas < 10 ? '0' + horas : horas;
+            minutos = minutos < 10 ? '0' + minutos : minutos;
+            segundos = segundos < 10 ? '0' + segundos : segundos;
+
+            const horaActual = `${horas}:${minutos}:${segundos}`;
+            document.getElementById('reloj').textContent = horaActual;
+        }
+
+        actualizarReloj();
+
+        setInterval(actualizarReloj, 1000);
+
 function togglePanel() {
     document.getElementById('accPanel').classList.toggle('open');
 }
@@ -578,9 +664,15 @@ function renderHistorial(contenedorId, registros) {
 
 async function cargarHistorialReciente() {
     try {
-        const res = await fetch(`${API_HISTORIAL}?accion=reciente`);
-        const data = await res.json();
-        renderHistorial('historial-reciente', Array.isArray(data) ? data : []);
+        const [resReciente, resTotal] = await Promise.all([
+            fetch(`${API_HISTORIAL}?accion=reciente`),
+            fetch(`${API_HISTORIAL}?accion=todo`)
+        ]);
+        const reciente = await resReciente.json();
+        const todos    = await resTotal.json();
+        renderHistorial('historial-reciente', Array.isArray(reciente) ? reciente : []);
+        document.getElementById('kpi-total-movimientos').textContent =
+            Array.isArray(todos) ? todos.length : '0';
     } catch (e) {
         document.getElementById('historial-reciente').innerHTML =
             '<div class="historial-vacio">No se pudo cargar el historial.</div>';
@@ -602,6 +694,24 @@ async function abrirHistorialCompleto() {
 function cerrarHistorialCompleto() {
     document.getElementById('modalHistorial').classList.remove('open');
 }
+
+function actualizarTiempo() {
+            const ahora = new Date();
+            const opcionesFecha = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            
+            const fechaActual = ahora.toLocaleDateString('es-ES', opcionesFecha);
+            const horaActual = ahora.toLocaleTimeString('es-ES');
+            document.getElementById('fecha').textContent = fechaActual;
+            document.getElementById('reloj').textContent = horaActual;
+        }
+        actualizarTiempo();
+
+        setInterval(actualizarTiempo, 1000);
 
 document.addEventListener('DOMContentLoaded', cargarHistorialReciente);
 </script>
