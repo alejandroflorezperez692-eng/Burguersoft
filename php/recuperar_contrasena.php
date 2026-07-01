@@ -17,11 +17,11 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Recuperar Contraseña</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1.png" type="image/x-icon">
 </head>
 <body>
     <div class="navbar">
-        <img src="../estilos/img/icono.png" class="logo">
+        <img src="../estilos/img/icono1-oscuro.png" class="logo">
         <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
 
@@ -137,7 +137,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>
                 </div>
