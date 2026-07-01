@@ -4,8 +4,8 @@ requerirAdmin();
 $navActivo = 'menu';
 
 $categorias_enum = [
-    'Hamburguesa','Perros Caliente','Salchipapa','Fritos',
-    'Arepas','Picada','Bebidas Frias','Bebidas Calientes','Pizza'
+    'Hamburguesa', 'Perros Calientes', 'Salchipapa', 'Fritos',
+    'Arepas', 'Picada', 'Bebidas Frias', 'Bebidas Calientes', 'Pizza'
 ];
 
 $cat_icons = [
@@ -424,6 +424,18 @@ $cat_icons = [
             border-color: var(--border-strong);
         }
 
+        /* Producto agotado: tarjeta completa en gris */
+        .product-card.agotado {
+            filter: grayscale(1);
+            opacity: 0.6;
+            background: #f1f1f1;
+        }
+
+        .product-card.agotado:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
         .product-img {
             width: 100%;
             height: 155px;
@@ -434,6 +446,7 @@ $cat_icons = [
         }
 
         .product-card:hover .product-img { transform: scale(1.04); }
+        .product-card.agotado:hover .product-img { transform: none; }
 
         .product-body {
             padding: 12px 14px;
@@ -850,7 +863,7 @@ function renderMenu(filtro = '') {
 
 function crearTarjeta(p) {
     const card = document.createElement('div');
-    card.className = 'product-card';
+    card.className = 'product-card' + (p.estado === 'Agotado' ? ' agotado' : '');
     const imgSrc    = p.img || '../estilos/img/default.jpg';
     const estadoCls = 'estado-' + p.estado.replace(/ /g, '_');
     card.innerHTML = `
@@ -976,7 +989,7 @@ document.getElementById('formProducto').addEventListener('submit', async e => {
 });
 
 function prepararEdicion(id) {
-    const p = productos.find(x => x.id === id);
+    const p = productos.find(x => Number(x.id) === Number(id));
     if (!p) return;
 
     document.getElementById('editId').value      = p.id;

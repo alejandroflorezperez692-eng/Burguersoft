@@ -48,6 +48,7 @@ if ($method === 'PUT') {
     try {
         $pdo->prepare("UPDATE materia_prima SET nombre=?, tipo=?, unidad_medida=?, valor=?, marca_id=? WHERE id=?")
             ->execute([$nombre, $tipo, $unidad, $valor, $marca_id, $id]);
+        registrarBitacora($pdo, (int)($_SESSION['id_usuario'] ?? 0), 'Materia Prima', "Editó el insumo: $nombre");
         jsonResponse(['success' => true]);
     } catch (PDOException $e) {
         jsonResponse(['error' => 'Error de Base de Datos: ' . $e->getMessage()], 500);
@@ -58,7 +59,12 @@ if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     requerirAdminApi();
     try {
+        $sNombre = $pdo->prepare("SELECT nombre FROM materia_prima WHERE id = ?");
+        $sNombre->execute([$id]);
+        $nombre = $sNombre->fetchColumn() ?: "#$id";
+
         $pdo->prepare("UPDATE materia_prima SET estado = 'Inactivo' WHERE id=?")->execute([$id]);
+        registrarBitacora($pdo, (int)($_SESSION['id_usuario'] ?? 0), 'Materia Prima', "Dio de baja el insumo: $nombre");
         jsonResponse(['success' => true]);
     } catch (PDOException $e) {
         jsonResponse(['error' => 'No se pudo dar de baja la materia prima'], 409);

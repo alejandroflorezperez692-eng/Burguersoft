@@ -5,9 +5,9 @@ require_once __DIR__ . '/../includes/conexion.php';
 global $pdo;
 
 $stmtProd = $pdo->query(
-    "SELECT id, nombre, valor, descripcion, img, categoria
+    "SELECT id, nombre, valor, descripcion, img, categoria, estado
      FROM producto
-     WHERE estado IN ('Disponible','Por agotarse')
+     WHERE estado IN ('Disponible','Por agotarse','Agotado')
      ORDER BY categoria, nombre"
 );
 $productos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
@@ -181,6 +181,31 @@ if (!function_exists('formatCOP')) {
             box-shadow: 0 12px 30px rgba(61,33,17,.15);
             border-color: var(--secundario);
         }
+
+        /* Producto agotado: tarjeta en gris, sin interacción */
+        .prod-card.agotado {
+            filter: grayscale(1);
+            opacity: 0.6;
+        }
+        .prod-card.agotado:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #e8e0d4;
+        }
+        .prod-card.agotado .btn-add {
+            cursor: not-allowed;
+        }
+        .badge-agotado {
+            display: inline-block;
+            background: #888;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
         .prod-card-img {
             width: 100%; height: 160px;
             object-fit: cover;
@@ -252,6 +277,12 @@ $paginaActiva = 'menu';
 include __DIR__ . '/../includes/header_publico.php';
 ?>
 
+<section class="hero"><div class="carousel-container">
+    <div class="carousel-slide active" style="background-image:url('https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/4e4293857c03d819e4ae51de1e86d66a.jpg');"></div>
+    <div class="carousel-slide" style="background-image:url('https://ranchera.com.co/wp-content/uploads/2022/11/perro-colombiano-1.jpg');"></div>
+    <div class="carousel-slide" style="background-image:url('https://chefstv.net/wp-content/uploads/2024/03/0045-empanadas-saltenas-fritas-wide-web.webp');"></div>
+    <div class="carousel-slide" style="background-image:url('https://www.elespectador.com/resizer/v2/4YMEEW2QBVGALOUC7LSPUFNKMU.jpg?auth=1913090d3e141e8a3ccce35509259201363e9dddf853024e2f30ac71ce6383a9&width=1110&height=739&smart=true&quality=60');"></div>
+</div></section>
 
 <h2 class="titulo-seccion">NUESTROS PRODUCTOS</h2>
 
@@ -267,8 +298,8 @@ include __DIR__ . '/../includes/header_publico.php';
         <?php foreach ($grupos as $categoria => $items): ?>
             <h3 class="cat-titulo"><?= hv($categoria) ?></h3>
             <div class="productos-grid">
-                <?php foreach ($items as $p): ?>
-                <div class="prod-card">
+                <?php foreach ($items as $p): $agotado = ($p['estado'] === 'Agotado'); ?>
+                <div class="prod-card<?= $agotado ? ' agotado' : '' ?>">
                     <img class="prod-card-img"
                          src="<?= hv($p['img']) ?>"
                          alt="<?= hv($p['nombre']) ?>"  
@@ -279,7 +310,9 @@ include __DIR__ . '/../includes/header_publico.php';
                     </div>
                     <div class="prod-card-footer">
                         <span class="prod-card-precio"><?= formatCOP($p['valor']) ?></span>
-                        <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <?php if ($agotado): ?>
+                        <span class="badge-agotado">Agotado</span>
+                        <?php elseif (isset($_SESSION['id_usuario'])): ?>
                         <button type="button" class="btn-add" title="Agregar al carrito"
                             onclick="agregarAlCarrito(
                                 <?= (int)$p['id'] ?>,
@@ -359,7 +392,7 @@ function irLoginConAviso(tipo) {
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;margin-top:-30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin:6px;">El Oriente</h3>
                 </div>

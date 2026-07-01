@@ -274,6 +274,7 @@ body.dark-mode .acc-btn-reset {
 }
 
 body.dark-mode .acc-panel button.acc-btn-option:hover,
+body.dark-mode .acc-panel button.btn-circular-add.btn-login 
 body.dark-mode .acc-panel button.acc_tema:hover,
 body.dark-mode .acc-panel button.acc-btn-reset:hover,
 body.dark-mode .acc-panel .acc-row-btns button:hover {

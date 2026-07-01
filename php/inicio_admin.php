@@ -253,6 +253,181 @@ $navActivo = 'inicio';
         body.dark-mode .welcome-banner { background: linear-gradient(135deg, #0e0500, #2a0f02); }
         body.dark-mode .stat-card { background: var(--surface); }
         body.dark-mode .quick-link { background: var(--surface); }
+
+        .historial-section {
+            background: var(--surface);
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 26px 28px;
+        }
+
+        .historial-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .historial-header h3 {
+            font-family: var(--font-sans);
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-900);
+        }
+
+        .btn-ver-mas {
+            border: 1.5px solid var(--border-strong);
+            background: transparent;
+            color: var(--text-600);
+            font-size: 12.5px;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+
+        .btn-ver-mas:hover { border-color: var(--brand); color: var(--brand); }
+
+        .historial-lista { display: flex; flex-direction: column; gap: 2px; }
+
+        .historial-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 12px 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .historial-item:last-child { border-bottom: none; }
+
+        .historial-modulo {
+            flex-shrink: 0;
+            min-width: 88px;
+            text-align: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10.5px;
+            font-weight: 700;
+            background: rgba(232,130,26,0.12);
+            color: var(--brand);
+        }
+
+        .historial-texto { flex: 1; min-width: 0; }
+
+        .historial-desc {
+            font-size: 13.5px;
+            color: var(--text-900);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .historial-fecha {
+            font-size: 11.5px;
+            color: var(--text-400);
+        }
+
+        .historial-vacio {
+            text-align: center;
+            color: var(--text-400);
+            font-size: 13px;
+            padding: 30px 0;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,8,2,0.55);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal-box {
+            background: var(--surface);
+            border-radius: var(--r-lg);
+            width: 100%;
+            max-width: 560px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+            padding: 26px 30px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-900);
+        }
+
+        .modal-close {
+            border: none;
+            background: var(--surface-3);
+            color: var(--text-600);
+            width: 30px;
+            height: 30px;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-size: 15px;
+            line-height: 1;
+        }
+
+        .modal-close:hover { background: var(--danger); color: #fff; }
+
+        body.dark-mode .historial-section { background: var(--surface); }
+        body.dark-mode .modal-box { background: var(--surface); }
+
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 22px 24px 18px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--kpi-accent, var(--brand));
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            color: var(--text-400);
+            margin-bottom: 10px;
+        }
+
+        .kpi-val {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-900);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .kpi-sub { font-size: 11.5px; color: var(--text-400); }
     </style>
 </head>
 <body>
@@ -268,6 +443,31 @@ $navActivo = 'inicio';
             <img src="../estilos/img/usuario..png" class="welcome-img" alt="">
         </div>
 
+        <div class="historial-section">
+            <div class="historial-header">
+                <h3>Tus Movimientos:</h3>
+                <button class="btn-ver-mas" onclick="abrirHistorialCompleto()">Ver más</button>
+            </div>
+            <div class="historial-lista" id="historial-reciente">
+                <div class="historial-vacio">Cargando historial...</div>
+            </div>
+        </div>
+        <div class="kpi-card" style="--kpi-accent:#E8821A;">
+            <div class="kpi-label">Total ventas</div>
+            <div class="kpi-val" id="kpi-total">—</div>
+            <div class="kpi-sub">Histórico acumulado</div>
+        </div>
+</div>
+
+<div class="modal-overlay" id="modalHistorial" onclick="if(event.target===this)cerrarHistorialCompleto()">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Historial completo de movimientos</h2>
+            <button class="modal-close" onclick="cerrarHistorialCompleto()">X</button>
+        </div>
+        <div class="historial-lista" id="historial-completo">
+            <div class="historial-vacio">Cargando historial...</div>
+        </div>
     </div>
 </div>
 
@@ -340,15 +540,77 @@ document.addEventListener('DOMContentLoaded', function () {
     if (toastEl && toast === 'login_ok') {
         toastEl.textContent = '¡Bienvenido a BurguerSoft, Administrador!'; 
         setTimeout(() => toastEl.classList.add('mostrar'), 100);
+
       
         setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
 
       
+
+        setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
+
+
         const url = new URL(window.location.href);
         url.searchParams.delete('toast');
         window.history.replaceState({}, '', url);
     }
 });
+
+const API_HISTORIAL = '/burguersoft/controllers/historial.php';
+
+function formatearFechaHistorial(fecha) {
+    if (!fecha) return '—';
+    const f = new Date(fecha.replace(' ', 'T'));
+    if (isNaN(f.getTime())) return fecha;
+    const fechaTexto = f.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+    const horaTexto  = f.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+    return `${fechaTexto} · ${horaTexto}`;
+}
+
+function renderHistorial(contenedorId, registros) {
+    const cont = document.getElementById(contenedorId);
+    if (!registros.length) {
+        cont.innerHTML = '<div class="historial-vacio">Aún no tienes movimientos registrados.</div>';
+        return;
+    }
+    cont.innerHTML = registros.map(r => `
+        <div class="historial-item">
+            <div class="historial-modulo">${r.modulo}</div>
+            <div class="historial-texto">
+                <div class="historial-desc">${r.descripcion}</div>
+                <div class="historial-fecha">${formatearFechaHistorial(r.fecha)}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function cargarHistorialReciente() {
+    try {
+        const res = await fetch(`${API_HISTORIAL}?accion=reciente`);
+        const data = await res.json();
+        renderHistorial('historial-reciente', Array.isArray(data) ? data : []);
+    } catch (e) {
+        document.getElementById('historial-reciente').innerHTML =
+            '<div class="historial-vacio">No se pudo cargar el historial.</div>';
+    }
+}
+
+async function abrirHistorialCompleto() {
+    document.getElementById('modalHistorial').classList.add('open');
+    try {
+        const res = await fetch(`${API_HISTORIAL}?accion=todo`);
+        const data = await res.json();
+        renderHistorial('historial-completo', Array.isArray(data) ? data : []);
+    } catch (e) {
+        document.getElementById('historial-completo').innerHTML =
+            '<div class="historial-vacio">No se pudo cargar el historial.</div>';
+    }
+}
+
+function cerrarHistorialCompleto() {
+    document.getElementById('modalHistorial').classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', cargarHistorialReciente);
 </script>
 </body>
 </html>

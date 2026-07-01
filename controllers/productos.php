@@ -17,9 +17,8 @@ $categorias_enum = [
     'Arepas','Picada','Bebidas Frias','Bebidas Calientes','Pizza'
 ];
 
-function requerirAdminApi(): void {
-    if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador')
-        jsonResponse(['error' => 'No autorizado'], 403);
+function calcularEstado(int $cantidad): string {
+    return estadoProductoPorCantidad($cantidad);
 }
 
 if ($accion === 'categorias' && $method === 'GET') {
@@ -46,7 +45,6 @@ if ($accion === 'productos') {
     }
 
     if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
-    if (in_array($method, ['POST', 'PUT', 'DELETE'])) requerirAdminApi();
 
     if ($method === 'POST') {
         $nombre      = limpiar($_POST['nombre']      ?? '');
@@ -55,7 +53,7 @@ if ($accion === 'productos') {
         $categoria   = limpiar($_POST['categoria']   ?? '');
         $cantidad    = limpiar($_POST['cantidad']    ?? '0');
         $cantidad_int = (int)$cantidad;
-        $estado      = calcularEstadoStock($cantidad_int);
+        $estado      = calcularEstado($cantidad_int);
 
         if (!$nombre || $valor <= 0 || !$categoria)
             jsonResponse(['error' => 'Nombre, precio y categoría son obligatorios'], 400);
@@ -78,7 +76,9 @@ if ($accion === 'productos') {
              VALUES (?, ?, ?, ?, ?, ?, ?)"
         )->execute([$nombre, $valor, $descripcion, $img, $cantidad, $categoria, $estado]);
 
-        jsonResponse(['success' => true, 'id' => (int)$pdo->lastInsertId()]);
+        $idNuevo = (int)$pdo->lastInsertId();
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Menú', "Creó el producto: $nombre");
+        jsonResponse(['success' => true, 'id' => $idNuevo]);
     }
 
     if ($method === 'PUT') {
@@ -90,7 +90,7 @@ if ($accion === 'productos') {
         $categoria   = limpiar($_POST['categoria']   ?? '');
         $cantidad    = limpiar($_POST['cantidad']    ?? '0');
         $cantidad_int = (int)$cantidad;
-        $estado      = calcularEstadoStock($cantidad_int);
+        $estado      = calcularEstado($cantidad_int);
 
         if ($valor <= 0 || !$categoria || (int)$cantidad < 0)
             jsonResponse(['error' => 'Precio y categoría son obligatorios'], 400);
@@ -113,14 +113,20 @@ if ($accion === 'productos') {
              WHERE id=?"
         )->execute([$nombre, $valor, $descripcion, $img, $cantidad, $categoria, $estado, $id]);
 
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Menú', "Editó el producto: $nombre");
         jsonResponse(['success' => true]);
     }
 
     if ($method === 'DELETE') {
         if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
         try {
+            $sNombre = $pdo->prepare("SELECT nombre FROM producto WHERE id = ?");
+            $sNombre->execute([$id]);
+            $nombre = $sNombre->fetchColumn() ?: "#$id";
+
             $pdo->prepare("DELETE FROM receta  WHERE producto_id = ?")->execute([$id]);
             $pdo->prepare("DELETE FROM producto WHERE id = ?")->execute([$id]);
+            registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Menú', "Eliminó el producto: $nombre");
             jsonResponse(['success' => true]);
         } catch (PDOException $e) {
             jsonResponse(['error' => 'No se puede eliminar: tiene ventas asociadas'], 409);
@@ -143,7 +149,6 @@ if ($accion === 'receta') {
     }
 
     if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
-    if (in_array($method, ['POST', 'DELETE'])) requerirAdminApi();
 
     if ($method === 'POST') {
         $body        = json_decode(file_get_contents('php://input'), true);
@@ -156,10 +161,12 @@ if ($accion === 'receta') {
             "INSERT INTO receta (producto_id, materia_id,
              cantidad_usada, descripcion) VALUES (?,?,?,'')"
         )->execute([$producto_id, $materia_id, $cantidad]);
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Menú', "Agregó un ingrediente a la receta del producto #$producto_id");
         jsonResponse(['success' => true, 'id' => (int)$pdo->lastInsertId()]);
     }
 
     if ($method === 'DELETE') {
+        if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
         if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
         $pdo->prepare("DELETE FROM receta WHERE id = ?")->execute([$id]);
         jsonResponse(['success' => true]);

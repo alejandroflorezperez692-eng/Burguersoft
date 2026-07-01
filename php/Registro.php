@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <div class="navbar">
-        <img src="../estilos/img/icono.png" class="logo">
+        <img src="../estilos/img/icono1-oscuro.png" class="logo">
         <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
 
@@ -269,7 +269,7 @@ function configurarDocumento(limpiar) {
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>
                 </div>

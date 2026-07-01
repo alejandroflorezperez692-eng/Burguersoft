@@ -125,6 +125,7 @@ if ($method === 'POST') {
         }
 
         $pdo->commit();
+        registrarBitacora($pdo, $usuario_id, 'Compras', "Registró la compra #$compra_id por valor de $" . number_format($total, 0, ',', '.'));
         jsonResponse(['success' => true, 'compra_id' => $compra_id]);
     } catch (Throwable $e) {
         $pdo->rollBack();
@@ -154,6 +155,7 @@ if ($method === 'DELETE') {
         $pdo->prepare("DELETE FROM compra WHERE id = ?")->execute([$id]);
 
         $pdo->commit();
+        registrarBitacora($pdo, (int)($_SESSION['id_usuario'] ?? 0), 'Compras', "Eliminó la compra #$id");
         jsonResponse(['success' => true]);
     } catch (Throwable $e) {
         $pdo->rollBack();
