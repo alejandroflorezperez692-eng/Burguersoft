@@ -90,6 +90,7 @@ if ($method === 'POST' && ($_POST['_method'] ?? '') !== 'PUT') {
         }
 
         $pdo->commit();
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Promociones', "Creó la promoción: $nombre");
         jsonResponse(['success' => true, 'id' => $promo_id]);
     } catch (Throwable $e) {
         $pdo->rollBack();
@@ -146,6 +147,7 @@ if ($method === 'PUT' || ($method === 'POST' && ($_POST['_method'] ?? '') === 'P
         }
 
         $pdo->commit();
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Promociones', "Editó la promoción: $nombre");
         jsonResponse(['success' => true]);
     } catch (Throwable $e) {
         $pdo->rollBack();
@@ -157,9 +159,14 @@ if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     $pdo->beginTransaction();
     try {
+        $sNombre = $pdo->prepare("SELECT nombre FROM promocion WHERE id = ?");
+        $sNombre->execute([$id]);
+        $nombre = $sNombre->fetchColumn() ?: "#$id";
+
         $pdo->prepare("DELETE FROM promocion_producto WHERE id_promocion = ?")->execute([$id]);
         $pdo->prepare("DELETE FROM promocion WHERE id = ?")->execute([$id]);
         $pdo->commit();
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Promociones', "Eliminó la promoción: $nombre");
         jsonResponse(['success' => true]);
     } catch (Throwable $e) {
         $pdo->rollBack();

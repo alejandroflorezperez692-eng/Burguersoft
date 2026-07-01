@@ -25,6 +25,7 @@ if ($method === 'POST') {
     if (!$nombre || !$nit) jsonResponse(['error' => 'Nombre y NIT son requeridos'], 400);
     $pdo->prepare("INSERT INTO marca (nombre, img, telefono, correo, nit, estado) VALUES (?,?,?,?,?,?)")
         ->execute([$nombre, $imagen, $telefono, $correo, $nit, $estado]);
+    registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Marcas', "Registró la marca: $nombre");
     jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()]);
 }
 
@@ -39,13 +40,19 @@ if ($method === 'PUT') {
     $estado   = limpiar($body['estado']   ?? '');
     $pdo->prepare("UPDATE marca SET nombre=?, img=?, telefono=?, correo=?, nit=?, estado=? WHERE id=?")
         ->execute([$nombre, $imagen, $telefono, $correo, $nit, $estado, $id]);
+    registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Marcas', "Editó la marca: $nombre");
     jsonResponse(['success' => true]);
 }
 
 if ($method === 'DELETE') {
     if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
     try {
+        $sNombre = $pdo->prepare("SELECT nombre FROM marca WHERE id = ?");
+        $sNombre->execute([$id]);
+        $nombre = $sNombre->fetchColumn() ?: "#$id";
+
         $pdo->prepare("DELETE FROM marca WHERE id=?")->execute([$id]);
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Marcas', "Eliminó la marca: $nombre");
         jsonResponse(['success' => true]);
     } catch (PDOException $e) {
         jsonResponse(['error' => 'No se puede eliminar: marca en uso'], 409);

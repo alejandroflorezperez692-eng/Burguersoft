@@ -419,12 +419,12 @@ function mostrarTabla(datos) {
     datos.forEach(m => {
         c.innerHTML += `<tr>
             <td style="font-weight:600;">${m.nombre}</td>
-            <td style="color:var(--text-600);">${m.tipo}</td>
-            <td style="color:var(--text-400);">${m.unidad_medida}</td>
+            <td style="color:var(--text-900);">${m.tipo}</td>
+            <td style="color:var(--text-900);">${m.unidad_medida}</td>
             <td class="valor-cell">$${fmt.format(parseFloat(m.valor) || 0)}</td>
             <td style="text-align:center;font-weight:600;">${m.cantidad}</td>
             <td>${estadoBadge(m.estado, m.cantidad)}</td>
-            <td style="color:var(--text-400);">${m.nombre_marca || '—'}</td>
+            <td style="color:#160800;">${m.nombre_marca || '—'}</td>
             <td>
                 <button class="btn-icon-det" onclick="editar(${m.id},'${encodeURIComponent(m.nombre)}','${encodeURIComponent(m.tipo)}','${encodeURIComponent(m.valor)}','${encodeURIComponent(m.unidad_medida || '')}',${m.marca_id||0})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
                 <button class="btn-icon-del" onclick="eliminar(${m.id})" title="Eliminar"><img src ="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
