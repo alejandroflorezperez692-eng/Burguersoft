@@ -274,7 +274,6 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
     </script>
     <script>
-   
     window.addEventListener('DOMContentLoaded', () => {
         mostrarToastCodigo(' El codigo ha sido enviado a tu correo, insertalo para crear tu nueva contraseña');
     });
