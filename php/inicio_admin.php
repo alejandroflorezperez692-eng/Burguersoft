@@ -340,10 +340,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (toastEl && toast === 'login_ok') {
         toastEl.textContent = '¡Bienvenido a BurguerSoft, Administrador!'; 
         setTimeout(() => toastEl.classList.add('mostrar'), 100);
-        // Ocultar después de 3.5s
+      
         setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
 
-        // Limpiar el parámetro de la URL
+      
         const url = new URL(window.location.href);
         url.searchParams.delete('toast');
         window.history.replaceState({}, '', url);

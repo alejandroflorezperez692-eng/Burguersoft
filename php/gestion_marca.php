@@ -758,7 +758,7 @@ function prepararEdicion(id, nombre, imagen, tel, mail, nit, estado) {
     document.getElementById('modalMarca').classList.add('show');
 }
 
-// ── Toast reutilizable para marcas ──────────────────────
+
 let _toastMarcaTimer = null;
 
 function mostrarToastMarca(mensaje, tipo = 'ok') {
@@ -800,7 +800,7 @@ function mostrarToastMarca(mensaje, tipo = 'ok') {
     }, 3500);
 }
 
-// ── Guardar / Actualizar ────────────────────────────────
+
 async function guardarMarca() {
     const nombre   = document.getElementById('m-nombre').value.trim();
     const imagen   = document.getElementById('m-imagen').value.trim();
@@ -844,7 +844,7 @@ async function guardarMarca() {
     }
 }
 
-// ── Eliminar ────────────────────────────────────────────
+
 async function eliminarMarca(id) {
     if (!confirm('¿Eliminar esta marca?')) return;
 

@@ -143,7 +143,7 @@ header hr {
     width: 0;
     height: 2px;
     background: var(--color-secundario);
-    transition: width var(--transicion);  /* ← esto faltaba */
+    transition: width var(--transicion); 
 }
 .header-center a:hover,
 .header-center a.activo {

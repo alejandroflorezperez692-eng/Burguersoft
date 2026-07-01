@@ -103,7 +103,7 @@ function vaciarCarrito() {
     actualizarCarrito();
 }
 
-// ─── PEDIDO ───────────────────────────────────────────────
+
 let ultimaVentaId = null;
 
 async function enviarPedido(datos) {
@@ -214,7 +214,7 @@ function mostrarFactura() {
     if (typeof actualizarFactura === 'function') actualizarFactura();
 }
 
-// ─── INGREDIENTES ─────────────────────────────────────────
+
 const ingredientesDB = {
     hamburguesa: {
         Sencilla: "Pan artesanal, carne 120g, queso, lechuga, tomate y salsas.",

@@ -12,7 +12,7 @@ $stmtProd = $pdo->query(
 );
 $productos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
 
-// Promociones activas
+
 $hoy = date('Y-m-d');
 $stmtPromo = $pdo->prepare(
     "SELECT id, nombre, descripcion, precio, imagen
@@ -324,7 +324,6 @@ function irLoginConAviso(tipo) {
 
 <script src="/burguersoft/js/Menu.js"></script>
 
-<!-- Accesibilidad -->
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
     <div class="acc-row">
