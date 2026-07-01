@@ -6,7 +6,7 @@ require_once 'includes/funciones.php';
 require_once 'includes/enviar_correo.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirigir('recuperar_contrasena.php');
+    redirigir('php/recuperar_contrasena.php');
 }
 
 $correo = limpiar($_POST['correo'] ?? '');
@@ -14,7 +14,7 @@ $correo = limpiar($_POST['correo'] ?? '');
 if (!$correo || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
     $_SESSION['mensaje']      = 'Por favor ingresa un correo válido.';
     $_SESSION['tipo_mensaje'] = 'error';
-    redirigir('recuperar_contrasena.php');
+    redirigir('php/recuperar_contrasena.php');
 }
 
 $stmt = $conn->prepare("SELECT id FROM usuario WHERE correo = ?");
@@ -26,7 +26,7 @@ if ($stmt->num_rows === 0) {
     $_SESSION['mensaje']      = 'Si el correo está registrado recibirás el código en breve.';
     $_SESSION['tipo_mensaje'] = 'exito';
     $stmt->close();
-    redirigir('recuperar_contrasena.php');
+    redirigir('php/recuperar_contrasena.php');
 }
 $stmt->close();
 
@@ -48,6 +48,6 @@ if ($enviado) {
 } else {
     $_SESSION['mensaje']      = 'Error al enviar el correo. Intenta nuevamente.';
     $_SESSION['tipo_mensaje'] = 'error';
-    redirigir('recuperar_contrasena.php');
+    redirigir('php/recuperar_contrasena.php');
 }
 ?>

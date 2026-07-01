@@ -101,12 +101,12 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             padding-right: 90px;
         }
 
-        body.modo-oscuro-accesible .btn-toggle-password {
-            color: var(--color-acento);
+        .btn-toggle-password:hover {
+            color: var(--color-oscuro);
         }
 
-        body.modo-oscuro-accesible .btn-toggle-password:hover {
-            color: #fff;
+        body.dark-mode .btn-toggle-password:hover {
+            color: #ffffff;
         }
 
 
@@ -172,7 +172,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
-        <a href="../php/Burguersoft.php" class="btn-regresar"> [ Regresar ]</a>
+        <a href="../php/Burguersoft.php" class="btn-regresar">Regresar</a>
     </div>
 
     <div class="contenedor-login">
@@ -187,7 +187,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             <form id="loginForm" method="POST" action="login.php">
                 <h2>CORREO*</h2>
                 <input type="email" name="correo" id="email" class="input"
-                       placeholder="ejemplo@gmail.com" required
+                       placeholder="ejemplo@gmail.com" required autocomplete="off"
                        value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>"
                        <?= $bloqueado ? 'disabled' : '' ?>>
 
@@ -196,12 +196,10 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" name="contrasena" id="password" class="input"
                            placeholder="Ingresa tu contraseña" required
                            <?= $bloqueado ? 'disabled' : '' ?>>
-                    <button type="button" id="btnToggle" onclick="togglePassword()"
-                        onmouseover="this.style.color='#000000'"
-                        onmouseout="this.style.color='#E8821A'"
+                    <button type="button" id="btnToggle" class="btn-toggle-password" onclick="togglePassword()"
                         style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
                                background:none; border:none; cursor:pointer; font-size:13px;
-                               font-weight:700; color:#E8821A;"
+                               font-weight:700; color:#E8821A; transition: color 0.2s;"
                         <?= $bloqueado ? 'disabled' : '' ?>>
                         Mostrar
                     </button>

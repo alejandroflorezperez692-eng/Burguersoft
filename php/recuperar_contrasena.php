@@ -22,7 +22,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
-        <a href="login.php" class="btn-regresar">[ Regresar ]</a>
+        <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
 
     <div class="contenedor-login">
@@ -47,7 +47,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 
         <form method="POST" action="../procesar_recuperacion.php">
             <input id="rec-email" name="correo" type="email" class="input"
-                   placeholder="Correo electrónico (obligatorio)" required>
+                   placeholder="Correo electrónico (obligatorio)" required autocomplete="off">
             <button type="submit" class="btn-primario">Enviar código de recuperación</button>
         </form>
 
