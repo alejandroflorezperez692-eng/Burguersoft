@@ -257,3 +257,4 @@ function volverSubmenu(id) {
     const submenu = document.getElementById('submenu-' + id);
     if (submenu) submenu.style.display = 'none';
 }
+

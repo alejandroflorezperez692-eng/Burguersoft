@@ -22,8 +22,10 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 <body>
     <div class="navbar">
         <img src="../estilos/img/icono.png" class="logo">
-        <a href="login.php" class="btn-regresar">[ Regresar ]</a>
+        <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
+
+    <div class="contenedor-login">
 
     <div class="header-bar">¿TIENES PROBLEMAS?</div>
 
@@ -45,7 +47,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 
         <form method="POST" action="../procesar_recuperacion.php">
             <input id="rec-email" name="correo" type="email" class="input"
-                   placeholder="Correo electrónico (obligatorio)" required>
+                   placeholder="Correo electrónico (obligatorio)" required autocomplete="off">
             <button type="submit" class="btn-primario">Enviar código de recuperación</button>
         </form>
 
@@ -58,6 +60,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
         </div>
 
         <a href="/burguersoft/php/registro.php" class="btn-secundario">Crear cuenta nueva</a>
+    </div>
     </div>
 
 <div class="acc-panel" id="accPanel">

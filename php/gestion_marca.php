@@ -757,8 +757,6 @@ function prepararEdicion(id, nombre, imagen, tel, mail, nit, estado) {
     previewLogo();
     document.getElementById('modalMarca').classList.add('show');
 }
-
-// ── Toast reutilizable para marcas ──────────────────────
 let _toastMarcaTimer = null;
 
 function mostrarToastMarca(mensaje, tipo = 'ok') {
