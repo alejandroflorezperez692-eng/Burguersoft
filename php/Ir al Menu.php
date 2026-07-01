@@ -12,7 +12,7 @@ $stmtProd = $pdo->query(
 );
 $productos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
 
-// Promociones activas
+
 $hoy = date('Y-m-d');
 $stmtPromo = $pdo->prepare(
     "SELECT id, nombre, descripcion, precio, imagen
