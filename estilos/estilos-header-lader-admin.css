@@ -163,6 +163,15 @@ a { text-decoration:none; color:inherit; }
     transition: opacity 0.2s;
 }
 
+.icono-sidebar-perfil {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    opacity: 0.65;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+}
+
 .sidebar-item:hover .icono-sidebar,
 .sidebar-item.active .icono-sidebar { opacity: 1; }
 

@@ -38,6 +38,8 @@ if ($method === 'GET' && !$id) {
 
 if ($method === 'PUT' && $id) {
     $body = json_decode(file_get_contents('php://input'), true);
+    $cambios = [];
+
     if (isset($body['rol'])) {
         $stmtRol = $pdo->prepare("SELECT id FROM rol WHERE nombre = ?");
         $stmtRol->execute([$body['rol']]);
@@ -49,11 +51,17 @@ if ($method === 'PUT' && $id) {
 
         $pdo->prepare("UPDATE usuario SET rol_id = ? WHERE id = ?")
             ->execute([$rol['id'], $id]);
+        $cambios[] = "rol a {$body['rol']}";
     }
 
     if (isset($body['estado'])) {
         $pdo->prepare("UPDATE usuario SET estado = ? WHERE id = ?")
             ->execute([$body['estado'], $id]);
+        $cambios[] = "estado a {$body['estado']}";
+    }
+
+    if ($cambios) {
+        registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Usuarios', "Actualizó el usuario #$id: " . implode(', ', $cambios));
     }
 
     echo json_encode(['success' => true]);
@@ -64,6 +72,7 @@ if ($method === 'PUT' && $id) {
 if ($method === 'DELETE' && $id) {
     $pdo->prepare("DELETE FROM usuario WHERE id = ?")
         ->execute([$id]);
+    registrarBitacora($pdo, (int)$_SESSION['id_usuario'], 'Usuarios', "Eliminó al usuario #$id");
     echo json_encode(['success' => true]);
     exit;
 }

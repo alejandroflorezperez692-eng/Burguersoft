@@ -278,7 +278,7 @@ $navActivo = 'compras';
 
         .detalle-mini {
             font-size: 12px;
-            color: var(--text-400);
+            color: var(--text-900);
         }
 
         .btn-icon-del {
@@ -471,7 +471,7 @@ $navActivo = 'compras';
   <div class="contenido-modal" style="max-width: 600px; width: 90%;">
     <span class="cerrar" onclick="cerrarModal()">&times;</span>
     
-    <div class="form-panel-title" style="margin-bottom: 15px;">Detalle de la Compra / Factura</div>
+    <div class="form-panel-title" style="margin-bottom: 15px;">Detalle de la Compra - Factura</div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; font-size: 13px;">
         <p><strong>ID Compra:</strong> <span id="factura-id">—</span></p>
@@ -774,7 +774,7 @@ function resumenInsumos(id) {
 }
 
 function mostrarTabla(datos) {
-    const c = document.getElementById('cuerpoTabla');
+    const c = document.getElementById('cuerpoTabla');resumenInsumos
     c.innerHTML = '';
     if (!Array.isArray(datos) || !datos.length) {
         c.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-400);padding:40px;">Sin compras registradas.</td></tr>`;
@@ -785,7 +785,7 @@ function mostrarTabla(datos) {
         c.innerHTML += `<tr>
             <td style="color:var(--text-400);font-size:12px;font-weight:600;">#${comp.id}</td>
             <td>${fecha}</td>
-            <td>${resumenInsumos(comp.id)}</td>
+            <td style="color:var(--text-900);font-size:12px;font-weight:800;">${resumenInsumos(comp.id)}</td>
             <td><span class="metodo-badge">${comp.metodo_pago}</span></td>
             <td class="valor-cell">$${fmt.format(Number(comp.valor_total) || 0)}</td>
             <td>
