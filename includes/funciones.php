@@ -44,11 +44,19 @@ function iniciarSesionSegura(): void {
 
 function requerirLogin(): void {
     iniciarSesionSegura();
+
+    
+    if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/php/login.php');
+
     if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/login.php');
+
 }
 
 function requerirAdmin(): void {
     requerirLogin();
+
+   
+
     if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador') {
         redirigir('/burguersoft/php/inicio_admin.php');
     }

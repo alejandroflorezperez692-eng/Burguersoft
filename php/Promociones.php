@@ -426,7 +426,6 @@ $navActivo = 'promociones';
             document.getElementById('fecha_inicio').min = hoy;
             document.getElementById('fecha_fin').min = hoy;
 
-            // Ademas, cuando cambie fecha_inicio, fecha_fin no puede ser menor
             document.getElementById('fecha_inicio').addEventListener('change', function() {
                 document.getElementById('fecha_fin').min = this.value;
             });
@@ -750,13 +749,12 @@ if (data.success || data.id) {
     }
 }
 
-// ── Función del toast ─────────────────────────────────────
+
 let _toastPromoTimer = null;
 
 function mostrarToastPromo(mensaje, tipo = 'ok') {
     let toast = document.getElementById('toastPromo');
 
-    // Crear el div si no existe
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'toastPromo';
@@ -773,7 +771,6 @@ function mostrarToastPromo(mensaje, tipo = 'ok') {
         document.body.appendChild(toast);
     }
 
-    // Colores según tipo
     if (tipo === 'ok') {
         toast.style.background = '#2f2a1f';
         toast.style.color      = '#F2A93B';

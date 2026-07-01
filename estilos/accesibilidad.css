@@ -68,7 +68,7 @@
     color: var(--text-600, #6b4c38);
 }
 
-/* MODIFICADO EN MODO CLARO: Ahora el botón de restablecer se pone naranja completo al pasar el mouse */
+
 .acc-btn-reset:hover {
     background: var(--brand, #E8821A) !important;
     color: #fff !important;
@@ -101,10 +101,7 @@
     box-shadow: 0 8px 28px rgba(232,130,26,0.6);
 }
 
-/* ====================================================================
-   MODO CLARO - AJUSTES DEL PANEL DEL CARRITO
-   ==================================================================== */
-/* CORREGIDO EN MODO CLARO: El botón siempre será naranja vivo con letras blancas por defecto, incluso si está deshabilitado (:disabled) */
+
 .cart-panel .btn-checkout,
 body:not(.dark-mode) .cart-panel .btn-checkout,
 body:not(.dark-mode) .cart-panel .btn-checkout:disabled {
@@ -115,7 +112,6 @@ body:not(.dark-mode) .cart-panel .btn-checkout:disabled {
     transition: background-color 0.2s ease, transform 0.1s ease !important;
 }
 
-/* MODIFICADO: Agregado un efecto visual al pasar el mouse (hover) cambiando el fondo a un tono naranja más oscuro y activo (#cf6f13) */
 .cart-panel .btn-checkout:hover,
 body:not(.dark-mode) .cart-panel .btn-checkout:hover,
 body:not(.dark-mode) .cart-panel .btn-checkout:not(:disabled):hover {
@@ -124,15 +120,22 @@ body:not(.dark-mode) .cart-panel .btn-checkout:not(:disabled):hover {
     border-color: #cf6f13 !important;
 }
 
-/* MODIFICADO EN MODO CLARO: Forzar que "Vaciar Carrito" y "Ver Factura" hereden el color de letra legible del select */
+
 body:not(.dark-mode) .cart-panel .btn-cart-action {
-    color: #ffffff !important;
+    background-color: #6b4c38 !important; 
+    color: #ffffff !important;            
+    border-color: #6b4c38 !important;
     font-weight: 600 !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
 }
 
-/* ====================================================================
-   MODO CLARO - CORRECCIÓN SECCIÓN SOBRE NOSOTROS (FONDO BLANCO TOTAL)
-   ==================================================================== */
+body:not(.dark-mode) .cart-panel .btn-cart-action:hover {
+    background-color: #f5ede0 !important; 
+    color: #6b4c38 !important;            
+    border-color: #6b4c38 !important;
+}
+
+
 .nosotros-section,
 body:not(.dark-mode) .nosotros-section {
     background: #ffffff !important;
@@ -141,9 +144,7 @@ body:not(.dark-mode) .nosotros-section {
 }
 
 
-/* ====================================================================
-   MODO OSCURO GENERAL
-   ==================================================================== */
+
 body.dark-mode {
     --color-fondo:       #000000;
     --color-fondo-alt:   #000000;
@@ -173,7 +174,6 @@ body.dark-mode .nav-links a {
     color: var(--dm-texto) !important;
 }
 
-/* Quita el fondo que aparece al pasar el mouse o al quedar en la página activa */
 .header-center a:hover,
 .header-center a.activo,
 body.dark-mode .header-center a:hover,
@@ -190,7 +190,7 @@ body.dark-mode .contact-section,
 body.dark-mode .promociones,
 body.dark-mode .section-title,
 body.dark-mode .section-text {
-    background-color: #000000 !important; /* CORREGIDO A NEGRO ABSOLUTO */
+    background-color: #000000 !important;
     color: var(--dm-texto) !important;
 }
 
@@ -283,7 +283,6 @@ body.dark-mode .acc-btn-reset {
     border-color: rgba(232,130,26,0.25) !important;
 }
 
-/* Selectores ultradefinidos para obligar a que se llene todo el botón con el color gris oscuro uniforme en hover (MODO OSCURO) */
 body.dark-mode .acc-panel button.acc-btn-option:hover,
 body.dark-mode .acc-panel button.btn-circular-add.btn-login 
 body.dark-mode .acc-panel button.acc_tema:hover,
@@ -335,7 +334,7 @@ body.dark-mode .nosotros-section,
 body.dark-mode .nosotros-ubicacion,
 body.dark-mode .contact-section,
 body.dark-mode .promociones {
-    background-color: #000000 !important; /* CORREGIDO A NEGRO ABSOLUTO */
+    background-color: #000000 !important; 
 }
 
 
@@ -378,7 +377,6 @@ body.dark-mode .contact-section * {
     background-color: transparent;
 }
 
-/* CORRECCIÓN DE LA REGLA ULTRA-GLOBAL PARA EVITAR EL GRIS OSCURO */
 body.dark-mode .producto-card, 
 body.dark-mode .producto-card *,
 body.dark-mode .prod-card,
@@ -393,16 +391,14 @@ body.dark-mode input,
 body.dark-mode textarea, 
 body.dark-mode select:not(.btn-pago),
 body.dark-mode button:not(.acc-fab):not(#toggleCart):not(.close-cart):not(#cartItems button):not(.btn-cart-action):not(.cart-panel *):not(.btn-pago):not(.acc-btn-option):not(.acc_tema):not(.acc-btn-reset):not(.nosotros-ubicacion):not(.nosotros-ubicacion *):not(.map-content):not(.map-content *):not(.map-info):not(.map-info *) {
-    background-color: #000000 !important; /* CORREGIDO A NEGRO ABSOLUTO */
+    background-color: #000000 !important; 
 }
 
 body.dark-mode .prod-card-nombre {
     color: var(--dm-texto) !important;
 }
 
-/* ====================================================================
-   MODO OSCURO - PANEL DEL CARRITO
-   ==================================================================== */
+
 body.dark-mode .cart-panel {
     background-color: #000000 !important;
     box-shadow: -5px 0 25px rgba(0,0,0,.5) !important;
@@ -506,9 +502,7 @@ body.dark-mode .cart-panel .btn-checkout:not(:disabled):hover {
     border-color: #ff5722 !important;
 }
 
-/* ====================================================================
-   CORRECCIÓN DEFINITIVA: ELIMINACIÓN TOTAL DEL FONDO DETRÁS DEL CARRITO
-   ==================================================================== */
+
 body.dark-mode #toggleCart,
 body.dark-mode #toggleCart *,
 body.dark-mode .cart-container,
@@ -530,9 +524,7 @@ body.dark-mode #toggleCart *:hover {
     background-color: transparent !important;
 }
 
-/* ====================================================================
-   CORRECCIÓN ULTRA-REFORZADA: ELIMINAR FONDO DE LOS TEXTOS EN UBICACIÓN
-   ==================================================================== */
+
 body.dark-mode .nosotros-ubicacion,
 body.dark-mode .nosotros-ubicacion *,
 body.dark-mode .map-content,
@@ -554,10 +546,7 @@ body.dark-mode .section-text {
 }
 
 
-/* ====================================================================
-   MODO OSCURO - PANEL DE REGISTRO (#registroForm)
-   Solo afecta este formulario, no toca footer ni modo claro
-   ==================================================================== */
+
 body.dark-mode #registroForm {
     background-color: #000000 !important;
 }
@@ -626,9 +615,7 @@ body.dark-mode #registroForm .encabezado {
     margin-bottom: 4px;
 }
 
-/* ====================================================================
-   MODO OSCURO - PANEL RECUPERAR CONTRASEÑA
-   ==================================================================== */
+
 body.dark-mode .header-bar {
     border-bottom: 1px solid rgba(232,130,26,0.35) !important;
 }
@@ -674,11 +661,7 @@ body.dark-mode .btn-regresar:hover {
     background-color: transparent !important;
 }
 
-/* ====================================================================
-   CORRECCIÓN DEFINITIVA: ENLACES RECUPERAR CONTRASEÑA Y CREAR CUENTA
-   ==================================================================== */
 
-/* Estilo inicial para ambos enlaces: Se eliminan por completo las líneas y subrayados */
 body.dark-mode .card a.link,
 body.dark-mode .enlace-externo a,
 body.dark-mode #loginForm .link,
@@ -686,14 +669,14 @@ body.dark-mode #loginForm .enlace-externo a {
     background: transparent !important;
     background-color: transparent !important;
     color: var(--dm-texto, #E8821A) !important;
-    text-decoration: none !important; /* Quita el subrayado por defecto */
-    border-bottom: none !important;       /* Elimina la línea naranja personalizada */
+    text-decoration: none !important;
+    border-bottom: none !important;     
     padding-bottom: 1px;
     transition: background 0.2s ease, opacity 0.2s ease !important;
     display: inline-block;
 }
 
-/* Efecto Hover: Solo un cambio sutil de brillo transparente sin alterar el fondo ni añadir líneas */
+
 body.dark-mode .card a.link:hover,
 body.dark-mode .enlace-externo a:hover,
 body.dark-mode #loginForm .link:hover,
@@ -712,12 +695,12 @@ body.dark-mode .nom-local{
     color: #E8821A !important;
 }
 
-/* Modo claro: muestra logo claro, oculta logo oscuro */
+
 .logo-oscuro {
     display: none;
 }
 
-/* Modo oscuro: muestra logo oscuro, oculta logo claro */
+
 body.dark-mode .logo-claro {
     display: none;
 }

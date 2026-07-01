@@ -76,7 +76,7 @@ foreach ($filas as $f) {
             flex-direction: column;
         }
 
-        /* ── Layout principal ── */
+      
         .pedidos-page {
             max-width: 900px;
             width: 100%;
@@ -93,7 +93,7 @@ foreach ($filas as $f) {
         }
         .pedidos-header p { color: var(--muted); margin-top: 6px; font-size: 1.04rem; }
 
-        /* ── Pedido card ── */
+       
         .pedido-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -120,7 +120,7 @@ foreach ($filas as $f) {
         .pedido-num  { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--brand); font-weight: 700; }
         .pedido-fecha { font-size: .8rem; color: var(--muted); }
 
-        /* ── Barra de progreso ── */
+        
         .progreso-container {
             padding: 20px 22px 24px;
             border-bottom: 1px solid var(--border);
@@ -230,7 +230,7 @@ foreach ($filas as $f) {
         }
         .progreso-cancelado span { color: #e06060; font-size: .88rem; font-weight: 700; }
 
-        /* ── Tabla ── */
+       
         .pedido-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
         .pedido-table thead tr { background: rgba(255,255,255,.03); }
         .pedido-table th {
@@ -253,7 +253,7 @@ foreach ($filas as $f) {
         .producto-nombre { font-weight: 700; color: #f0e8df; }
         .precio-unit { color: var(--muted); font-size: .82rem; }
 
-        /* ── Pie de pedido ── */
+       
         .pedido-foot {
             display: flex;
             justify-content: flex-end;
@@ -295,7 +295,7 @@ foreach ($filas as $f) {
             height: 52px;
             border-radius: 50%;
          }
-        /* ── Estado vacío ── */
+        
         .pedidos-empty {
             text-align: center;
             padding: 80px 20px;
@@ -366,7 +366,7 @@ foreach ($filas as $f) {
 
         <div class="pedido-card">
 
-            <!-- Encabezado -->
+         
             <div class="pedido-head">
                 <div class="pedido-head-left">
                     <span class="pedido-num">Pedido #<?= $p['id'] ?></span>
@@ -374,7 +374,7 @@ foreach ($filas as $f) {
                 </div>
             </div>
 
-            <!-- Barra de progreso -->
+           
             <div class="progreso-container">
                 <div class="progreso-estado-label <?= $cancelado ? 'cancelado' : '' ?>">
                     <?= $cancelado ? '✗ Pedido cancelado' : htmlspecialchars($estado) ?>
@@ -414,7 +414,6 @@ foreach ($filas as $f) {
                 <?php endif; ?>
             </div>
 
-            <!-- Tabla de productos -->
             <table class="pedido-table">
                 <thead>
                     <tr>
@@ -436,7 +435,6 @@ foreach ($filas as $f) {
                 </tbody>
             </table>
 
-            <!-- Total -->
             <div class="pedido-foot">
                 <span class="label">Total del pedido:</span>
                 <span class="total">$<?= number_format($p['total'], 0, ',', '.') ?></span>

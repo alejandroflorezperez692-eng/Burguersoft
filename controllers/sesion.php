@@ -8,9 +8,7 @@ if (empty($_SESSION['id_usuario'])) {
     jsonResponse(['error' => 'No autorizado'], 401);
 }
 
-// Devuelve los datos de quien tiene la sesión iniciada en este momento.
-// Si es un cliente comprando desde el carrito, es el cliente.
-// Si es el administrador llenando el formulario de "Nueva Venta", es el administrador.
+
 jsonResponse([
     'id'       => (int)$_SESSION['id_usuario'],
     'nombre'   => $_SESSION['nombre']      ?? '',
