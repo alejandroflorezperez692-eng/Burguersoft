@@ -172,9 +172,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 0 !important;
         }
 
-        /* ========================================================
-           CORRECCIÓN ULTRA-PRIORITARIA PARA EL MODO CLARO
-           ======================================================== */
+ 
         body:not(.dark-mode) #loginForm .link,
         body:not(.dark-mode) .enlace-externo a {
             text-decoration: none !important;

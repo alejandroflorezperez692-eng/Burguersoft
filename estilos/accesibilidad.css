@@ -317,11 +317,7 @@ body.dark-mode textarea:-webkit-autofill:active {
     transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
 }
 
-/* ============================================
-   FIX AUTOCOMPLETADO DEL NAVEGADOR - MODO CLARO
-   Evita el fondo azul/amarillo que impone el navegador
-   al autocompletar campos guardados, en todos los paneles.
-============================================ */
+
 body:not(.dark-mode) input:-webkit-autofill,
 body:not(.dark-mode) input:-webkit-autofill:hover,
 body:not(.dark-mode) input:-webkit-autofill:focus,
@@ -744,11 +740,7 @@ body.dark-mode .sidebar-divider{
 }
 
 
-/* ========================================================
-   NUEVAS AGREGACIONES EXCLUSIVAS PARA MODO CLARO (LOGIN)
-   ======================================================== */
 
-/* Evita que los enlaces se subrayen en estado normal o hover, y cambia el color hover a Naranja */
 body:not(.dark-mode) .card a.link,
 body:not(.dark-mode) .enlace-externo a,
 body:not(.dark-mode) .card a.link:hover,
@@ -761,18 +753,18 @@ body:not(.dark-mode) .enlace-externo a:hover {
     color: #E8821A !important;
 }
 
-/* Hace que el texto "¿No tienes una cuenta?" sea visible en color marrón oscuro */
+
 body:not(.dark-mode) .enlace-externo {
     color: #000000 !important;
 }
 
-/* Hace visible la letra "o" del separador en modo claro */
+
 body:not(.dark-mode) .separador-contenedor .circulo {
     color: #000000 !important;
     font-weight: 600;
 }
 
-/* Hace visibles las líneas a los lados de la "o" en modo claro */
+
 body:not(.dark-mode) .separador-contenedor .linea {
     background-color: rgba(0, 0, 0, 0.25) !important;
     height: 1px !important;
