@@ -143,6 +143,30 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             margin-bottom: 10px;
         }
+
+        /* ========================================================
+           CORRECCIÓN ULTRA-PRIORITARIA PARA MODO CLARO (VERIFICAR)
+           ======================================================== */
+        
+        /* Asegura que el texto base "¿No recibiste el código?" se visualice en negro */
+        body:not(.dark-mode) .enlace-externo {
+            color: #000000 !important;
+        }
+
+        /* Mantiene el enlace "Enviar de nuevo" en naranja puro y sin subrayado */
+        body:not(.dark-mode) .enlace-externo a {
+            color: #E8821A !important;
+            text-decoration: none !important;
+            font-weight: 700 !important;
+        }
+
+        /* Evita que se vuelva negro o se subraye al pasar el mouse por encima (hover) */
+        body:not(.dark-mode) .enlace-externo a:hover {
+            color: #E8821A !important;
+            text-decoration: none !important;
+            background: transparent !important;
+            background-color: transparent !important;
+        }
     </style>
 </head>
 <body>
@@ -189,7 +213,6 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <p class="enlace-externo" style="margin-top:16px;font-size:14px;">
             ¿No recibiste el código?
             <a href="php/recuperar_contrasena.php">Enviar de nuevo</a>
-
         </p>
     </div>
     </div>

@@ -88,7 +88,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>BURGUERSOFT - Iniciar Sesión</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
-     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <style>
         .input-password-wrapper {
             position: relative;
@@ -108,7 +108,6 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         body.dark-mode .btn-toggle-password:hover {
             color: #ffffff;
         }
-
 
         .toast-bienvenida {
             position: fixed;
@@ -134,8 +133,8 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         .toast-bienvenida.mostrar {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
+        }
 
-}
         .contenedor-login {
             flex: 1;
             display: flex;
@@ -166,6 +165,36 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         footer {
             margin-top: 0 !important;
         }
+
+        /* ========================================================
+           CORRECCIÓN ULTRA-PRIORITARIA PARA EL MODO CLARO
+           ======================================================== */
+        body:not(.dark-mode) #loginForm .link,
+        body:not(.dark-mode) .enlace-externo a {
+            text-decoration: none !important;
+        }
+
+        body:not(.dark-mode) #loginForm .link:hover,
+        body:not(.dark-mode) .enlace-externo a:hover {
+            color: #E8821A !important;
+            text-decoration: none !important;
+        }
+
+        body:not(.dark-mode) .enlace-externo {
+            color: #000000 !important;
+        }
+
+        body:not(.dark-mode) .separador-contenedor .circulo {
+            color: #000000 !important;
+            font-weight: 700 !important;
+        }
+
+        body:not(.dark-mode) .separador-contenedor .linea {
+            background-color: rgba(0, 0, 0, 0.25) !important;
+            background: rgba(0, 0, 0, 0.25) !important;
+            height: 1px !important;
+            display: block !important;
+        }
     </style>
 </head>
 
@@ -176,8 +205,8 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="contenedor-login">
-  <div class="header-bar"> INICIAR SESIÓN </div>
-<div class="card">
+        <div class="header-bar"> INICIAR SESIÓN </div>
+        <div class="card">
             <?php if ($error): ?>
                 <p class="<?= $bloqueado ? 'error-bloqueo' : 'error-normal' ?>">
                     <?= $error ?>
@@ -295,26 +324,25 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         <?php if ($mensaje_exito): ?>
-window.addEventListener('DOMContentLoaded', () => {
-    mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
-});
-<?php endif; ?>
+        window.addEventListener('DOMContentLoaded', () => {
+            mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
+        });
+        <?php endif; ?>
 
-function mostrarToastBienvenida(mensaje) {
-    let toast = document.querySelector('.toast-bienvenida');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.className = 'toast-bienvenida';
-        document.body.appendChild(toast);
-    }
-    toast.textContent = mensaje;
-    toast.classList.add('mostrar');
+        function mostrarToastBienvenida(mensaje) {
+            let toast = document.querySelector('.toast-bienvenida');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.className = 'toast-bienvenida';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = mensaje;
+            toast.classList.add('mostrar');
 
-    setTimeout(() => {
-        toast.classList.remove('mostrar');
-    }, 3500);
-}
-
+            setTimeout(() => {
+                toast.classList.remove('mostrar');
+            }, 3500);
+        }
 
         <?php if ($bloqueado && $segundos_restantes > 0): ?>
         (function () {
@@ -334,17 +362,14 @@ function mostrarToastBienvenida(mensaje) {
         <?php endif; ?>
 
         <?php if ($mensaje_exito): ?>
-window.addEventListener('DOMContentLoaded', () => {
-    mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
-});
-<?php elseif ($mensaje_aviso): ?>
-window.addEventListener('DOMContentLoaded', () => {
-    mostrarToastBienvenida(<?= json_encode($mensaje_aviso) ?>);
-});
-<?php endif; ?>
-
-       
-</script>
-
+        window.addEventListener('DOMContentLoaded', () => {
+            mostrarToastBienvenida(<?= json_encode($mensaje_exito) ?>);
+        });
+        <?php elseif ($mensaje_aviso): ?>
+        window.addEventListener('DOMContentLoaded', () => {
+            mostrarToastBienvenida(<?= json_encode($mensaje_aviso) ?>);
+        });
+        <?php endif; ?>
+    </script>
 </body>
 </html>
