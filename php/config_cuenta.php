@@ -127,29 +127,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: block;
             text-align: center;
             margin-top: 8px;
+            margin-bottom: -40px !important;
         }
 
         .profile-logout:hover { background: rgba(200,56,42,0.07); border-color: var(--danger); }
 
-        .form-panel {
-            margin-left: -28px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--r-lg);
-            padding: 32px;
-            box-shadow: var(--shadow-sm);
+        .form-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 0;
+            gap: 28px;
         }
 
         .form-section {
-            padding-bottom: 28px;
-            margin-bottom: 28px;
-            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 32px;
         }
-
-        .form-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
 
         .form-section-title {
             font-family: var(--font-display);
@@ -164,6 +159,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             grid-template-columns: 1fr 1fr;
             gap: 16px;
         }
+
+        .form-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-actions-inner {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-actions-inner .profile-logout { margin-top: 0; }
 
         .field {
             display: flex;
@@ -238,6 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .msg-err { background: #fde8e8; color: #922; border-left: 4px solid var(--danger); }
 
         .btn-submit {
+            margin-top: 15px !important;
             width: 100%;
             padding: 11px;
             background: var(--brand);
@@ -258,10 +276,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             .config-layout { grid-template-columns: 1fr; }
             .form-row-2 { grid-template-columns: 1fr; }
             .reqs { grid-template-columns: 1fr; }
+
+            .form-columns { grid-template-columns: 1fr; }
         }
 
         body.dark-mode .profile-panel { background: var(--surface); }
-        body.dark-mode .form-panel { background: var(--surface); }
+        body.dark-mode .form-section { background: var(--surface); }
         body.dark-mode .field input { background: var(--surface-2); color: var(--text-900); }
     </style>
 </head>
@@ -278,22 +298,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <div class="config-layout">
-
-        <div>
-        </div>
-
-        <div class="form-panel">
-
+        <div class="form-wrapper">
             <?php if ($msg): ?>
             <div class="msg-box msg-<?= $msg['type'] ?>"><?= htmlspecialchars($msg['text']) ?></div>
             <?php endif; ?>
-
             <form method="POST" action="config_cuenta.php">
-
+              <div class="form-columns">
                 <div class="form-section">
                     <div class="form-section-title" style="font-family: var(--font-sans);">Información Personal</div>
-
                     <div class="form-row-2">
                         <div class="field">
                             <label>Nombre</label>
@@ -360,20 +372,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="strength-bar" id="progreso"></div>
                         </div>
                         <ul class="reqs">
-                            <li id="req-len">❌ Mínimo 8 caracteres</li>
-                            <li id="req-may">❌ Una mayúscula</li>
-                            <li id="req-num">❌ Un número</li>
-                            <li id="req-esp">❌ Un símbolo</li>
+                            <li id="req-len"><span style="color:#922; font-size:15px; font-weight:900;">X</span> Mínimo 8 caracteres</li>
+                            <li id="req-may"><span style="color:#922; font-size:15px; font-weight:900;">X</span>  Una mayúscula</li>
+                            <li id="req-num"><span style="color:#922; font-size:15px; font-weight:900;">X</span>  Un número</li>
+                            <li id="req-esp"><span style="color:#922; font-size:15px; font-weight:900;">X</span>  Un símbolo o caracter especial</li>
                         </ul>
                     </div>
                 </div>
+            </div>
 
-                <button type="submit" class="btn-submit">Guardar cambios</button>
-                <a href="/burguersoft/logout.php" class="profile-logout">Cerrar sesión</a>
-            </form>
-
+                <div class="form-actions">
+                    <div class="form-actions-inner">
+                        <button type="submit" class="btn-submit">Guardar cambios</button>
+                        <a href="/burguersoft/logout.php" class="profile-logout">Cerrar sesión</a>
+                    </div>
+                </div>
         </div>
-    </div>
 
 </div>
 </div>
@@ -422,7 +436,7 @@ function evaluarPassword(valor) {
     const longitud  = valor.length >= 8;
     const mayuscula = /[A-Z]/.test(valor);
     const numero    = /[0-9]/.test(valor);
-    const especial  = /[@#$%^&*!]/.test(valor);
+    const especial  = /[@#$%^&*!().,={}"/]/.test(valor);
     const checks    = [longitud, mayuscula, numero, especial];
 
     const ids = ['req-len','req-may','req-num','req-esp'];
