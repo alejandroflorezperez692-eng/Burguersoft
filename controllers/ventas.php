@@ -11,14 +11,6 @@ $id     = (int)($_GET['id'] ?? 0);
 
 $ESTADOS_VALIDOS = ['Pagado', 'Cancelado', 'Reembolsada', 'Rechazada'];
 
-function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
-    $s = $pdo->prepare("SELECT cantidad FROM producto WHERE id = ?");
-    $s->execute([$producto_id]);
-    $cantidad = (int)$s->fetchColumn();
-    $estado   = estadoProductoPorCantidad($cantidad);
-    $pdo->prepare("UPDATE producto SET estado = ? WHERE id = ?")->execute([$estado, $producto_id]);
-}
-
 function restaurarStockVenta(PDO $pdo, int $venta_id): void {
     $s = $pdo->prepare("SELECT producto_id, cantidad FROM detalle_venta WHERE venta_id = ?");
     $s->execute([$venta_id]);
@@ -310,11 +302,11 @@ if ($method === 'PUT') {
 
     if (!$estado && !$metodo) jsonResponse(['error' => 'Sin datos para actualizar'], 400);
 
-  $estados_validos = [
-    'En cocina','En barra','Pendiente de pago','Entregado','Pagado','Cancelado',
-    'Listo','En camino',
-    'Listo para recoger'
-];
+    $estados_validos = [
+        'En cocina','En barra','Pendiente de pago','Entregado','Pagado','Cancelado',
+        'Listo','En camino',
+        'Listo para recoger'
+    ];
     if ($estado && !in_array($estado, $estados_validos))
         jsonResponse(['error' => 'Estado inválido'], 400);
 
@@ -322,13 +314,10 @@ if ($method === 'PUT') {
     $sVenta->execute([$id]);
     $venta = $sVenta->fetch();
     if (!$venta) jsonResponse(['error' => 'Venta no encontrada'], 404);
-    
+
     $estadoActual = $venta['estado'];
 
-$esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
-
-
-$esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
+    $esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
     if (!$esAdmin) {
         if ((int)$venta['usuario_id'] !== (int)$_SESSION['id_usuario'])
             jsonResponse(['error' => 'No autorizado'], 403);
@@ -337,11 +326,6 @@ $esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
         if (!in_array($estadoActual, ['En cocina','En barra','Pendiente de pago']))
             jsonResponse(['error' => 'Este pedido ya no se puede cancelar'], 409);
     }
-
-    $sActual = $pdo->prepare("SELECT estado FROM venta WHERE id = ?");
-    $sActual->execute([$id]);
-    $estadoActual = $sActual->fetchColumn();
-    if ($estadoActual === false) jsonResponse(['error' => 'Venta no encontrada'], 404);
 
     $campos = [];
     $vals   = [];
@@ -409,6 +393,6 @@ if ($method === 'DELETE') {
         jsonResponse(['error' => $e->getMessage()], 422);
     }
 }
- 
+
 jsonResponse(['error' => 'Método no permitido'], 405);
 ?>

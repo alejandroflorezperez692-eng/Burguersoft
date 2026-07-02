@@ -46,9 +46,6 @@ function requerirLogin(): void {
     iniciarSesionSegura();
 
     if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/php/login.php');
-
-    if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/login.php');
-
 }
 
 function requerirAdmin(): void {
@@ -72,12 +69,11 @@ function estadoProductoPorCantidad(int $cantidad): string {
     return 'Disponible';
 }
 
-
 function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
     $s = $pdo->prepare("SELECT cantidad FROM producto WHERE id = ?");
     $s->execute([$producto_id]);
     $cantidad = (int)$s->fetchColumn();
-    $estado   = calcularEstadoStock($cantidad);
+    $estado   = estadoProductoPorCantidad($cantidad);
     $pdo->prepare("UPDATE producto SET estado = ? WHERE id = ?")
         ->execute([$estado, $producto_id]);
 }   
@@ -91,4 +87,3 @@ function registrarBitacora(PDO $pdo, int $usuario_id, string $modulo, string $de
     }
 }
 ?>
-
