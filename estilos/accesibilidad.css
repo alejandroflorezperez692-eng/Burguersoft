@@ -317,11 +317,7 @@ body.dark-mode textarea:-webkit-autofill:active {
     transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
 }
 
-/* ============================================
-   FIX AUTOCOMPLETADO DEL NAVEGADOR - MODO CLARO
-   Evita el fondo azul/amarillo que impone el navegador
-   al autocompletar campos guardados, en todos los paneles.
-============================================ */
+
 body:not(.dark-mode) input:-webkit-autofill,
 body:not(.dark-mode) input:-webkit-autofill:hover,
 body:not(.dark-mode) input:-webkit-autofill:focus,
@@ -768,6 +764,7 @@ body:not(.dark-mode) .enlace-externo a:hover {
 body:not(.dark-mode) .enlace-externo {
     color: #000000 !important;
 }
+
 
 body:not(.dark-mode) .separador-contenedor .circulo {
     color: #000000 !important;
