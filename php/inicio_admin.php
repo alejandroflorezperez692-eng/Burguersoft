@@ -10,7 +10,7 @@ $navActivo = 'inicio';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT — Inicio</title>
     <link rel="stylesheet" href="../estilos/estilos-header-lader-admin.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <style>
         .dashboard-wrap {
             padding: 40px;

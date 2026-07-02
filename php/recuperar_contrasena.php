@@ -17,7 +17,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Recuperar Contraseña</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
-    <link rel="icon" href="../estilos/img/icono1.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
 </head>
 <body>
     <div class="navbar">

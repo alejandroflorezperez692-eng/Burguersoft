@@ -103,7 +103,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
 
     <nav class="header-center">
         <a href="/burguersoft/php/Burguersoft.php"  <?= $paginaActiva==='inicio'  ?'class="activo"':'' ?>>Inicio</a>
-        <a href="/burguersoft/php/el_oriente.php"   <?= $paginaActiva==='oriente' ?'class="activo"':'' ?>>El Oriente</a>
+        <a href="/burguersoft/php/el_oriente.php"   <?= $paginaActiva==='oriente' ?'class="activo"':'' ?>>Nosotros</a>
         <a href="/burguersoft/php/Ir al Menu.php"   <?= $paginaActiva==='menu'    ?'class="activo"':'' ?>>Menú</a>
         <a href="/burguersoft/php/contactanos.php"  <?= $paginaActiva==='contacto'?'class="activo"':'' ?>>Contactanos</a>
     </nav>

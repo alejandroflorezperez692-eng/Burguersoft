@@ -92,7 +92,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>BURGUERSOFT - Iniciar Sesión</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
-     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+     <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <style>
         .input-password-wrapper {
             position: relative;

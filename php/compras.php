@@ -10,7 +10,7 @@ $navActivo = 'compras';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT — Gestión de Compras</title>
     <link rel="stylesheet" href="../estilos/estilos-header-lader-admin.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <style>
         .compras-page { padding: 36px 40px 60px; }
 
