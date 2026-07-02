@@ -594,20 +594,6 @@ function togglePanel() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const now = new Date();
-    document.getElementById('fecha-actual').textContent =
-        '' + now.toLocaleDateString('es-CO', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-    fetch('/burguersoft/controllers/ventas.php')
-        .then(r => r.json()).then(d => {
-            document.getElementById('stat-ventas').textContent = Array.isArray(d) ? d.length : '—';
-        }).catch(() => {});
-
-    fetch('/burguersoft/controllers/Gestion-usuarios.php')
-        .then(r => r.json()).then(d => {
-            document.getElementById('stat-usuarios').textContent = Array.isArray(d) ? d.length : '—';
-        }).catch(() => {});
-
     fetch('/burguersoft/controllers/marcas.php')
         .then(r => r.json()).then(d => {
             document.getElementById('stat-marcas').textContent = Array.isArray(d) ? d.length : '—';

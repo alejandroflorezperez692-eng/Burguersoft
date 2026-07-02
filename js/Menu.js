@@ -103,8 +103,9 @@ function vaciarCarrito() {
     actualizarCarrito();
 }
 
-
-let ultimaVentaId = null;
+if (typeof window.ultimaVentaId === 'undefined') {
+    window.ultimaVentaId = null;
+}
 
 async function enviarPedido(datos) {
     if (carrito.length === 0) return;
@@ -134,8 +135,13 @@ async function enviarPedido(datos) {
         }
     });
 
-    const subtotal = items.reduce((s, it) => s + (it.precio_unitario * it.cantidad), 0)
+   const subtotal = items.reduce((s, it) => s + (it.precio_unitario * it.cantidad), 0)
                    + promociones.reduce((s, p) => s + p.precio, 0);
+
+    let tipoEntrega = 'Recoger'; 
+    if (datos.modo === 'domicilio')    tipoEntrega = 'Domicilio';
+    else if (datos.modo === 'restaurante') tipoEntrega = 'Consumir';
+    else if (datos.modo === 'recoger') tipoEntrega = 'Recoger';
 
     const btnCheckout = document.getElementById('btnCheckout');
     if (btnCheckout) { btnCheckout.disabled = true; btnCheckout.textContent = 'Procesando...'; }
@@ -147,7 +153,8 @@ async function enviarPedido(datos) {
             body: JSON.stringify({
                 metodo_pago: metodoPago,
                 items,
-                promociones
+                promociones,
+                tipo_entrega: tipoEntrega   
             })
         });
 
@@ -158,7 +165,7 @@ async function enviarPedido(datos) {
             return;
         }
 
-        ultimaVentaId   = data.venta_id;
+        window.ultimaVentaId = data.venta_id;
         pedidoRealizado = true;
 
         const todosLosItems = [...mapProductos.values(), ...mapPromos.values()];
@@ -168,8 +175,8 @@ async function enviarPedido(datos) {
         carrito = [];
         guardarCarrito();
         actualizarCarrito();
-
         alert('¡Compra confirmada! Tu pedido #' + ultimaVentaId + ' fue registrado.');
+
     } catch (e) {
         console.error('Error al enviar el pedido', e);
         alert('Error de conexión al confirmar la compra. Intenta de nuevo.');
@@ -214,32 +221,33 @@ function mostrarFactura() {
     if (typeof actualizarFactura === 'function') actualizarFactura();
 }
 
-
-const ingredientesDB = {
-    hamburguesa: {
-        Sencilla: "Pan artesanal, carne 120g, queso, lechuga, tomate y salsas.",
-        Doble:    "Pan artesanal, doble carne 240g, doble queso, lechuga, tomate y salsas.",
-        Especial: "Carne 150g, queso, tocineta, jamón, huevo, lechuga, tomate y salsas.",
-        Pollo:    "Pechuga de pollo apanada, queso, lechuga, tomate y salsas."
-    },
-    perros: {
-        Sencillo:  "Salchicha, pan perro, ripio de papa, salsas.",
-        Especial:  "Salchicha, pollo desmechado, queso, ripio, salsas.",
-        Americano: "Salchicha americana, queso, cebolla grill, tocineta y salsas."
-    },
-    bebidas: {
-        CocaCola:  "Bebida gaseosa sabor cola.",
-        Agua:      "Agua potable.",
-        JugoFresa: "Jugo natural de fresa."
-    }
-};
+if (typeof window.ingredientesDB === 'undefined') {
+    window.ingredientesDB = {
+        hamburguesa: {
+            Sencilla: "Pan artesanal, carne 120g, queso, lechuga, tomate y salsas.",
+            Doble:    "Pan artesanal, doble carne 240g, doble queso, lechuga, tomate y salsas.",
+            Especial: "Carne 150g, queso, tocineta, jamón, huevo, lechuga, tomate y salsas.",
+            Pollo:    "Pechuga de pollo apanada, queso, lechuga, tomate y salsas."
+        },
+        perros: {
+            Sencillo:  "Salchicha, pan perro, ripio de papa, salsas.",
+            Especial:  "Salchicha, pollo desmechado, queso, ripio, salsas.",
+            Americano: "Salchicha americana, queso, cebolla grill, tocineta y salsas."
+        },
+        bebidas: {
+            CocaCola:  "Bebida gaseosa sabor cola.",
+            Agua:      "Agua potable.",
+            JugoFresa: "Jugo natural de fresa."
+        }
+    };
+}
 
 function hoverIngredientes(categoria, elemento) {
     const item = elemento.getAttribute('data-item');
     const caja = elemento.parentElement.parentElement.querySelector('.ingredientes-box');
-    if (ingredientesDB[categoria]?.[item] && caja) {
+    if (window.ingredientesDB[categoria]?.[item] && caja) {
         caja.style.display = 'block';
-        caja.innerHTML = `<strong>Ingredientes:</strong><br>${ingredientesDB[categoria][item]}`;
+        caja.innerHTML = `<strong>Ingredientes:</strong><br>${window.ingredientesDB[categoria][item]}`;
     }
 }
 
