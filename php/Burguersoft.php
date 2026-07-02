@@ -37,7 +37,7 @@ if (isset($_SESSION['logout_exitoso'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Inicio</title>
     <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
-    <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css">
+    <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css?v=3">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
     <script src="../js/Hero-Carrusel.js" defer></script>
     <style>
@@ -138,7 +138,7 @@ if (isset($_SESSION['logout_exitoso'])) {
 </footer>
 
 
-<script src="../js/accesibilidad.js"></script>
+
 <script src="/burguersoft/js/Menu.js"></script>
 <script>
 const SESION_ACTIVA = <?= json_encode(!empty($_SESSION['id_usuario'])) ?>;

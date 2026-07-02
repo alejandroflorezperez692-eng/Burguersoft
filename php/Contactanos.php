@@ -9,7 +9,7 @@ $paginaActiva = 'contacto';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Contactanos</title>
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css">
     <script src="../js/Hero-Carrusel.js" defer></script>
 </head>
@@ -120,8 +120,7 @@ $paginaActiva = 'contacto';
 <button class="acc-fab" id="accFab" onclick="togglePanel()">
     <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
 </button>
-<link rel="stylesheet" href="../estilos/accesibilidad.css">
-<script src="../js/accesibilidad.js"></script>
+
 
      <footer>
     <div class="footer-container">
