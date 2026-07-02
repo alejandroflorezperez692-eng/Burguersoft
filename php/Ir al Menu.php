@@ -1,13 +1,13 @@
-    <?php
+<?php
     session_start();
 
     require_once __DIR__ . '/../includes/conexion.php';
     global $pdo;
 
     $stmtProd = $pdo->query(
-        "SELECT id, nombre, valor, descripcion, img, categoria
+        "SELECT id, nombre, valor, descripcion, img, categoria, estado
         FROM producto
-        WHERE estado IN ('Disponible','Por agotarse')
+        WHERE estado IN ('Disponible','Por agotarse','Agotado')
         ORDER BY categoria, nombre"
     );
     $productos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
@@ -182,6 +182,31 @@
                 box-shadow: 0 12px 30px rgba(61,33,17,.15);
                 border-color: var(--secundario);
             }
+
+            /* Producto agotado: tarjeta en gris, sin interacción */
+            .prod-card.agotado {
+                filter: grayscale(1);
+                opacity: 0.6;
+            }
+            .prod-card.agotado:hover {
+                transform: none;
+                box-shadow: none;
+                border-color: #e8e0d4;
+            }
+            .prod-card.agotado .btn-add {
+                cursor: not-allowed;
+            }
+            .badge-agotado {
+                display: inline-block;
+                background: #888;
+                color: #fff;
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: .06em;
+                text-transform: uppercase;
+                padding: 3px 10px;
+                border-radius: 20px;
+            }
             .prod-card-img {
                 width: 100%; height: 160px;
                 object-fit: cover;
@@ -275,8 +300,8 @@
             <?php foreach ($grupos as $categoria => $items): ?>
                 <h3 class="cat-titulo"><?= hv($categoria) ?></h3>
                 <div class="productos-grid">
-                    <?php foreach ($items as $p): ?>
-                    <div class="prod-card">
+                    <?php foreach ($items as $p): $agotado = ($p['estado'] === 'Agotado'); ?>
+                    <div class="prod-card<?= $agotado ? ' agotado' : '' ?>">
                         <img class="prod-card-img"
                             src="<?= hv($p['img']) ?>"
                             alt="<?= hv($p['nombre']) ?>"  
@@ -287,7 +312,9 @@
                         </div>
                         <div class="prod-card-footer">
                             <span class="prod-card-precio"><?= formatCOP($p['valor']) ?></span>
-                            <?php if (isset($_SESSION['id_usuario'])): ?>
+                            <?php if ($agotado): ?>
+                            <span class="badge-agotado">Agotado</span>
+                            <?php elseif (isset($_SESSION['id_usuario'])): ?>
                             <button type="button" class="btn-add" title="Agregar al carrito"
                                 onclick="agregarAlCarrito(
                                     <?= (int)$p['id'] ?>,
@@ -298,9 +325,9 @@
                                     this
                                 )">+</button>
                             <?php else: ?>
-                            <a href="/burguersoft/php/login.php">
-                                <button type="button" class="btn-add" title="Inicia sesión para agregar">🔒</button>
-                            </a>
+                                <button type="button" class="btn-add" title="Inicia sesión para agregar" onclick="irLoginConAviso('producto')">
+                                    <img src="../estilos/img/bloquear.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                                </button>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -322,6 +349,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+    function irLoginConAviso(tipo) {
+        window.location.href = '/burguersoft/php/login.php?aviso=' + tipo;
+    }
+    </script>
 
     <script src="/burguersoft/js/Menu.js?v=<?= time(); ?>"></script>
 
@@ -360,7 +393,7 @@
             <div class="footer-brand">
                 <div class="footer-brand-text">
                     <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;margin-top:-30px;">
-                        <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                        <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                         <hr>
                         <h3 style="margin:6px;">El Oriente</h3>
                     </div>

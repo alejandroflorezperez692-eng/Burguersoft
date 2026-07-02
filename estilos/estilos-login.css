@@ -32,7 +32,7 @@ body {
     background-image:
         radial-gradient(circle at 15% 25%, rgba(232, 130, 26, 0.10) 0%, transparent 55%),
         radial-gradient(circle at 85% 75%, rgba(200, 56, 42, 0.07) 0%, transparent 50%);
-    min-height: 100vh;
+    min-height: unset ;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -355,7 +355,7 @@ h2 {
 .card + * { flex: 1; }
 
 .contenedor-login {
-    flex: 1;                  
+    flex: 0;                  
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -420,6 +420,16 @@ body.modo-oscuro-accesible .input:focus {
     border-color: var(--color-primario) !important;
     background-color: #2d2d2d !important;
     box-shadow: 0 0 0 3px rgba(232, 130, 26, 0.20) !important;
+}
+
+body.modo-oscuro-accesible .input:-webkit-autofill,
+body.modo-oscuro-accesible .input:-webkit-autofill:hover,
+body.modo-oscuro-accesible .input:-webkit-autofill:focus,
+body.modo-oscuro-accesible .input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #2a2a2a inset !important;
+    -webkit-text-fill-color: #f0ebe3 !important;
+    caret-color: #f0ebe3 !important;
+    transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
 }
 
 body.modo-oscuro-accesible .link {

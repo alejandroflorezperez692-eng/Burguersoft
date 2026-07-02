@@ -5,6 +5,8 @@ require_once 'includes/funciones.php';
 if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificado'])) {
     redirigir('recuperar_contrasena.php');
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -91,6 +93,14 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
             user-select: none;
             transition: color .2s;
         }
+
+        .btn-toggle-pass:hover {
+            color: var(--color-oscuro, #2c1810);
+        }
+
+        body.dark-mode .btn-toggle-pass:hover {
+            color: #ffffff;
+        }
         
         #requisitos {
             list-style: none;
@@ -131,10 +141,11 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 </head>
 <body>
     <div class="navbar">
-        <img src="estilos/img/icono.png" class="logo" alt="Logo">
-        <a href="php/login.php" class="btn-regresar">[ Regresar ]</a>
+        <img src="estilos/img/icono1-oscuro.png" class="logo" alt="Logo">
+        <a href="php/login.php" class="btn-regresar">Regresar</a>
     </div>
 
+    <div class="contenedor-login">
     <div class="header-bar">NUEVA CONTRASEÑA</div>
 
     <div class="card" style="padding: 20px;"> <div class="icono" style="margin-bottom: 10px;">
@@ -148,10 +159,9 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
             <div class="campo">
                 <label for="password">NUEVA CONTRASEÑA*</label>
                 <div class="input-wrapper">
-                    <input type="password" id="password" name="password" required
+                    <input type="password" id="password" name="nueva_contrasena" required
                            placeholder="Mínimo 8 caracteres">
-                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('password', this)"
-                            onmouseover="this.style.color='#000000'" onmouseout="this.style.color='#E8821A'">
+                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('password', this)">
                         Mostrar
                     </button>
                 </div>
@@ -171,10 +181,9 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
             <div class="campo">
                 <label for="confirmar-password">CONFIRMAR CONTRASEÑA*</label>
                 <div class="input-wrapper">
-                    <input type="password" id="confirmar-password" required
+                    <input type="password" id="confirmar-password" name="confirmar_contrasena"  required
                            placeholder="Repite tu contraseña">
-                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('confirmar-password', this)"
-                            onmouseover="this.style.color='#000000'" onmouseout="this.style.color='#E8821A'">
+                    <button type="button" class="btn-toggle-pass" onclick="togglePassword('confirmar-password', this)">
                         Mostrar
                     </button>
                 </div>
@@ -183,6 +192,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
 
             <button type="submit" class="btn-primario">Cambiar contraseña</button>
         </form>
+    </div>
     </div>
 
     <div class="acc-panel" id="accPanel">
@@ -218,6 +228,42 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
     <script src="js/accesibilidad.js"></script>
 
     <script>
+            window.addEventListener('DOMContentLoaded', () => {
+        mostrarToastCodigo(' El codigo ha sido verficado, inserta tu nueva contraseña y confirmarla');
+    });
+
+    let _toastTimer = null;
+
+    function mostrarToastCodigo(mensaje) {
+        let toast = document.getElementById('toastCodigo');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastCodigo';
+            toast.style.cssText = `
+                position: fixed; top: 20px; left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                padding: 18px 28px; border-radius: 10px;
+                font-size: 14px; font-weight: 600;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+                opacity: 0; z-index: 99999;
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                pointer-events: none; max-width: 90%; text-align: center;
+                background: #2f2a1f; color: #ffffff;
+                border: 2.5px solid #E8821A;
+            `;
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = mensaje;
+        toast.style.opacity   = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => {
+            toast.style.opacity   = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        }, 3500);
+    }
     function togglePassword(inputId, btn) {
         const input = document.getElementById(inputId);
         if (input.type === 'password') {
@@ -321,7 +367,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
             <div class="footer-brand">
                 <div class="footer-brand-text">
                     <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                        <img src="estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                        <img src="estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                         <hr>
                         <h3 style="margin: 6px;">El Oriente</h3>
                     </div>

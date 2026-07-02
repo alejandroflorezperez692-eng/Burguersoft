@@ -92,7 +92,8 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 
 include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php'; 
 ?>
-
+<link rel="stylesheet" href="../estilos/accesibilidad.css?v=2">
+<script src="../estilos/accesibilidad.js"></script>
 <header>
     <div class="header-left">
         <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
@@ -122,6 +123,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
                 <span class="badge-carrito" id="badge-carrito">0</span>
             </div>
         </button>
+        <div id="toastBienvenida" class="toast-bienvenida"></div>
 
         <div class="cart-panel" id="cartPanel">
             <div class="cart-header-title">
@@ -217,6 +219,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
     </div>
 </header>
 
+<div id="toastBienvenida" class="toast-bienvenida"></div> 
+
 <?php if ($logueado && !empty($uModal)): ?>
 <?php 
 $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perfil'])) ? 'mp-show' : ''; 
@@ -275,7 +279,7 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
                 <span>Contraseña</span>
             </button>
             <button class="mp-tab" id="mpTabInfo" onclick="mpSwitchTab('info')">
-                <img class="mp-tab-icon" src="/burguersoft/estilos/img/usuario.png" alt="">
+                <img class="mp-tab-icon" src="/burguersoft/estilos/img/usuario..png" alt="">
                 <span>Cuenta</span>
             </button>
         </div>
@@ -495,7 +499,7 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
             <span id="factura-total" style="font-size:22px;font-weight:900;color:#EF9F27;"></span>
         </div>
         <div style="margin-top:16px;padding:10px 14px;background:#FFF8EE;border:1px solid #FAEEDA;border-radius:8px;font-size:11px;color:#7A6855;text-align:center;">
-            ¡Gracias por tu compra! 🍔 Este es un resumen antes de confirmar tu pedido.
+            ¡Gracias por tu compra! Este es un resumen antes de confirmar tu pedido.
         </div>
     </div>
     <div style="padding:0 24px 24px;display:flex;gap:10px;">
@@ -509,6 +513,31 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
 
 <style>
 body { overflow-x: hidden; width: 100%; }
+
+.toast-bienvenida {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: #2f2a1f;
+    color: #ffffff;
+    border: 2.5px solid #E8821A;
+    padding: 18px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    opacity: 0;
+    z-index: 9999;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+.toast-bienvenida.mostrar {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
 
 #modalFacturaOverlay {
     display: none;
@@ -574,6 +603,52 @@ body { overflow-x: hidden; width: 100%; }
 .subtotal strong{color:#000;font-size:24px}
 .btn-checkout{width:100%;padding:14px;border:none;border-radius:4px;background:#ccc;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:not-allowed}
 .btn-checkout:not(:disabled){background:#ff5722;cursor:pointer}
+
+.cart-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.btn-pago {
+    grid-column: 1 / -1;
+}
+.btn-cart-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #E0D5C5;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #412a2a;
+    color: #7A6855;
+    transition: all 0.2s ease;
+}
+.btn-cart-action:hover {
+    background-color: #665050;
+    color: #EF9F27;
+    transform: translateY(-1px);
+}
+.btn-vaciar:hover {
+    background-color: #665050;
+    color: #C0392B;
+}
+.btn-pago {
+    background-color: #412a2a;
+    color: #BA7517;
+}
+.btn-pago:hover {
+    background-color: #665050;
+    color: #412402;
+}
+.btn-checkout {
+    margin-top: 5px;
+}
 
 .cart-actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .btn-pago{grid-column:1 / -1;}
@@ -687,9 +762,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+    function mostrarToastalerta(mensaje) {
+        let toast = document.getElementById('toastCodigo');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastCodigo';
+            toast.style.cssText = `
+                position: fixed; top: 20px; left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                padding: 18px 28px; border-radius: 10px;
+                font-size: 14px; font-weight: 600;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+                opacity: 0; z-index: 99999;
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                pointer-events: none; max-width: 90%; text-align: center;
+                background: #2f2a1f; color: #f6f5f2;
+                border: 2.5px solid #E8821A;
+            `;
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = mensaje;
+        toast.style.opacity   = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => {
+            toast.style.opacity   = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        }, 3500);
+    }
+
 function verFactura() {
     if (!carrito || carrito.length === 0) {
-        alert('El carrito está vacío.');
+        mostrarToastalerta('El carrito está vacío.');
         return;
     }
 
@@ -729,10 +835,18 @@ function imprimirFactura() {
     window.print();
 }
 
+let _toastTimer = null;
+
 function vaciarCarrito() {
-    if (!confirm('¿Estás seguro de que deseas vaciar el carrito?')) return;
+    if (!carrito || carrito.length === 0) {
+        mostrarToastalerta('No hay productos en el carrito para vaciarlo.');
+    return;
+    }
+    if (!confirm('¿Estás seguro de que deseas vaciar el carrito?')) 
+        return;
     carrito = [];
     if (typeof actualizarCarrito === 'function') actualizarCarrito();
+    mostrarToastalerta('Tu carrito ha sido vaciado.');
 }
 
 function abrirModalPerfil() {
@@ -784,4 +898,26 @@ function togglePanel() {
     document.getElementById('accPanel').classList.toggle('open');
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const params  = new URLSearchParams(window.location.search);
+    const toast   = params.get('toast');
+    const toastEl = document.getElementById('toastBienvenida');
+
+    if (toastEl && toast) {
+        const mensajes = {
+            login_ok:  '¡Has iniciado sesión correctamente!',
+            logout_ok: 'Has cerrado sesión correctamente.'
+        };
+
+        if (mensajes[toast]) {
+            toastEl.textContent = mensajes[toast];
+            setTimeout(() => toastEl.classList.add('mostrar'), 100);
+            setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
+
+            const url = new URL(window.location.href);
+            url.searchParams.delete('toast');
+            window.history.replaceState({}, '', url);
+        }
+    }
+});
 </script>

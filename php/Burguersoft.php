@@ -23,6 +23,11 @@ $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
 
 function formatCOP($valor) {
     return '$' . number_format((float)$valor, 0, ',', '.');
+    
+}
+if (isset($_SESSION['logout_exitoso'])) {
+    echo "<script>alert('Sesión cerrada correctamente');</script>";
+    unset($_SESSION['logout_exitoso']);
 }
 ?>
 <!DOCTYPE html>
@@ -111,7 +116,7 @@ function formatCOP($valor) {
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;margin-top:-30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin:6px;">El Oriente</h3>
                 </div>
@@ -191,10 +196,10 @@ async function cargarPromociones() {
                         ${SESION_ACTIVA
                             ? `<button class="btn-circular-add" title="Agregar al carrito">+</button>`
                             : `<button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
-                                   onclick="window.location.href='/burguersoft/php/login.php'">
-                                   <img src="../estilos/img/bloquear.png"
-                                        style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
-                               </button>`
+                                onclick="irLoginConAviso('promo')">
+                                <img src="../estilos/img/bloquear.png"
+                                style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                            </button>`
                         }
                     </div>
                 </div>`;
@@ -216,6 +221,9 @@ async function cargarPromociones() {
         grid.innerHTML = '<p style="padding:20px;color:#888;grid-column:1/-1">No se pudieron cargar las promociones.</p>';
         console.error(e);
     }
+}
+function irLoginConAviso(tipo) {
+    window.location.href = '/burguersoft/php/login.php?aviso=' + tipo;
 }
 </script>
 

@@ -17,13 +17,15 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Recuperar Contraseña</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1.png" type="image/x-icon">
 </head>
 <body>
     <div class="navbar">
-        <img src="../estilos/img/icono.png" class="logo">
-        <a href="login.php" class="btn-regresar">[ Regresar ]</a>
+        <img src="../estilos/img/icono1-oscuro.png" class="logo">
+        <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
+
+    <div class="contenedor-login">
 
     <div class="header-bar">¿TIENES PROBLEMAS?</div>
 
@@ -45,7 +47,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 
         <form method="POST" action="../procesar_recuperacion.php">
             <input id="rec-email" name="correo" type="email" class="input"
-                   placeholder="Correo electrónico (obligatorio)" required>
+                   placeholder="Correo electrónico (obligatorio)" required autocomplete="off">
             <button type="submit" class="btn-primario">Enviar código de recuperación</button>
         </form>
 
@@ -58,6 +60,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
         </div>
 
         <a href="/burguersoft/php/registro.php" class="btn-secundario">Crear cuenta nueva</a>
+    </div>
     </div>
 
 <div class="acc-panel" id="accPanel">
@@ -90,12 +93,51 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
 <script src="../js/accesibilidad.js"></script>
 
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        mostrarToastRecuperar('Ingresa tu correo para recuperar tu contraseña.');
+    });
+
+    let _toastRecTimer = null;
+
+    function mostrarToastRecuperar(mensaje) {
+        let toast = document.getElementById('toastRecuperar');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastRecuperar';
+            toast.style.cssText = `
+                position: fixed; top: 20px; left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                padding: 18px 2.5px; border-radius: 10px;
+                font-size: 14px; font-weight: 600;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+                opacity: 0; z-index: 99999;
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                pointer-events: none; max-width: 90%; text-align: center;
+                background: #2f2a1f; color: #f4f3f2;
+                border: 1px solid #E8821A;
+            `;
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = mensaje;
+        toast.style.opacity   = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+
+        if (_toastRecTimer) clearTimeout(_toastRecTimer);
+        _toastRecTimer = setTimeout(() => {
+            toast.style.opacity   = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        }, 3500);
+    }
+</script>
+
     <footer>
     <div class="footer-container">
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>
                 </div>

@@ -1,4 +1,4 @@
-    <?php
+<?php
     session_start();
     require_once __DIR__ . '/../includes/conexion.php';
     require_once __DIR__ . '/../includes/funciones.php';

@@ -30,12 +30,12 @@ $paginaActiva = 'oriente';
 <section class="nosotros-ubicacion">
     <h2 class="section-title">¿Dónde nos encontramos?</h2><br>
     <p class="section-text">Encuéntranos en el corazón de Sogamoso. Ven y disfruta de nuestros deliciosos platos en un ambiente acogedor y familiar.</p><br>
-    <p class="section-text">Calle 9a #1a-47, Barrio El Oriente</p>
+    <p class="section-text">Calle 9 #1A-43, Barrio El Oriente</p>
     <p class="section-text">Sogamoso, Boyacá</p><br>
     <p class="section-text">¡Te esperamos con el mejor sabor de la ciudad!</p>
 </section>
 <section class="map-content">
-    <iframe class="nosotros-map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d997.0558698401526!2d-72.92006585457908!3d5.708015928459993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1ses-419!2sco!4v1764791648761!5m2!1ses-419!2sco" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1211.7190490619414!2d-72.92133471077832!3d5.707706883119887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e6a45e9b0c4a911%3A0x995f54933198b328!2sCl.%209%20%23%201A-43%2C%20Sogamoso%2C%20Boyac%C3%A1!5e1!3m2!1ses-419!2sco!4v1782927865632!5m2!1ses-419!2sco" width="1450" height="650" style="border:0; border-radius: 35px;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </section>
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
@@ -72,7 +72,7 @@ $paginaActiva = 'oriente';
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style =" display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>
                 </div>

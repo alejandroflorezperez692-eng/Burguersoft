@@ -11,7 +11,7 @@
     --color-acento:      #f5a623;
     --color-alertas:     #C8382A;
     --color-fondo:       #fdf8f0;
-    --color-fondo-alt:   #f7f0e4;
+    --color-fondo-alt:   #1a0000;
     --color-texto:       #1a1008;
     --color-texto-suave: #6b4c38;
     --color-borde:       rgba(232, 130, 26, 0.25);
@@ -79,7 +79,7 @@ header {
 .logo {
     width: 90px;
     height: 90px;
-    background-image: url('img/icono.png');
+    background-image: url('img/icono1-oscuro.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -143,12 +143,12 @@ header hr {
     width: 0;
     height: 2px;
     background: var(--color-secundario);
-    transition: width var(--transicion);  /* ← esto faltaba */
+    transition: width var(--transicion); 
 }
 .header-center a:hover,
 .header-center a.activo {
     color: var(--color-acento);
-    background: var(--color-primario);
+    background: transparent;
 }
 
 .header-center a:hover::after,
@@ -492,7 +492,7 @@ header hr {
     max-width: 680px;
     height: 70%;
     border-radius: 20px;
-    box-shadow: 4px 4px 14px 14px rgba(44, 24, 16, 0.3);
+    box-shadow: 4px 4px 14px 14px rgba(209, 0, 0, 0.3);
     object-fit: cover;
     transition: transform 0.55s ease, box-shadow 0.55s ease;
 }
@@ -500,7 +500,7 @@ header hr {
 .nosotros-img img:hover,
 .nosotros-img:hover img {
     transform: scale(1.04) rotate(-0.5deg);
-    box-shadow: 4px 4px 14px 14px rgba(44, 24, 16, 0.2);
+    box-shadow: 4px 4px 14px 14px rgba(255, 72, 0, 0.2);
 }
 .nosotros-ubicacion {
     display: flex;

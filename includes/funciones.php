@@ -44,15 +44,17 @@ function iniciarSesionSegura(): void {
 
 function requerirLogin(): void {
     iniciarSesionSegura();
+
     if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/php/login.php');
+
+    if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/login.php');
+
 }
 
 function requerirAdmin(): void {
     requerirLogin();
+
     if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador') {
-        // ⚠️ AJUSTA ESTA RUTA: debe apuntar a la página del CLIENTE
-        // (la que muestra "Mis Pedidos"), NUNCA a Menu.php ni a otra
-        // página que también llame a requerirAdmin().
         redirigir('/burguersoft/php/login.php');
     }
 }
@@ -64,11 +66,12 @@ function jsonResponse(mixed $data, int $code = 200): never {
     exit;
 }
 
-function calcularEstadoStock(int $cantidad): string {
+function estadoProductoPorCantidad(int $cantidad): string {
     if ($cantidad <= 0) return 'Agotado';
-    if ($cantidad <= 5)  return 'Por agotarse';
+    if ($cantidad <= 5) return 'Por agotarse';
     return 'Disponible';
 }
+
 
 function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
     $s = $pdo->prepare("SELECT cantidad FROM producto WHERE id = ?");
@@ -78,3 +81,14 @@ function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
     $pdo->prepare("UPDATE producto SET estado = ? WHERE id = ?")
         ->execute([$estado, $producto_id]);
 }   
+
+function registrarBitacora(PDO $pdo, int $usuario_id, string $modulo, string $descripcion): void {
+    if (!$usuario_id) return;
+    try {
+        $pdo->prepare("INSERT INTO historial (usuario_id, modulo, descripcion) VALUES (?,?,?)")
+            ->execute([$usuario_id, $modulo, $descripcion]);
+    } catch (Throwable $e) {
+    }
+}
+?>
+

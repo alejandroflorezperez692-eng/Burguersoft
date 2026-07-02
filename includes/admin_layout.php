@@ -7,7 +7,8 @@ $esAdmin     = $rolAdmin === 'Administrador';
 ?>
 <div class="sidebar">
     <div class="sidebar-header">
-        <img src="../estilos/img/icono1.png" alt="Logo" class="logo">
+        <img src="../estilos/img/icono1.png" alt="Logo" class="logo logo-claro">
+        <img src="../estilos/img/icono1-oscuro.png" alt="Logo" class="logo logo-oscuro">
         <hr class="sidebar-divider">
         <span class="nom-local">El Oriente</span>
     </div>
@@ -88,7 +89,7 @@ $esAdmin     = $rolAdmin === 'Administrador';
 <nav class="header-nav">
 
     <a href="../php/config_cuenta.php" class="nav-item <?= $navActivo === 'config_cuenta' ? 'active' : '' ?> admin-name ">
-        <img src="../estilos/img/usuario.png" class="icono-sidebar" alt="perfil">
+        <img src="../estilos/img/usuario..png" class="icono-sidebar-perfil" alt="perfil">
         <span><?= htmlspecialchars($nombreAdmin) ?></span>
     </a>
     <a href="../php/logout.php" class="nav-item nav-logout">

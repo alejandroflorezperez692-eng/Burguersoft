@@ -75,15 +75,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
     <script src="../js/Registro.js" defer></script>
+    <style>
+        .btn-toggle-password:hover {
+            color: var(--color-oscuro);
+        }
+
+        body.dark-mode .btn-toggle-password:hover {
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
 
     <div class="navbar">
-        <img src="../estilos/img/icono.png" class="logon">
-        <button class="boton-regresar" onclick="history.back()">[ Regresar ]</button>
+        <img src="../estilos/img/icono1-oscuro.png" class="logo">
+        <a href="login.php" class="btn-regresar">Regresar</a>
     </div>
 
-    <form id="registroForm">
+    <form id="registroForm" autocomplete="off">
         <div class="contenedor">
             <div class="encabezado">
                 <h2 style="text-align: center;">CREAR UNA CUENTA</h2>
@@ -100,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" id="nombre" name="nombre" placeholder="Digite su nombre"
                         pattern="[A-Za-z0-9]+"
                         maxlength="15"
+                        autocomplete="off"
                         oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]/g, '');
                         this.value = this.value.toLowerCase().replace(/^./, c => c.toUpperCase());"
                         required>
@@ -109,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" id="apellido" name="apellido" placeholder="Digite su apellido"
                         pattern="[A-Za-záéíóúÁÉÍÓÚñÑ]+"
                         maxlength="15"
+                        autocomplete="off"
                         oninput="this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ ]/g, ''); this.value = this.value.toLowerCase().replace(/^./, function(c){ return c.toUpperCase(); });"
                         required>
                 </div>
@@ -130,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="campo">
                     <label for="Ndocumento">Número Documento*</label>
                     <input type="text" id="Ndocumento" name="numero_documento"
-                           placeholder="Digite su número de documento" required>
+                           placeholder="Digite su número de documento" autocomplete="off" required>
                 </div>
             </div>
 
@@ -139,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="correo">CORREO*</label>
                     <input type="email" id="correo" name="correo" 
                         placeholder="ejemplo@gmail.com" 
-                        autocomplete="email"
+                        autocomplete="off"
                         required>
                 </div>
             </div>
@@ -151,12 +162,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         placeholder="Mínimo 8 caracteres"
                         oninput="evaluarPassword(this.value); verificarCoincidencia();"
                         style="padding-right:80px; width:100%;">
-                    <button type="button" onclick="togglePassword('password', this)"
-                        onmouseover="this.style.color='#000000'"
-                        onmouseout="this.style.color='#E8821A'"
+                    <button type="button" class="btn-toggle-password" onclick="togglePassword('password', this)"
                         style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
                             background:none; border:none; cursor:pointer; font-size:13px;
-                            font-weight:700; color:#E8821A;">
+                            font-weight:700; color:#E8821A; transition: color 0.2s;">
                         Mostrar
                     </button>
                 </div>
@@ -179,9 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         placeholder="Repite tu contraseña"
                         oninput="verificarCoincidencia()"
                         style="padding-right:80px; width:100%;">
-                    <button type="button" onclick="togglePassword('confirmar-password', this)"
-                        onmouseover="this.style.color='#000000'"
-                        onmouseout="this.style.color='#E8821A'"
+                    <button type="button" class="btn-toggle-password" onclick="togglePassword('confirmar-password', this)"
                         style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
                             background:none; border:none; cursor:pointer; font-size:13px;
                             font-weight:700; color:#E8821A;">
@@ -262,7 +269,7 @@ function configurarDocumento(limpiar) {
         <div class="footer-brand">
             <div class="footer-brand-text">
                 <div style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 10px; margin-top: -30px;">
-                    <img src="../estilos/img/icono.png" alt="Logo de El Oriente" class="footer-logo">
+                    <img src="../estilos/img/icono1-oscuro.png" alt="Logo de El Oriente" class="footer-logo">
                     <hr>
                     <h3 style="margin: 6px;">El Oriente</h3>
                 </div>

@@ -758,6 +758,49 @@ function prepararEdicion(id, nombre, imagen, tel, mail, nit, estado) {
     document.getElementById('modalMarca').classList.add('show');
 }
 
+
+let _toastMarcaTimer = null;
+
+function mostrarToastMarca(mensaje, tipo = 'ok') {
+    let toast = document.getElementById('toastMarca');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastMarca';
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            padding: 18px 28px; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0; z-index: 99999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none; max-width: 90%; text-align: center;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    if (tipo === 'ok') {
+        toast.style.background = '#2f2a1f';
+        toast.style.color      = '#ffffff';
+        toast.style.border     = '2.5px solid #E8821A';
+    } else {
+        toast.style.background = '#2f1f1f';
+        toast.style.color      = '#e63946';
+        toast.style.border     = '1px solid #e63946';
+    }
+
+    toast.textContent = mensaje;
+    toast.style.opacity   = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    if (_toastMarcaTimer) clearTimeout(_toastMarcaTimer);
+    _toastMarcaTimer = setTimeout(() => {
+        toast.style.opacity   = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3500);
+}
+
+
 async function guardarMarca() {
     const nombre   = document.getElementById('m-nombre').value.trim();
     const imagen   = document.getElementById('m-imagen').value.trim();
@@ -765,20 +808,58 @@ async function guardarMarca() {
     const correo   = document.getElementById('m-correo').value.trim();
     const nit      = document.getElementById('m-nit').value.trim();
     const estado   = document.getElementById('m-estado').value.trim();
-    if (!nombre || !imagen || !nit) return alert('Nombre, imagen y NIT son obligatorios.');
+
+    if (!nombre || !imagen || !nit) {
+        mostrarToastMarca('⚠ Nombre, imagen y NIT son obligatorios.', 'error');
+        return;
+    }
+
     const datos  = { nombre, img: imagen, telefono, correo, nit, estado };
     const url    = editIdMarca ? `${API_M}?id=${editIdMarca}` : API_M;
     const method = editIdMarca ? 'PUT' : 'POST';
-    const res = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(datos) });
-    if (res.ok) { cerrarModal(); mostrarMarcas(); }
-    else alert(editIdMarca ? 'Error al actualizar.' : 'Error al agregar.');
+
+    try {
+        const res = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+
+        if (res.ok) {
+            const eraEdicion = editIdMarca !== null;
+            cerrarModal();
+            mostrarMarcas();
+            const msg = eraEdicion
+                ? ' Marca actualizada.'
+                : ' Marca agregada.';
+            mostrarToastMarca(msg, 'ok');
+        } else {
+            const msg = editIdMarca
+                ? '⚠ Error al actualizar la marca.'
+                : '⚠ Error al agregar la marca.';
+            mostrarToastMarca(msg, 'error');
+        }
+    } catch (e) {
+        mostrarToastMarca('⚠ Error de conexión.', 'error');
+    }
 }
+
 
 async function eliminarMarca(id) {
     if (!confirm('¿Eliminar esta marca?')) return;
-    const res = await fetch(`${API_M}?id=${id}`, { method: 'DELETE' });
-    if (res.ok) mostrarMarcas();
-    else alert('Error: puede estar en uso.');
+
+    try {
+        const res = await fetch(`${API_M}?id=${id}`, { method: 'DELETE' });
+
+        if (res.ok) {
+            mostrarMarcas();
+            mostrarToastMarca(' Marca eliminada.');
+        } else {
+            mostrarToastMarca('⚠ Error: la marca puede estar en uso.', 'error');
+        }
+    } catch (e) {
+        mostrarToastMarca('⚠ Error de conexión.', 'error');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', mostrarMarcas);

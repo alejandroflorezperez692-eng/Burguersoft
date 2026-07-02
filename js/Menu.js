@@ -175,8 +175,8 @@ async function enviarPedido(datos) {
         carrito = [];
         guardarCarrito();
         actualizarCarrito();
+        alert('¡Compra confirmada! Tu pedido #' + ultimaVentaId + ' fue registrado.');
 
-        alert('¡Compra confirmada! Tu pedido fue registrado.');
     } catch (e) {
         console.error('Error al enviar el pedido', e);
         alert('Error de conexión al confirmar la compra. Intenta de nuevo.');
@@ -265,3 +265,4 @@ function volverSubmenu(id) {
     const submenu = document.getElementById('submenu-' + id);
     if (submenu) submenu.style.display = 'none';
 }
+

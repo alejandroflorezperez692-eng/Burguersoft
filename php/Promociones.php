@@ -426,7 +426,6 @@ $navActivo = 'promociones';
             document.getElementById('fecha_inicio').min = hoy;
             document.getElementById('fecha_fin').min = hoy;
 
-            // Ademas, cuando cambie fecha_inicio, fecha_fin no puede ser menor
             document.getElementById('fecha_inicio').addEventListener('change', function() {
                 document.getElementById('fecha_fin').min = this.value;
             });
@@ -614,6 +613,48 @@ function abrirModal() {
 
 function cerrarModal() { document.getElementById('formulario').classList.remove('show'); editandoId = null; seleccionados.clear(); }
 
+let _toastMpTimer = null;
+
+function mostrarToastMp(mensaje, tipo = 'ok') {
+    let toast = document.getElementById('toastMp');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastMp';
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            padding: 18px 28px; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0; z-index: 99999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none; max-width: 90%; text-align: center;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    if (tipo === 'ok') {
+        toast.style.background = '#2f2a1f';
+        toast.style.color      = '#ffffff';
+        toast.style.border     = '2.5px solid #E8821A';
+    } else {
+        toast.style.background = '#2f1f1f';
+        toast.style.color      = '#e63946';
+        toast.style.border     = '1px solid #e63946';
+    }
+
+    toast.textContent = mensaje;
+    toast.style.opacity   = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    if (_toastMpTimer) clearTimeout(_toastMpTimer);
+    _toastMpTimer = setTimeout(() => {
+        toast.style.opacity   = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3500);
+}
+
+
 async function editarPromo(id) {
     const promo = promociones.find(p => p.id === id);
     if (!promo) return;
@@ -645,19 +686,31 @@ async function eliminarPromo(id) {
     try {
         const res  = await fetch(`${CTRL}?id=${id}`, { method: 'DELETE' });
         const data = await res.json();
-        if (data.success) cargarPromos(); else alert('Error: ' + (data.error || ''));
-    } catch (e) { alert('Error de conexión'); }
+        if (data.success) {
+            cargarPromos();
+            mostrarToastPromo(' Promoción eliminada.');
+        } else {
+            mostrarToastPromo('⚠ Error: ' + (data.error || 'No se pudo eliminar.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastPromo('⚠ Error de conexión.', 'error');
+    }
 }
 
 async function guardarPromo() {
-    const nombre      = document.getElementById('nombre').value.trim();
-    const descripcion = document.getElementById('descripcion').value.trim();
-    const precio      = document.getElementById('precio').value;
+    const nombre       = document.getElementById('nombre').value.trim();
+    const descripcion  = document.getElementById('descripcion').value.trim();
+    const precio       = document.getElementById('precio').value;
     const fecha_inicio = document.getElementById('fecha_inicio').value;
     const fecha_fin    = document.getElementById('fecha_fin').value;
-    const imagenFile  = document.getElementById('imagen').files[0];
+    const imagenFile   = document.getElementById('imagen').files[0];
 
-    if (!nombre || !precio) { alert('Nombre y precio son obligatorios'); return; }
+    if (!nombre || !precio) {
+        mostrarToastPromo('⚠ Nombre y precio son obligatorios', 'error');
+        return;
+    }
+
+
 
     const fd = new FormData();
     fd.append('nombre', nombre);
@@ -668,10 +721,8 @@ async function guardarPromo() {
     fd.append('fecha_fin', fecha_fin);
     fd.append('productos_ids', JSON.stringify([...seleccionados]));
     if (imagenFile) fd.append('imagen', imagenFile);
+    if (editandoId) fd.append('_method', 'PUT');
 
-    if (editandoId) {
-        fd.append('_method', 'PUT');
-    }
 
     const url    = editandoId ? `${CTRL}?id=${editandoId}` : CTRL;
     const method = 'POST';
@@ -679,9 +730,66 @@ async function guardarPromo() {
     try {
         const res  = await fetch(url, { method, body: fd });
         const data = await res.json();
-        if (data.success || data.id) { cerrarModal(); cargarPromos(); }
-        else alert('Error: ' + (data.error || ''));
-    } catch (e) { alert('Error de conexión'); }
+if (data.success || data.id) {
+    
+    const eraEdicion = editandoId !== null;
+    
+    cerrarModal();
+    cargarPromos();
+    
+    const msg = eraEdicion
+        ? ' Promoción actualizada.'
+        : ' Promoción guardada.';
+    mostrarToastPromo(msg, 'ok');
+}else {
+            mostrarToastPromo('⚠ Error: ' + (data.error || 'Inténtalo de nuevo.'), 'error');
+        }
+    } catch (e) {
+        mostrarToastPromo('⚠ Error de conexión.', 'error');
+    }
+}
+
+
+let _toastPromoTimer = null;
+
+function mostrarToastPromo(mensaje, tipo = 'ok') {
+    let toast = document.getElementById('toastPromo');
+
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastPromo';
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            padding: 14px 24px; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0; z-index: 99999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none; max-width: 90%; text-align: center;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    if (tipo === 'ok') {
+        toast.style.background = '#2f2a1f';
+        toast.style.color      = '#F2A93B';
+        toast.style.border     = '1px solid #E8821A';
+    } else {
+        toast.style.background = '#2f1f1f';
+        toast.style.color      = '#e63946';
+        toast.style.border     = '1px solid #e63946';
+    }
+
+    toast.textContent = mensaje;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    if (_toastPromoTimer) clearTimeout(_toastPromoTimer);
+    _toastPromoTimer = setTimeout(() => {
+        toast.style.opacity   = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    }, 3500);
 }
 
 document.getElementById('imagen').addEventListener('change', e => {
