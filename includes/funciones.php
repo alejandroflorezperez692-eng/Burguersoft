@@ -45,20 +45,14 @@ function iniciarSesionSegura(): void {
 function requerirLogin(): void {
     iniciarSesionSegura();
 
-    
     if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/php/login.php');
-
-    if (empty($_SESSION['id_usuario'])) redirigir('/burguersoft/login.php');
-
 }
 
 function requerirAdmin(): void {
     requerirLogin();
 
-   
-
     if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador') {
-        redirigir('/burguersoft/php/inicio_admin.php');
+        redirigir('/burguersoft/php/login.php');
     }
 }
 
@@ -74,6 +68,15 @@ function estadoProductoPorCantidad(int $cantidad): string {
     if ($cantidad <= 5) return 'Por agotarse';
     return 'Disponible';
 }
+
+function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
+    $s = $pdo->prepare("SELECT cantidad FROM producto WHERE id = ?");
+    $s->execute([$producto_id]);
+    $cantidad = (int)$s->fetchColumn();
+    $estado   = estadoProductoPorCantidad($cantidad);
+    $pdo->prepare("UPDATE producto SET estado = ? WHERE id = ?")
+        ->execute([$estado, $producto_id]);
+}   
 
 function registrarBitacora(PDO $pdo, int $usuario_id, string $modulo, string $descripcion): void {
     if (!$usuario_id) return;

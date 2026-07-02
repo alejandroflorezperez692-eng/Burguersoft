@@ -11,14 +11,6 @@ $id     = (int)($_GET['id'] ?? 0);
 
 $ESTADOS_VALIDOS = ['Pagado', 'Cancelado', 'Reembolsada', 'Rechazada'];
 
-function actualizarEstadoProducto(PDO $pdo, int $producto_id): void {
-    $s = $pdo->prepare("SELECT cantidad FROM producto WHERE id = ?");
-    $s->execute([$producto_id]);
-    $cantidad = (int)$s->fetchColumn();
-    $estado   = estadoProductoPorCantidad($cantidad);
-    $pdo->prepare("UPDATE producto SET estado = ? WHERE id = ?")->execute([$estado, $producto_id]);
-}
-
 function restaurarStockVenta(PDO $pdo, int $venta_id): void {
     $s = $pdo->prepare("SELECT producto_id, cantidad FROM detalle_venta WHERE venta_id = ?");
     $s->execute([$venta_id]);
@@ -123,12 +115,12 @@ if ($method === 'GET') {
     }
 
     jsonResponse($pdo->query("
-        SELECT v.id, v.fecha, v.valor_total, v.metodo_pago, v.estado,
+        SELECT v.id, v.fecha, v.valor_total, v.metodo_pago, v.estado, v.tipo_entrega,
                u.nombre AS nombre_usuario, u.apellido AS apellido_usuario,
                v.usuario_id
         FROM venta v
         LEFT JOIN usuario u ON u.id = v.usuario_id
-        ORDER BY v.fecha DESC
+        ORDER BY v.id DESC  
     ")->fetchAll());
 }
 
@@ -138,8 +130,13 @@ if ($method === 'POST') {
     $items      = $body['items']      ?? [];
     $promos     = $body['promociones'] ?? [];
     $usuario_id = (int)($_SESSION['id_usuario'] ?? 0);
+    $tipo_entrega  = limpiar($body['tipo_entrega'] ?? 'Recoger');
+    $tipos_validos = ['Domicilio', 'Recoger', 'Consumir'];
+    if (!in_array($tipo_entrega, $tipos_validos)) {
+        $tipo_entrega = 'Recoger';
+    }
 
-    if (!$metodo || (empty($items) && empty($promos)))
+  if (!$metodo || (empty($items) && empty($promos)))
         jsonResponse(['error' => 'Faltan datos de la venta'], 400);
 
     $metodos_validos = ['Efectivo','Tarjeta','Transferencia','Nequi','Daviplata'];
@@ -216,8 +213,8 @@ if ($method === 'POST') {
             }
         }
 
-        $pdo->prepare("INSERT INTO venta (valor_total, metodo_pago, estado, usuario_id) VALUES (?,?,?,?)")
-            ->execute([$total, $metodo, 'Pagado', $usuario_id]);
+        $pdo->prepare("INSERT INTO venta (valor_total, metodo_pago, estado, usuario_id, tipo_entrega) VALUES (?,?,?,?,?)")
+            ->execute([$total, $metodo, 'En cocina', $usuario_id, $tipo_entrega]);
         $venta_id = (int)$pdo->lastInsertId();
 
         $insDetalle = $pdo->prepare("
@@ -303,13 +300,32 @@ if ($method === 'PUT') {
     $estado = limpiar($body['estado']      ?? '');
     $metodo = limpiar($body['metodo_pago'] ?? '');
 
-    if ($estado && !in_array($estado, $ESTADOS_VALIDOS))
-        jsonResponse(['error' => 'Estado de venta inválido'], 400);
+    if (!$estado && !$metodo) jsonResponse(['error' => 'Sin datos para actualizar'], 400);
 
-    $sActual = $pdo->prepare("SELECT estado FROM venta WHERE id = ?");
-    $sActual->execute([$id]);
-    $estadoActual = $sActual->fetchColumn();
-    if ($estadoActual === false) jsonResponse(['error' => 'Venta no encontrada'], 404);
+    $estados_validos = [
+        'En cocina','En barra','Pendiente de pago','Entregado','Pagado','Cancelado',
+        'Listo','En camino',
+        'Listo para recoger'
+    ];
+    if ($estado && !in_array($estado, $estados_validos))
+        jsonResponse(['error' => 'Estado inválido'], 400);
+
+    $sVenta = $pdo->prepare("SELECT estado, usuario_id FROM venta WHERE id = ?");
+    $sVenta->execute([$id]);
+    $venta = $sVenta->fetch();
+    if (!$venta) jsonResponse(['error' => 'Venta no encontrada'], 404);
+
+    $estadoActual = $venta['estado'];
+
+    $esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
+    if (!$esAdmin) {
+        if ((int)$venta['usuario_id'] !== (int)$_SESSION['id_usuario'])
+            jsonResponse(['error' => 'No autorizado'], 403);
+        if ($estado !== 'Cancelado' || $metodo)
+            jsonResponse(['error' => 'Solo puedes cancelar tu pedido'], 403);
+        if (!in_array($estadoActual, ['En cocina','En barra','Pendiente de pago']))
+            jsonResponse(['error' => 'Este pedido ya no se puede cancelar'], 409);
+    }
 
     $campos = [];
     $vals   = [];

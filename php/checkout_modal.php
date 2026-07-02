@@ -35,7 +35,7 @@ if ($logueado): ?>
                  fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            Entrega a domicilio &mdash; tiempo estimado: <strong>30&ndash;45 min</strong>
+            Entrega a domicilio &mdash; tiempo estimado: <strong>30 - 45 min</strong>
         </div>
 
         <div class="co-fieldset">
@@ -137,7 +137,7 @@ if ($logueado): ?>
                      fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
-                Recoge tu pedido en el local &mdash; te avisamos cuando este listo
+                Recoge tu pedido en el local &mdash; Te avisamos cuando este listo
             </div>
 
             <div class="co-fieldset">
@@ -190,13 +190,14 @@ if ($logueado): ?>
                      fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2"/><path d="M7 2v20"/><path d="M21 15V2s-5 2-5 7v6"/>
                 </svg>
-                Consumiras en el restaurante &mdash; bienvenido
+                Consumiras en el restaurante &mdash; Bienvenido
             </div>
 
             <div class="co-fieldset">
                 <label class="co-label">Numero de mesa <span class="co-req">*</span></label>
-                <input type="number" id="co-res-mesa" class="co-input"
-                       placeholder="Ej: 5" min="1" max="50"/>
+                <input type="text" id="co-res-mesa" class="co-input"
+                    placeholder="Mesa (1 al 7)" maxlength="1"
+                    oninput="this.value = this.value.replace(/[^1-7]/g, '');"/>
                 <span class="co-hint" id="co-res-mesa-hint"></span>
             </div>
 
@@ -415,7 +416,7 @@ function confirmarPedido(modo) {
         if (!nombre) ok = false;
 
         if (!telReg.test(tel)) {
-            setHint('co-dom-tel-hint', 'Ingresa un numero colombiano valido (ej: 3001234567)');
+            setHint('co-dom-tel-hint', 'Ingresa un numero valido (ej: 3001234567)');
             ok = false;
         } else {
             setHint('co-dom-tel-hint', '');
@@ -486,7 +487,7 @@ function confirmarPedido(modo) {
             if (!nombre) ok = false;
 
             if (!telReg.test(tel)) {
-                setHint('co-rec-tel-hint', 'Ingresa un numero colombiano valido');
+                setHint('co-rec-tel-hint', 'Ingresa un numero valido');
                 ok = false;
             } else {
                 setHint('co-rec-tel-hint', '');

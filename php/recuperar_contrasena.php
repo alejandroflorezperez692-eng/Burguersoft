@@ -17,21 +17,18 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Recuperar Contraseña</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
+
     <link rel="icon" href="../estilos/img/icono1.png" type="image/x-icon">
     
     <style>
-        /* ========================================================
-           CORRECCIÓN ULTRA-PRIORITARIA PARA MODO CLARO (RECUPERAR)
-           ======================================================== */
-        
-        /* Hace que el texto "Entonces..." sea visible y legible en negro */
+      
         body:not(.dark-mode) .separador-contenedor .circulo {
             color: #000000 !important;
             font-weight: 700 !important;
-            background-color: #ffffff !important; /* Mantiene el fondo limpio detrás del texto */
+            background-color: #ffffff !important; 
         }
 
-        /* Hace que las líneas del separador sean más notorias */
+       
         body:not(.dark-mode) .separador-contenedor .linea {
             background-color: rgba(0, 0, 0, 0.25) !important;
             background: rgba(0, 0, 0, 0.25) !important;
@@ -39,24 +36,26 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
             display: block !important;
         }
 
-        /* Fuerza a que el botón Crear Cuenta tenga un borde naranja fuerte y visible desde el inicio */
+      
         body:not(.dark-mode) .btn-secundario {
             border: 2px solid #E8821A !important;
             color: #E8821A !important;
             font-weight: 700 !important;
-            background-color: transparent !important; /* Totalmente sin fondo desde el inicio */
+            background-color: transparent !important; 
             background: transparent !important;
             transition: color 0.2s ease, border-color 0.2s ease !important;
         }
 
-        /* Mantiene el botón sin fondo al pasar el mouse por encima (Hover) */
+       
         body:not(.dark-mode) .btn-secundario:hover {
             background-color: transparent !important;
             background: transparent !important;
-            color: #cf6f13 !important; /* Cambia a un naranja más oscurito para el efecto visual */
+            color: #cf6f13 !important; 
             border-color: #cf6f13 !important;
         }
     </style>
+
+    <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
 </head>
 <body>
     <div class="navbar">

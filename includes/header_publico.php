@@ -96,14 +96,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
 <script src="../estilos/accesibilidad.js"></script>
 <header>
     <div class="header-left">
-        <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
+        <a class="logo"></a>
         <hr>
-        <a href="/burguersoft/php/el_oriente.php" class="nom-local">El Oriente</a>
+        <a class="nom-local">EL ORIENTE</a>
     </div>
 
     <nav class="header-center">
         <a href="/burguersoft/php/Burguersoft.php"  <?= $paginaActiva==='inicio'  ?'class="activo"':'' ?>>Inicio</a>
-        <a href="/burguersoft/php/el_oriente.php"   <?= $paginaActiva==='oriente' ?'class="activo"':'' ?>>El Oriente</a>
+        <a href="/burguersoft/php/el_oriente.php"   <?= $paginaActiva==='oriente' ?'class="activo"':'' ?>>Nosotros</a>
         <a href="/burguersoft/php/Ir al Menu.php"   <?= $paginaActiva==='menu'    ?'class="activo"':'' ?>>Menú</a>
         <a href="/burguersoft/php/contactanos.php"  <?= $paginaActiva==='contacto'?'class="activo"':'' ?>>Contactanos</a>
     </nav>
@@ -279,7 +279,7 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
                 <span>Contraseña</span>
             </button>
             <button class="mp-tab" id="mpTabInfo" onclick="mpSwitchTab('info')">
-                <img class="mp-tab-icon" src="/burguersoft/estilos/img/usuario.png" alt="">
+                <img class="mp-tab-icon" src="/burguersoft/estilos/img/usuario..png" alt="">
                 <span>Cuenta</span>
             </button>
         </div>

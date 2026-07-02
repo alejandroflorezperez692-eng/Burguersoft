@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/funciones.php';
+requerirLogin();   
 requerirAdmin();
 $navActivo = 'menu';
 
 $categorias_enum = [
-    'Hamburguesa', 'Perros Calientes', 'Salchipapa', 'Fritos',
+    'Hamburguesa', 'Perros Caliente', 'Salchipapa', 'Fritos',
     'Arepas', 'Picada', 'Bebidas Frias', 'Bebidas Calientes', 'Pizza'
 ];
 
@@ -27,7 +28,7 @@ $cat_icons = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT — Gestión del Menú</title>
     <link rel="stylesheet" href="../estilos/estilos-header-lader-admin.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <style>
         .menu-page { padding: 36px 40px 60px; }
 
@@ -682,6 +683,10 @@ $cat_icons = [
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div class="field">
+                        <label>Estado</label>
+                        <span id="estado-display" style="display:inline-block; padding:9.5px 13px; border-radius:var(--r-sm); font-size:13.5px; font-weight:700; background:#d5f5e3; color:#1a7a42;">Disponible</span>
+                    </div>
                     <input type="hidden" id="estado" value="Disponible">
                 </div>
 
@@ -874,7 +879,7 @@ function crearTarjeta(p) {
             <div class="product-desc">${p.descripcion || ''}</div>
             <div class="product-meta">
                 <div class="product-price">$${Number(p.valor).toLocaleString('es-CO')}</div>
-                <span class="product-estado ${estadoCls}">${p.estado}</span>
+                <span class="product-estado ${estadoCls}">${p.estado}: ${p.cantidad}</span>
             </div>
         </div>
         <div class="product-actions">

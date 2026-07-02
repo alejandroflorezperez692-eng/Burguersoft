@@ -4,7 +4,11 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 if (isset($_SESSION['id_usuario'])) {
-    redirigir('/burguersoft/php/inicio_admin.php');
+    if (($_SESSION['rol_usuario'] ?? '') === 'Administrador') {
+        redirigir('/burguersoft/php/inicio_admin.php');
+    } else {
+        redirigir('/burguersoft/php/Burguersoft.php');
+    }
 }
 
 $error              = '';
@@ -89,6 +93,8 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="stylesheet" href="../estilos/accesibilidad.css">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+
+     <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <style>
         .input-password-wrapper {
             position: relative;

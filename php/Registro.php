@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>BURGUERSOFT - Crear cuenta</title>
     <link rel="stylesheet" href="../estilos/estilos-registro.css">
     <link rel="stylesheet" href="../estilos/estilos-login.css">
-    <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
+    <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <script src="../js/Registro.js" defer></script>
     <style>
         .btn-toggle-password:hover {
