@@ -17,6 +17,44 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BURGUERSOFT - Recuperar Contraseña</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
+
+    <link rel="icon" href="../estilos/img/icono1.png" type="image/x-icon">
+    
+    <style>
+      
+        body:not(.dark-mode) .separador-contenedor .circulo {
+            color: #000000 !important;
+            font-weight: 700 !important;
+            background-color: #ffffff !important; 
+        }
+
+       
+        body:not(.dark-mode) .separador-contenedor .linea {
+            background-color: rgba(0, 0, 0, 0.25) !important;
+            background: rgba(0, 0, 0, 0.25) !important;
+            height: 1px !important;
+            display: block !important;
+        }
+
+      
+        body:not(.dark-mode) .btn-secundario {
+            border: 2px solid #E8821A !important;
+            color: #E8821A !important;
+            font-weight: 700 !important;
+            background-color: transparent !important; 
+            background: transparent !important;
+            transition: color 0.2s ease, border-color 0.2s ease !important;
+        }
+
+       
+        body:not(.dark-mode) .btn-secundario:hover {
+            background-color: transparent !important;
+            background: transparent !important;
+            color: #cf6f13 !important; 
+            border-color: #cf6f13 !important;
+        }
+    </style>
+
     <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
 </head>
 <body>

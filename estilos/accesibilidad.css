@@ -318,6 +318,21 @@ body.dark-mode textarea:-webkit-autofill:active {
 }
 
 
+body:not(.dark-mode) input:-webkit-autofill,
+body:not(.dark-mode) input:-webkit-autofill:hover,
+body:not(.dark-mode) input:-webkit-autofill:focus,
+body:not(.dark-mode) input:-webkit-autofill:active,
+body:not(.dark-mode) textarea:-webkit-autofill,
+body:not(.dark-mode) textarea:-webkit-autofill:hover,
+body:not(.dark-mode) textarea:-webkit-autofill:focus,
+body:not(.dark-mode) textarea:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-fondo-card, #ffffff) inset !important;
+    -webkit-text-fill-color: var(--color-oscuro, #222222) !important;
+    caret-color: var(--color-oscuro, #222222) !important;
+    transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
+}
+
+
 body.big-cursor,
 body.big-cursor * {
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 2 L8 26 L13 21 L17 30 L20 29 L16 20 L23 20 Z' fill='%23E8821A' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 8 2, auto !important;
@@ -709,7 +724,7 @@ body.dark-mode .logo-oscuro {
 }
 
 body.dark-mode .sidebar-header{
-    background-color: #1b0a00 !important;
+    background-color: #210d02 !important;
 }
 
 body.dark-mode .header-nav{
@@ -720,6 +735,43 @@ body.dark-mode .nav-logout {
     color: #1b0a00 !important;
 }
 
+body.dark-mode .sidebar {
+    background: linear-gradient(200deg, #0e0500 0%, #e8821a 250%);
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
 body.dark-mode .sidebar-divider{
     background: var(--color-primario) !important;
+}
+
+body:not(.dark-mode) .card a.link,
+body:not(.dark-mode) .enlace-externo a,
+body:not(.dark-mode) .card a.link:hover,
+body:not(.dark-mode) .enlace-externo a:hover {
+    text-decoration: none !important;
+}
+
+body:not(.dark-mode) .card a.link:hover,
+body:not(.dark-mode) .enlace-externo a:hover {
+    color: #E8821A !important;
+}
+
+body:not(.dark-mode) .enlace-externo {
+    color: #000000 !important;
+}
+
+
+body:not(.dark-mode) .separador-contenedor .circulo {
+    color: #000000 !important;
+    font-weight: 600;
+}
+
+body:not(.dark-mode) .separador-contenedor .linea {
+    background-color: rgba(0, 0, 0, 0.25) !important;
+    height: 1px !important;
 }

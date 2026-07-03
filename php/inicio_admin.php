@@ -307,6 +307,59 @@ $navActivo = 'inicio';
             color: var(--text-400);
         }
 
+        .historial-filtros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .historial-filtros input[type="text"],
+        .historial-filtros select,
+        .historial-filtros input[type="date"] {
+            padding: 8px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: var(--font-sans);
+            font-size: 12.5px;
+            background: var(--surface-2);
+            color: var(--text-900);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .historial-filtros input[type="text"] {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .historial-filtros select {
+            min-width: 160px;
+        }
+
+        .historial-filtros input:focus,
+        .historial-filtros select:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+
+        .btn-limpiar-filtros {
+            border: 1.5px solid var(--border-strong);
+            background: transparent;
+            color: var(--text-600);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            transition: all 0.18s;
+            white-space: nowrap;
+        }
+
+        .btn-limpiar-filtros:hover { border-color: var(--brand); color: var(--brand); }
+
         .btn-ver-mas {
             border: 1.5px solid var(--border-strong);
             background: transparent;
@@ -501,7 +554,7 @@ $navActivo = 'inicio';
         <div class="dashboard-row">
             <div class="historial-section">
                 <div class="historial-header">
-                    <h3>Tus Movimientos:</h3>
+                    <h3>Tus Últimos Movimientos:</h3>
                     <button class="btn-ver-mas" onclick="abrirHistorialCompleto()">Ver más</button>
                 </div>
                <div class="historial-columnas">
@@ -526,8 +579,17 @@ $navActivo = 'inicio';
 <div class="modal-overlay" id="modalHistorial" onclick="if(event.target===this)cerrarHistorialCompleto()">
     <div class="modal-box">
         <div class="modal-header">
-            <h2>Historial completo de movimientos</h2>
+            <h2 style="font-family:var(--font-sans);">Historial completo de movimientos</h2>
             <button class="modal-close" onclick="cerrarHistorialCompleto()">×</button>
+        </div>
+        <div class="historial-filtros">
+            <input type="text" id="filtro-buscar" placeholder="Buscar en la acción...">
+            <select id="filtro-modulo">
+                <option value="">Todos los apartados</option>
+            </select>
+            <input type="date" id="filtro-fecha-desde" title="Desde">
+            <input type="date" id="filtro-fecha-hasta" title="Hasta">
+            <button type="button" class="btn-limpiar-filtros" onclick="limpiarFiltrosHistorial()">Limpiar</button>
         </div>
         <div class="historial-columnas">
             <div class="historial-col-apartado">Apartado</div>
@@ -612,14 +674,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (toastEl && toast === 'login_ok') {
         toastEl.textContent = '¡Bienvenido a BurguerSoft, Administrador!'; 
         setTimeout(() => toastEl.classList.add('mostrar'), 100);
-
-      
         setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
-
-      
-
-        setTimeout(() => toastEl.classList.remove('mostrar'), 3500);
-
 
         const url = new URL(window.location.href);
         url.searchParams.delete('toast');
@@ -628,6 +683,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 const API_HISTORIAL = '/burguersoft/controllers/historial.php';
+let historialTodoData = [];
 
 function formatearFechaHistorial(fecha) {
     if (!fecha) return '—';
@@ -661,9 +717,13 @@ async function cargarHistorialReciente() {
             fetch(`${API_HISTORIAL}?accion=reciente`),
             fetch(`${API_HISTORIAL}?accion=todo`)
         ]);
-        const reciente = await resReciente.json();
-        const todos    = await resTotal.json();
-        renderHistorial('historial-reciente', Array.isArray(reciente) ? reciente : []);
+        const reciente    = await resReciente.json();
+        const todos       = await resTotal.json();
+        const recienteArr = Array.isArray(reciente) ? reciente : [];
+
+        // Solo se muestran los últimos 3 movimientos en el dashboard
+        renderHistorial('historial-reciente', recienteArr.slice(0, 3));
+
         document.getElementById('kpi-total-movimientos').textContent =
             Array.isArray(todos) ? todos.length : '0';
     } catch (e) {
@@ -672,12 +732,60 @@ async function cargarHistorialReciente() {
     }
 }
 
+function poblarFiltroModulos(registros) {
+    const select = document.getElementById('filtro-modulo');
+    const seleccionActual = select.value;
+
+    const modulos = [...new Set(registros.map(r => r.modulo).filter(Boolean))].sort();
+
+    select.innerHTML = '<option value="">Todos los apartados</option>' +
+        modulos.map(m => `<option value="${m}">${m}</option>`).join('');
+
+    select.value = seleccionActual;
+}
+
+function aplicarFiltrosHistorial() {
+    const texto  = document.getElementById('filtro-buscar').value.trim().toLowerCase();
+    const modulo = document.getElementById('filtro-modulo').value;
+    const desde  = document.getElementById('filtro-fecha-desde').value;
+    const hasta  = document.getElementById('filtro-fecha-hasta').value;
+
+    const filtrados = historialTodoData.filter(r => {
+        if (modulo && r.modulo !== modulo) return false;
+        if (texto && !(r.descripcion || '').toLowerCase().includes(texto)) return false;
+
+        if (desde || hasta) {
+            const fechaSolo = (r.fecha || '').slice(0, 10); // 'YYYY-MM-DD'
+            if (desde && fechaSolo < desde) return false;
+            if (hasta && fechaSolo > hasta) return false;
+        }
+        return true;
+    });
+
+    renderHistorial('historial-completo', filtrados);
+}
+
+function limpiarFiltrosHistorial() {
+    document.getElementById('filtro-buscar').value      = '';
+    document.getElementById('filtro-modulo').value      = '';
+    document.getElementById('filtro-fecha-desde').value = '';
+    document.getElementById('filtro-fecha-hasta').value = '';
+    aplicarFiltrosHistorial();
+}
+
+document.getElementById('filtro-buscar').addEventListener('input', aplicarFiltrosHistorial);
+document.getElementById('filtro-modulo').addEventListener('change', aplicarFiltrosHistorial);
+document.getElementById('filtro-fecha-desde').addEventListener('change', aplicarFiltrosHistorial);
+document.getElementById('filtro-fecha-hasta').addEventListener('change', aplicarFiltrosHistorial);
+
 async function abrirHistorialCompleto() {
     document.getElementById('modalHistorial').classList.add('open');
     try {
-        const res = await fetch(`${API_HISTORIAL}?accion=todo`);
+        const res  = await fetch(`${API_HISTORIAL}?accion=todo`);
         const data = await res.json();
-        renderHistorial('historial-completo', Array.isArray(data) ? data : []);
+        historialTodoData = Array.isArray(data) ? data : [];
+        poblarFiltroModulos(historialTodoData);
+        aplicarFiltrosHistorial();
     } catch (e) {
         document.getElementById('historial-completo').innerHTML =
             '<div class="historial-vacio">No se pudo cargar el historial.</div>';

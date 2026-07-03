@@ -54,7 +54,7 @@ a { text-decoration:none; color:inherit; }
 
 .sidebar {
     width: var(--sidebar-w);
-    background: linear-gradient(200deg, var(--sidebar-start) 0%, var(--sidebar-end) 100%);
+    background: linear-gradient(200deg, #e8821a 0%, #0e0500 100%);
     position: fixed;
     inset: 0 auto 0 0;
     z-index: 100;
@@ -84,7 +84,7 @@ a { text-decoration:none; color:inherit; }
     padding: 0 20px;
     gap: 12px;
     border-bottom: 1px solid rgba(232,130,26,0.12);
-    background: var(--brand-deep);
+    background: #d07417;
     flex-shrink: 0;
     position: left !important;
 }

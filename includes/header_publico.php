@@ -96,9 +96,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php';
 <script src="../js/accesibilidad.js"></script>
 <header>
     <div class="header-left">
-        <a href="/burguersoft/php/Burguersoft.php" class="logo"></a>
+        <a class="logo"></a>
         <hr>
-        <a href="/burguersoft/php/el_oriente.php" class="nom-local">El Oriente</a>
+        <a class="nom-local">EL ORIENTE</a>
     </div>
 
     <nav class="header-center">
