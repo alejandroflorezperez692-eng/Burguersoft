@@ -279,7 +279,7 @@ $navActivo = 'backups';
         <div class="acc-row-label">Tipo de letra</div>
         <div class="acc-row-btns">
             <button class="acc-btn-option" onclick="aplicarFuente('Georgia, serif')">Serif</button>
-            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>
+            <button class="acc-btn-option" onclick="aplicarFuente('Arial, sans-serif')">Sans</button>   
         </div>
     </div>
     <button class="acc-btn-reset" onclick="restablecer()">Restablecer</button>

@@ -755,7 +755,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.addEventListener('click', function(e) {
         if (cartPanel && cartPanel.classList.contains('active')) {
-            if (!cartPanel.contains(e.target) && !toggleCartBtn.contains(e.target)) {
+            const esBotonAgregar = e.target.closest('[onclick*="agregarAlCarrito"]');
+            if (!cartPanel.contains(e.target) && !toggleCartBtn.contains(e.target) && !esBotonAgregar) {
                 cartPanel.classList.remove('active');
             }
         }
