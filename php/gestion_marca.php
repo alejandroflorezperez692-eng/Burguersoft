@@ -625,6 +625,16 @@ let editIdMarca = null;
 
 function togglePanel() { document.getElementById('accPanel').classList.toggle('open'); }
 
+function sololetras(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[a-zA-Z\s]+$/.test(char)) e.preventDefault();
+}
+
+function solonumeros(e) {
+    const char = String.fromCharCode(e.keyCode);
+    if (!/^[0-9.]$/.test(char)) e.preventDefault();
+}
+
 function estadoClass(e) {
     if (e === 'Activo')   return 'dot-activo';
     if (e === 'Inactivo') return 'dot-inactivo';

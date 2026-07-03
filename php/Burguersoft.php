@@ -16,20 +16,21 @@ $stmtPromo = $pdo->prepare(
      FROM promocion
      WHERE estado = 'Activa'
        AND (fecha_inicio IS NULL OR fecha_inicio <= ?)
-       AND (fecha_fin   IS NULL OR fecha_fin   >= ?)"
+       AND (fecha_fin    IS NULL OR fecha_fin    >= ?)"
 );
 $stmtPromo->execute([$hoy, $hoy]);
 $promociones = $stmtPromo->fetchAll(PDO::FETCH_ASSOC);
 
-function formatCOP($valor) {
-    return '$' . number_format((float)$valor, 0, ',', '.');
-    
+function formatCOP(float $valor): string {
+    return '$' . number_format($valor, 0, ',', '.');
 }
+
 if (isset($_SESSION['logout_exitoso'])) {
     echo "<script>alert('Sesión cerrada correctamente');</script>";
     unset($_SESSION['logout_exitoso']);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
