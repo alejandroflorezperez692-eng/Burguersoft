@@ -66,7 +66,7 @@ $paginaActiva = 'oriente';
     <img style="width:22px;height:22px;filter:invert(1);pointer-events:none;" src="../estilos/img/accesibilidad.png" alt="Accesibilidad">
 </button>
 <link rel="stylesheet" href="../estilos/accesibilidad.css">
-<script src="../js/accesibilidad.js"></script>
+
   <footer>
     <div class="footer-container">
         <div class="footer-brand">

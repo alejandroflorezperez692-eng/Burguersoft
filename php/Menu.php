@@ -1135,9 +1135,10 @@ function cerrarModal() {
 
 document.getElementById('btn-confirmar-ok').addEventListener('click', async () => {
     if (!idEliminar) return;
+    const id = idEliminar;
     cerrarModal();
     try {
-        const res  = await fetch(`${CTRL}?accion=productos&id=${idEliminar}`, { method: 'DELETE' });
+        const res  = await fetch(`${CTRL}?accion=productos&id=${id}`, { method: 'DELETE' });
         const data = await res.json();
         if (data.success) { toast('Producto eliminado'); await cargarProductos(document.getElementById('buscar').value); }
         else toast(data.error || 'No se pudo eliminar', 'err');

@@ -478,7 +478,7 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
     </div>
     <div style="padding:24px;">
         <div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px dashed #E0D5C5;">
-            <img src="/burguersoft/estilos/img/icono.png" alt="Logo"
+            <img src="/burguersoft/estilos/img/icono1-oscuro.png" alt="Logo"
                 style="width:64px;height:64px;object-fit:contain;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;">
             <div style="font-size:20px;font-weight:900;color:#1C1410;letter-spacing:1px;font-family:'Playfair Display',serif;">El Oriente</div>
             <div style="font-size:11px;color:#7A6855;margin-top:4px;letter-spacing:.5px;text-transform:uppercase;" id="factura-fecha"></div>
@@ -755,7 +755,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.addEventListener('click', function(e) {
         if (cartPanel && cartPanel.classList.contains('active')) {
-            if (!cartPanel.contains(e.target) && !toggleCartBtn.contains(e.target)) {
+            const esBotonAgregar = e.target.closest('[onclick*="agregarAlCarrito"]');
+            if (!cartPanel.contains(e.target) && !toggleCartBtn.contains(e.target) && !esBotonAgregar) {
                 cartPanel.classList.remove('active');
             }
         }
