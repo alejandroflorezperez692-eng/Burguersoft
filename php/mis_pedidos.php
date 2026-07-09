@@ -355,7 +355,7 @@ foreach ($filas as $f) {
 
         <?php if (empty($pedidos)): ?>
             <div class="pedidos-empty">
-                <div class="icon">🍔</div>
+                <div class="icon"></div>
                 <p>Aún no tienes pedidos registrados.</p>
                 <a href="/burguersoft/php/Ir al Menu.php">Ver el menú</a>
             </div>
@@ -473,7 +473,7 @@ foreach ($filas as $f) {
             <div class="footer-brand">
                 <div class="footer-brand-text">
                     <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;margin-top:-30px;">
-                        <img src="../estilos/img/icono.png" alt="Logo" class="footer-logo">
+                        <img src="../estilos/img/icono1-oscuro.png" alt="Logo" class="footer-logo">
                         <hr>
                         <h3 style="margin:6px;">El Oriente</h3>
                     </div>

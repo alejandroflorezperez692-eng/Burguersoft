@@ -93,7 +93,7 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php'; 
 ?>
 <link rel="stylesheet" href="../estilos/accesibilidad.css?v=2">
-<script src="../estilos/accesibilidad.js"></script>
+<script src="../js/accesibilidad.js"></script>
 <header>
     <div class="header-left">
         <a class="logo"></a>
