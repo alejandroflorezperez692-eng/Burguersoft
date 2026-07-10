@@ -197,9 +197,7 @@ async function cargarPromociones() {
                         ${SESION_ACTIVA
                             ? `<button class="btn-circular-add" title="Agregar al carrito">+</button>`
                             : `<button class="btn-circular-add btn-login" title="Inicia sesión para pedir"
-                                onclick="irLoginConAviso('promo')">
-                                <img src="../estilos/img/bloquear.png"
-                                style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                                onclick="irLoginConAviso('promo')">+
                             </button>`
                         }
                     </div>

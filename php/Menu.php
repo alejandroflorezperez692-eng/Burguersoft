@@ -924,8 +924,8 @@ function actualizarEstado(valor) {
     document.getElementById('estado').value = estado;
     const display = document.getElementById('estado-display');
     const colores = {
-        'Disponible':   { bg: '#d5f5e3', color: '#1a7a42' },
-        'Agotado':      { bg: '#fde8e8', color: '#922222' },
+        'Disponible':   { bg: '#1a1d1b', color: '#1a7a42' },
+        'Agotado':      { bg: '#1e1b1b', color: '#922222' },
         'Por agotarse': { bg: 'rgba(232,130,26,0.15)', color: '#8a4a10' }
     };
     const c = colores[estado];

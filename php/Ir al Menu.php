@@ -325,8 +325,7 @@
                                     this
                                 )">+</button>
                             <?php else: ?>
-                                <button type="button" class="btn-add" title="Inicia sesión para agregar" onclick="irLoginConAviso('producto')">
-                                    <img src="../estilos/img/bloquear.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;">
+                                <button type="button" class="btn-add" title="Inicia sesión para agregar" onclick="irLoginConAviso('producto')">+
                                 </button>
                             <?php endif; ?>
                         </div>

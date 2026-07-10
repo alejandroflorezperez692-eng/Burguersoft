@@ -579,7 +579,7 @@ $navActivo = 'inicio';
 <div class="modal-overlay" id="modalHistorial" onclick="if(event.target===this)cerrarHistorialCompleto()">
     <div class="modal-box">
         <div class="modal-header">
-            <h2 style="font-family:var(--font-sans);">Historial completo de movimientos</h2>
+            <h2>Historial completo de movimientos</h2>
             <button class="modal-close" onclick="cerrarHistorialCompleto()">×</button>
         </div>
         <div class="historial-filtros">
@@ -639,11 +639,14 @@ $navActivo = 'inicio';
             let minutos = ahora.getMinutes();
             let segundos = ahora.getSeconds();
 
-            horas = horas < 10 ? '0' + horas : horas;
+            const sufijo = horas >= 12 ? 'pm' : 'am';
+            horas = horas % 12;
+            if (horas === 0) horas = 12;
+
             minutos = minutos < 10 ? '0' + minutos : minutos;
             segundos = segundos < 10 ? '0' + segundos : segundos;
 
-            const horaActual = `${horas}:${minutos}:${segundos}`;
+            const horaActual = `${horas}:${minutos}:${segundos} ${sufijo}`;
             document.getElementById('reloj').textContent = horaActual;
         }
 
@@ -806,9 +809,7 @@ function actualizarTiempo() {
             };
             
             const fechaActual = ahora.toLocaleDateString('es-ES', opcionesFecha);
-            const horaActual = ahora.toLocaleTimeString('es-ES');
             document.getElementById('fecha').textContent = fechaActual;
-            document.getElementById('reloj').textContent = horaActual;
         }
         actualizarTiempo();
 

@@ -36,6 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $msg = ['type' => 'ok', 'text' => '✅ Cambios guardados correctamente.'];
     }
 }
+
+// Datos de documento: solo lectura, se consultan siempre frescos desde la BD
+$pdoInfo = getPDO();
+$stmtDoc = $pdoInfo->prepare("SELECT Tdocumento AS tipo_documento, Ndocumento AS numero_documento FROM usuario WHERE id = ?");
+$stmtDoc->execute([$_SESSION['id_usuario']]);
+$documentoUsuario = $stmtDoc->fetch(PDO::FETCH_ASSOC) ?: ['tipo_documento' => '', 'numero_documento' => ''];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -127,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: block;
             text-align: center;
             margin-top: 8px;
-            margin-bottom: -40px !important;
         }
 
         .profile-logout:hover { background: rgba(200,56,42,0.07); border-color: var(--danger); }
@@ -144,6 +149,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: var(--r-lg);
             box-shadow: var(--shadow-sm);
             padding: 32px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-section-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .form-section-title {
@@ -164,7 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
-            align-items: start;
         }
 
         .form-actions {
@@ -255,7 +268,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .msg-err { background: #fde8e8; color: #922; border-left: 4px solid var(--danger); }
 
         .btn-submit {
-            margin-top: 15px !important;
             width: 100%;
             padding: 11px;
             background: var(--brand);
@@ -268,6 +280,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cursor: pointer;
             box-shadow: 0 4px 14px rgba(232,130,26,0.35);
             transition: all 0.2s var(--ease);
+        }
+
+        .field input[readonly] {
+            background: var(--surface-2);
+            color: var(--text-600);
+            cursor: not-allowed;
+        }
+
+        .field input[readonly]:focus {
+            outline: none;
+            border-color: var(--border);
+        }
+
+        .field-hint {
+            font-size: 11px;
+            color: var(--text-400);
+            margin-top: 4px;
         }
 
         .btn-submit:hover { background: var(--brand-deep); transform: translateY(-2px); }
@@ -298,14 +327,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
+
         <div class="form-wrapper">
+
             <?php if ($msg): ?>
             <div class="msg-box msg-<?= $msg['type'] ?>"><?= htmlspecialchars($msg['text']) ?></div>
             <?php endif; ?>
+
             <form method="POST" action="config_cuenta.php">
+
               <div class="form-columns">
+
                 <div class="form-section">
                     <div class="form-section-title" style="font-family: var(--font-sans);">Información Personal</div>
+
+                    <div class="form-section-body">
+
                     <div class="form-row-2">
                         <div class="field">
                             <label>Nombre</label>
@@ -329,6 +366,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
+                    <div class="form-row-2">
+                        <div class="field">
+                            <label>Tipo de documento</label>
+                            <input type="text" value="<?= htmlspecialchars($documentoUsuario['tipo_documento'] ?? '') ?>" readonly tabindex="-1">
+                        </div>
+                        <div class="field">
+                            <label>Número de documento</label>
+                            <input type="text" value="<?= htmlspecialchars($documentoUsuario['numero_documento'] ?? '') ?>" readonly tabindex="-1">
+                        </div>
+                    </div>
+
                     <div class="field">
                         <label>Correo electrónico</label>
                         <input type="email" name="correo"
@@ -347,10 +395,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             placeholder="3001234567"
                             required>
                     </div>
+
+                    </div>
                 </div>
 
                 <div class="form-section">
                     <div class="form-section-title" style="font-family: var(--font-sans);">Seguridad (opcional)</div>
+
+                    <div class="form-section-body">
 
                     <div class="field">
                         <label>Contraseña actual</label>
@@ -378,19 +430,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <li id="req-esp"><span style="color:#922; font-size:15px; font-weight:900;">X</span>  Un símbolo o caracter especial</li>
                         </ul>
                     </div>
+
+                    </div>
                 </div>
-            </div>
+
+              </div>
 
                 <div class="form-actions">
-                    <div class="form-actions-inner">
+                    <div class="form-actions-inner" style="margin-top: 17px !important;">
                         <button type="submit" class="btn-submit">Guardar cambios</button>
                         <a href="/burguersoft/logout.php" class="profile-logout">Cerrar sesión</a>
                     </div>
                 </div>
+            </form>
+
         </div>
 
-</div>
-</div>
 
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>
