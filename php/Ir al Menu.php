@@ -5,7 +5,7 @@
     global $pdo;
 
     $stmtProd = $pdo->query(
-        "SELECT id, nombre, valor, descripcion, img, categoria, estado
+        "SELECT id, nombre, valor, descripcion, img, categoria, estado, cantidad
         FROM producto
         WHERE estado IN ('Disponible','Por agotarse','Agotado')
         ORDER BY categoria, nombre"
@@ -48,7 +48,13 @@
         <link rel="stylesheet" href="../estilos/factura-estilos.css">
         
         <style>
-            :root {
+            .prod-stock{
+                margin-top:8px;
+                font-size:13px;
+                color:#2e7d32;
+                font-weight:600;
+            }
+        :root {
                 --primario:   #3d2111;
                 --secundario: #F18921;
                 --alerta:     #C3402A;
@@ -306,9 +312,14 @@
                             src="<?= hv($p['img']) ?>"
                             alt="<?= hv($p['nombre']) ?>"  
                             onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
-                        <div class="prod-card-body">
+                       <div class="prod-card-body">
                             <div class="prod-card-nombre"><?= hv($p['nombre']) ?></div>
-                            <div class="prod-card-desc"><?= hv($p['descripcion']) ?></div>
+                            <div class="prod-card-desc">
+                                <?= hv($p['descripcion']) ?>
+                            </div>
+                            <div class="prod-stock">
+                                Disponibles: <strong><?= (int)$p['cantidad'] ?></strong>
+                            </div>
                         </div>
                         <div class="prod-card-footer">
                             <span class="prod-card-precio"><?= formatCOP($p['valor']) ?></span>
