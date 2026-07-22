@@ -79,8 +79,19 @@ function actualizarCarrito() {
                         x${item.cantidad} — $${(item.precio * item.cantidad).toLocaleString('es-CO')}
                     </div>
                 </div>
-                <button onclick="quitarDelCarrito('${item.nombre}')"
-                    style="background:none;border:none;color:#e63946;font-size:18px;cursor:pointer;padding:4px">×</button>
+              <div style="display:flex;align-items:center;gap:8px">
+                    <button onclick="event.stopPropagation(); event.preventDefault(); aumentarCantidad('${item.nombre}')"
+                        style="width:28px;height:28px;border:none;border-radius:6px;background:#F18921;color:white;font-size:18px;cursor:pointer">
+                        +
+                    </button>
+                    <span style="font-weight:bold">
+                        ${item.cantidad}
+                    </span>
+                    <button onclick="event.stopPropagation(); event.preventDefault(); disminuirCantidad('${item.nombre}')"
+                        style="width:28px;height:28px;border:none;border-radius:6px;background:#F18921;color:white;font-size:18px;cursor:pointer">
+                        -
+                    </button>
+                </div>
             `;
             cartItems.appendChild(div);
         }
@@ -88,10 +99,28 @@ function actualizarCarrito() {
 
     if (cartTotal) cartTotal.textContent = '$' + total.toLocaleString('es-CO');
 }
+function aumentarCantidad(nombre){
+    const producto = carrito.find(p => p.nombre === nombre);
+    if(producto){
+        carrito.push({...producto});
+    }
+    guardarCarrito();
+    actualizarCarrito();
+}
+
+function disminuirCantidad(nombre){
+    const indice = carrito.findIndex(p => p.nombre === nombre);
+    if(indice !== -1){
+        carrito.splice(indice,1);
+    }
+    guardarCarrito();
+    actualizarCarrito();
+}
 
 function quitarDelCarrito(nombre) {
     const idx = carrito.findIndex(i => i.nombre === nombre);
-    if (idx !== -1) carrito.splice(idx, 1);
+    if (idx !== -1)
+        carrito.splice(idx,1);
     guardarCarrito();
     actualizarCarrito();
 }
