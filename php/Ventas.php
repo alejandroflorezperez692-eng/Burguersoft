@@ -1,4 +1,4 @@
-    <?php
+<?php
     require_once __DIR__ . '/../includes/funciones.php';
     requerirAdmin();
     $navActivo = 'ventas';
@@ -344,9 +344,9 @@
                 border: none;
                 border-radius: var(--r-sm);
                 cursor: pointer;
-                font-size: 13px;
-                background: #922; 
-                color: #fff; 
+                background: #922;
+                color: #fff;
+                flex-shrink: 0;
             }
 
             .btn-icon-det {
@@ -358,9 +358,9 @@
                 border: none;
                 border-radius: var(--r-sm);
                 cursor: pointer;
-                font-size: 13px;
-                background: rgb(19, 11, 74); 
-                color: #fff; 
+                background: rgb(19, 11, 74);
+                color: #fff;
+                flex-shrink: 0;
             }
 
             .btn-icon-can {
@@ -372,14 +372,19 @@
                 border: none;
                 border-radius: var(--r-sm);
                 cursor: pointer;
-                font-size: 13px;
                 background: #E8821A;
-                color: #fff; 
+                color: #fff;
+                flex-shrink: 0;
             }
 
-            .btn-icon-del:hover { background: var(--danger); color: #fff;}
-            .btn-icon-det:hover { background:rgb(50, 34, 153); color: #fff;}
-            .btn-icon-can:hover{ background: rgb(203, 104, 38); color: #fff;
+            .btn-icon-del:hover { background: var(--danger); }
+            .btn-icon-det:hover { background: rgb(50, 34, 153); }
+            .btn-icon-can:hover  { background: rgb(203, 104, 38); }
+
+            .acciones-cell {
+                display: flex;
+                align-items: center;
+                gap: 6px;
             }
 
             body.dark-mode .kpi-card,
@@ -405,6 +410,7 @@
             font-weight:700;
             cursor:pointer;
             transition:.25s;
+            margin-left: none !important;
             }
 
             /* En cocina */
@@ -437,31 +443,30 @@
                 border-color:#9333ea;
             }
             
-            .estado-final{
-                display:inline-flex;
-                align-items:center;
-                justify-content:center;
-                padding:8px 18px;
-                border-radius:20px;
-                background:#d1fae5;
-                color:#166534;
-                font-weight:700;
-                border:2px solid #22c55e;
-                cursor:default;
-                min-width:120px;
+            .estado-final {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px 12px;
+                border-radius: 20px;
+                background: #d1fae5;
+                color: #166534;
+                font-size: 12px;
+                font-weight: 700;
+                white-space: nowrap;
             }
-            .estado-final-cancelado{
-                display:inline-flex;
-                align-items:center;
-                justify-content:center;
-                padding:8px 18px;
-                border-radius:20px;
-                background:#fee2e2;
-                color:#991b1b;
-                font-weight:700;
-                border:2px solid #ef4444;
-                cursor:default;
-                min-width:120px;
+
+            .estado-final-cancelado {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px 12px;
+                border-radius: 20px;
+                background: #fee2e2;
+                color: #991b1b;
+                font-size: 12px;
+                font-weight: 700;
+                white-space: nowrap;
             }
         </style>
     </head>
@@ -726,7 +731,7 @@
     function renderCharts(datos) {
         const hoy     = hoyStr();
         const diasMap = {};
-        for (let i = 13; i >= 0; i--) {
+        for (let i = 32; i >= 0; i--) {
             const d = new Date(); d.setDate(d.getDate() - i);
             diasMap[d.toISOString().substring(0, 10)] = 0;
         }
@@ -795,11 +800,11 @@
     function selectEstado(v){
 
     if (v.estado === "Pagado") {
-        return `<span class="estado-final">✔ Pagado</span>`;
+        return `<span class="estado-final">Pagado</span>`;
     }
 
     if (v.estado === "Cancelado") {
-        return `<span class="estado-final-cancelado">✗ Cancelado</span>`;
+        return `<span class="estado-final-cancelado">Cancelado</span>`;
     }
 
     const pasosPorTipo = {
@@ -889,7 +894,16 @@
             tbody.appendChild(sep);
 
             grupo.forEach(v => {
-                const hora   = (v.fecha || '').substring(11, 16) || '—';
+                let hora = '—';
+                    if (v.fecha && v.fecha.length >= 16) {
+                        const timeStr = v.fecha.substring(11, 16); 
+                        let [hh, mm] = timeStr.split(':').map(Number);
+                        if (!isNaN(hh) && !isNaN(mm)) {
+                            const ampm = hh >= 12 ? 'PM' : 'AM';
+                            hh = hh % 12 || 12;
+                            hora = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${ampm}`;
+                        }
+                    }
                 const nombre = v.nombre_usuario
                     ? `${v.nombre_usuario} ${v.apellido_usuario || ''}`.trim()
                     : 'Sin usuario';
@@ -899,15 +913,17 @@
                     <td class="usuario-cell">${escHtml(nombre)}</td>
                     <td>${renderItems(v.id)}</td>
                     <td class="valor-cell">$${Number(v.valor_total).toLocaleString('es-CO')}</td>
-                    <td style="color:var(--text-400);font-size:12.5px;">${hora}</td>
+                    <td style="color:var(--text-400);font-size:11px;">${hora}</td>
                     <td>${metodoBadge(v.metodo_pago)}</td>
-                    <td>${selectEstado(v)}</td>
+                    <td style="margin: none !important">${selectEstado(v)}</td>
                     <td>
-                        <button class="btn-icon-det" onclick="prepararEdicion(${v.id})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
-                        ${v.estado !== 'Cancelado' && v.estado !== 'Pagado'
-                            ? `<button class="btn-icon-can" onclick="cancelarVenta(${v.id})" title="Cancelar" style="margin-left:6px;"><img src="../estilos/img/cancel.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>`
-                            : ''}
-                        <button class="btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar" style="margin-left:6px;"><img src="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                        <div class="acciones-cell">
+                            <button class="btn-icon-det" onclick="prepararEdicion(${v.id})" title="Editar"><img src="../estilos/img/pencil.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                            ${v.estado !== 'Cancelado' && v.estado !== 'Pagado'
+                                ? `<button class="btn-icon-can" onclick="cancelarVenta(${v.id})" title="Cancelar"><img src="../estilos/img/cancel.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>`
+                                : ''}
+                            <button class="btn-icon-del" onclick="eliminarVenta(${v.id})" title="Eliminar"><img src="../estilos/img/trash.png" style="filter:invert(1);pointer-events:none;width:18px;height:18px;"></button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);

@@ -572,7 +572,7 @@ function agregarLinea() {
     wrap.id = `linea-${id}`;
 
     const opciones = materiasGlobal.map(m =>
-        `<option value="${m.id}">${m.nombre} (${m.unidad_medida || ''})</option>`
+        `<option value="${m.id}" data-valor="${m.valor || 0}">${m.nombre} (${m.unidad_medida || ''})</option>`
     ).join('');
 
     const opcionesMarca = marcasGlobal.map(m =>
@@ -629,9 +629,20 @@ function agregarLinea() {
 }
 
 function onCambioMateria(id) {
-    const sel = document.getElementById(`linea-${id}-materia`);
+    const sel       = document.getElementById(`linea-${id}-materia`);
     const wrapNuevo = document.getElementById(`linea-${id}-nuevo-wrap`);
+    const campoPrecio = document.getElementById(`linea-${id}-precio`);
+
     wrapNuevo.style.display = sel.value === '__nuevo__' ? 'grid' : 'none';
+
+    if (sel.value && sel.value !== '__nuevo__') {
+        const opt   = sel.options[sel.selectedIndex];
+        const valor = parseFloat(opt.dataset.valor) || 0;
+        if (valor > 0) campoPrecio.value = valor;
+    } else if (sel.value === '__nuevo__') {
+        campoPrecio.value = '';
+    }
+
     recalcularTotal();
 }
 
@@ -875,4 +886,3 @@ window.addEventListener('click', (e) => {
 </script>
 </body>
 </html>
-
