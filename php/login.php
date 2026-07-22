@@ -4,11 +4,7 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 if (isset($_SESSION['id_usuario'])) {
-    if (($_SESSION['rol_usuario'] ?? '') === 'Administrador') {
-        redirigir('/burguersoft/php/inicio_admin.php');
-    } else {
-        redirigir('/burguersoft/php/Burguersoft.php');
-    }
+    redirigir('/burguersoft/php/inicio_admin.php');
 }
 
 $error              = '';
@@ -91,10 +87,8 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BURGUERSOFT - Iniciar Sesión</title>
     <link rel="stylesheet" href="../estilos/estilos-login.css">
-    <link rel="stylesheet" href="../estilos/accesibilidad.css">
+    <link rel="stylesheet" href="../estilos/accesibilidad.css?v=3">
     <link rel="icon" href="../estilos/img/icono.png" type="image/x-icon">
-
-     <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
     <style>
         .input-password-wrapper {
             position: relative;
@@ -172,7 +166,9 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 0 !important;
         }
 
- 
+        /* ========================================================
+           CORRECCIÓN ULTRA-PRIORITARIA PARA EL MODO CLARO Y OSCURO
+           ======================================================== */
         body:not(.dark-mode) #loginForm .link,
         body:not(.dark-mode) .enlace-externo a {
             text-decoration: none !important;
@@ -186,6 +182,12 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
         body:not(.dark-mode) .enlace-externo {
             color: #000000 !important;
+        }
+
+        /* FORZAR COLOR BLANCO EN MODO OSCURO PARA EL TEXTO Y ENLACE */
+        body.dark-mode .enlace-externo,
+        body.dark-mode .enlace-externo a {
+            color: #ffffff !important;
         }
 
         body:not(.dark-mode) .separador-contenedor .circulo {
