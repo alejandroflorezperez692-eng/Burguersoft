@@ -317,6 +317,10 @@ if ($method === 'PUT') {
 
     $estadoActual = $venta['estado'];
 
+    if ($estadoActual === 'Cancelado' && $estado === 'Cancelado') {
+    jsonResponse(['success' => true]);
+}
+
     $esAdmin = ($_SESSION['rol_usuario'] ?? '') === 'Administrador';
     if (!$esAdmin) {
         if ((int)$venta['usuario_id'] !== (int)$_SESSION['id_usuario'])
@@ -336,12 +340,10 @@ if ($method === 'PUT') {
     $pdo->beginTransaction();
     try {
         if ($estado && $estado !== $estadoActual) {
-            $eraActiva  = $estadoActual === 'Pagado';
-            $seraActiva = $estado === 'Pagado';
-
-            if ($eraActiva && !$seraActiva) {
+            if ($estado === 'Cancelado') {
                 restaurarStockVenta($pdo, $id);
-            } elseif (!$eraActiva && $seraActiva) {
+            }
+            elseif ($estadoActual === 'Cancelado') {
                 descontarStockVenta($pdo, $id);
             }
         }
@@ -380,7 +382,7 @@ if ($method === 'DELETE') {
             jsonResponse(['error' => 'Venta no encontrada'], 404);
         }
 
-        if ($estadoActual === 'Pagado') {
+        if ($estadoActual !== 'Cancelado') {
             restaurarStockVenta($pdo, $id);
         }
 

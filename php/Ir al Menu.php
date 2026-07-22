@@ -48,12 +48,18 @@
         <link rel="stylesheet" href="../estilos/factura-estilos.css">
         
         <style>
-            .prod-stock{
-                margin-top:8px;
-                font-size:13px;
-                color:#2e7d32;
-                font-weight:600;
-            }
+        .prod-stock{
+            margin-top:8px;
+            font-size:13px;
+            color:#2e7d32;
+            font-weight:600;
+        }
+
+        .prod-card.agotado .prod-stock,
+        .prod-card.agotado .prod-stock strong{
+            color:#d32f2f !important;
+        }
+        
         :root {
                 --primario:   #3d2111;
                 --secundario: #F18921;
@@ -182,18 +188,40 @@
                 transition: transform .2s, box-shadow .2s, border-color .2s;
                 display: flex;
                 flex-direction: column;
+                position: relative;
             }
+
+            .ribbon-agotado{
+                position:absolute;
+                top:15px;
+                left:-35px;
+                width:140px;
+                background:#e60000;
+                color:white;
+                text-align:center;
+                font-weight:bold;
+                font-size:13px;
+                padding:6px 0;
+                transform:rotate(-45deg);
+                z-index:10;
+                box-shadow:0 3px 8px rgba(0,0,0,.3);
+                text-transform:uppercase;
+            }
+
             .prod-card:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 12px 30px rgba(61,33,17,.15);
                 border-color: var(--secundario);
             }
 
-            /* Producto agotado: tarjeta en gris, sin interacción */
             .prod-card.agotado {
-                filter: grayscale(1);
-                opacity: 0.6;
+                opacity: 0.7;
             }
+
+            .prod-card.agotado .prod-card-img{
+                filter: grayscale(100%);
+            }
+
             .prod-card.agotado:hover {
                 transform: none;
                 box-shadow: none;
@@ -307,11 +335,14 @@
                 <h3 class="cat-titulo"><?= hv($categoria) ?></h3>
                 <div class="productos-grid">
                     <?php foreach ($items as $p): $agotado = ($p['estado'] === 'Agotado'); ?>
-                    <div class="prod-card<?= $agotado ? ' agotado' : '' ?>">
+                        <div class="prod-card<?= $agotado ? ' agotado' : '' ?>">
+                            <?php if($agotado): ?>
+                                <div class="ribbon-agotado">AGOTADO</div>
+                            <?php endif; ?>
                         <img class="prod-card-img"
-                            src="<?= hv($p['img']) ?>"
-                            alt="<?= hv($p['nombre']) ?>"  
-                            onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
+                                src="<?= hv($p['img']) ?>"
+                                alt="<?= hv($p['nombre']) ?>"
+                                onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
                        <div class="prod-card-body">
                             <div class="prod-card-nombre"><?= hv($p['nombre']) ?></div>
                             <div class="prod-card-desc">
@@ -321,12 +352,10 @@
                                 Disponibles: <strong><?= (int)$p['cantidad'] ?></strong>
                             </div>
                         </div>
-                        <div class="prod-card-footer">
-                            <span class="prod-card-precio"><?= formatCOP($p['valor']) ?></span>
-                            <?php if ($agotado): ?>
-                            <span class="badge-agotado">Agotado</span>
-                            <?php elseif (isset($_SESSION['id_usuario'])): ?>
-                            <button type="button" class="btn-add" title="Agregar al carrito"
+                        <div class="prod-card-footer"><span class="prod-card-precio"><?= formatCOP($p['valor']) ?></span>
+                        <?php if (!$agotado && isset($_SESSION['id_usuario'])): ?>
+                            <button type="button" class="btn-add"
+                                title="Agregar al carrito"
                                 onclick="agregarAlCarrito(
                                     <?= (int)$p['id'] ?>,
                                     '<?= hv($p['nombre']) ?>',
@@ -335,16 +364,17 @@
                                     'producto',
                                     this
                                 )">+</button>
-                            <?php else: ?>
-                                <button type="button" class="btn-add" title="Inicia sesión para agregar" onclick="irLoginConAviso('producto')">+
-                                </button>
-                            <?php endif; ?>
-                        </div>
+                        <?php elseif (!$agotado): ?>
+                            <button type="button"
+                                class="btn-add"
+                                title="Inicia sesión para agregar"
+                                onclick="irLoginConAviso('producto')">+</button>
+                        <?php endif; ?>
+                    </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
             <?php endforeach; ?>
-
         <?php endif; ?>
     </div>
 
