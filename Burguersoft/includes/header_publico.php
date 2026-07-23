@@ -839,14 +839,13 @@ let _toastTimer = null;
 
 function vaciarCarrito() {
     if (!carrito || carrito.length === 0) {
-        mostrarToastalerta('No hay productos en el carrito para vaciarlo.');
-    return;
-    }
-    if (!confirm('¿Estás seguro de que deseas vaciar el carrito?')) 
+        mostrarToast("No hay productos en el carrito para vaciarlo.");
         return;
+    }
+    if (!confirm('¿Vaciar el carrito?')) return;
     carrito = [];
-    if (typeof actualizarCarrito === 'function') actualizarCarrito();
-    mostrarToastalerta('Tu carrito ha sido vaciado.');
+    guardarCarrito();
+    actualizarCarrito();
 }
 
 function abrirModalPerfil() {

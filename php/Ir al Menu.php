@@ -303,6 +303,30 @@
                 color: #888;
                 font-size: 16px;
             }
+            .toast{
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #2f2a1f;
+            color: #ffffff;
+            border: 2.5px solid #E8821A;
+            padding: 18px 28px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0;
+            z-index: 9999;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.mostrar{
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
         </style>
     </head>
     <body>
@@ -356,13 +380,14 @@
                         <?php if (!$agotado && isset($_SESSION['id_usuario'])): ?>
                             <button type="button" class="btn-add"
                                 title="Agregar al carrito"
-                                onclick="agregarAlCarrito(
+                              onclick="agregarAlCarrito(
                                     <?= (int)$p['id'] ?>,
                                     '<?= hv($p['nombre']) ?>',
                                     <?= (float)$p['valor'] ?>,
                                     '<?= hv($p['img']) ?>',
                                     'producto',
-                                    this
+                                    this,
+                                    <?= (int)$p['cantidad'] ?>
                                 )">+</button>
                         <?php elseif (!$agotado): ?>
                             <button type="button"
@@ -395,6 +420,8 @@
         window.location.href = '/burguersoft/php/login.php?aviso=' + tipo;
     }
     </script>
+
+    <div id="toast" class="toast"></div>
 
     <script src="/burguersoft/js/Menu.js?v=<?= time(); ?>"></script>
 

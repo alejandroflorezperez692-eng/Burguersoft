@@ -1,3 +1,16 @@
+function mostrarToast(mensaje) {
+    const toast = document.getElementById("toast");
+
+    if (!toast) return;
+
+    toast.textContent = mensaje;
+    toast.classList.add("mostrar");
+
+    setTimeout(() => {
+        toast.classList.remove("mostrar");
+    }, 3000);
+}
+
 function cargarCarritoGuardado() {
     try {
         const guardado = localStorage.getItem('burguersoft_carrito');
@@ -20,17 +33,32 @@ var pedidoRealizado = false;
 
 document.addEventListener('DOMContentLoaded', actualizarCarrito);
 
-function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
-    carrito.push({ id, nombre, precio: Number(precio), img, tipo });
+function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement, stock) {
+    const cantidadEnCarrito = carrito.filter(item => item.id === id).length;
+    if (cantidadEnCarrito >= stock) {
+        mostrarToast("Solo hay " + stock + " unidades disponibles.");
+        return;
+    }
+
+    carrito.push({
+        id,
+        nombre,
+        precio: Number(precio),
+        img,
+        tipo,
+        stock
+    });
+
     guardarCarrito();
     actualizarCarrito();
 
     if (btnElement) {
-        btnElement.textContent = '✓';
-        btnElement.style.background = '#27ae60';
+        btnElement.textContent = "✓";
+        btnElement.style.background = "#27ae60";
+
         setTimeout(() => {
-            btnElement.textContent = '+';
-            btnElement.style.background = '';
+            btnElement.textContent = "+";
+            btnElement.style.background = "";
         }, 800);
     }
 }
@@ -99,11 +127,18 @@ function actualizarCarrito() {
 
     if (cartTotal) cartTotal.textContent = '$' + total.toLocaleString('es-CO');
 }
+
 function aumentarCantidad(nombre){
     const producto = carrito.find(p => p.nombre === nombre);
-    if(producto){
-        carrito.push({...producto});
+    if (!producto) return;
+    const cantidadActual = carrito.filter(p => p.id === producto.id).length;
+
+    if (cantidadActual >= producto.stock) {
+        mostrarToast("Solo hay " + producto.stock + " unidades disponibles.");
+        return;
     }
+
+    carrito.push({ ...producto });
     guardarCarrito();
     actualizarCarrito();
 }
