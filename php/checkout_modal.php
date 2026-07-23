@@ -86,17 +86,9 @@ if ($logueado): ?>
                     <img src="../estilos/img/dinero.png" alt="Efectivo">
                     Efectivo
                 </button>
-                <button class="co-pay-opt" data-val="tarjeta" onclick="selPago(this,'dom')" type="button">
-                    <img src="../estilos/img/tarjeta.png" alt="Tarjeta">
-                    Tarjeta
-                </button>
-                <button class="co-pay-opt" data-val="nequi" onclick="selPago(this,'dom')" type="button">
-                    <img src="../estilos/img/nequi.png" alt="Nequi">
-                    Nequi
-                </button>
-                <button class="co-pay-opt" data-val="daviplata" onclick="selPago(this,'dom')" type="button">
-                    <img src="../estilos/img/daviplata.png" alt="Daviplata">
-                    Daviplata
+                <button class="co-pay-opt" data-val="bre-b" onclick="selPago(this,'dom')" type="button">
+                    <img src="../estilos/img/breb.png" alt="Bre-B">
+                    Bre-B
                 </button>
             </div>
             <input type="hidden" id="co-dom-pago" value=""/>
@@ -166,17 +158,9 @@ if ($logueado): ?>
                         <img src="/burguersoft/estilos/img/dinero.png" alt="Efectivo">
                         Efectivo
                     </button>
-                    <button class="co-pay-opt" data-val="tarjeta" onclick="selPago(this,'rec')" type="button">
-                        <img src="/burguersoft/estilos/img/tarjeta.png" alt="Tarjeta">
-                        Tarjeta
-                    </button>
-                    <button class="co-pay-opt" data-val="nequi" onclick="selPago(this,'rec')" type="button">
-                        <img src="/burguersoft/estilos/img/nequi.png">
-                        Nequi
-                    </button>
-                    <button class="co-pay-opt" data-val="daviplata" onclick="selPago(this,'rec')" type="button">
-                        <img src="/burguersoft/estilos/img/daviplata.png">
-                        Daviplata
+                    <button class="co-pay-opt" data-val="bre-b" onclick="selPago(this,'rec')" type="button">
+                        <img src="/burguersoft/estilos/img/breb.png" alt="Bre-B">
+                        Bre-B
                     </button>
                 </div>
                 <input type="hidden" id="co-rec-pago" value=""/>
@@ -215,17 +199,9 @@ if ($logueado): ?>
                         <img src="/burguersoft/estilos/img/dinero.png" alt="Efectivo">
                         Efectivo
                     </button>
-                    <button class="co-pay-opt" data-val="tarjeta" onclick="selPago(this,'res')" type="button">
-                        <img src="../estilos/img/tarjeta.png" alt="Tarjeta">
-                        Tarjeta
-                    </button>
-                    <button class="co-pay-opt" data-val="nequi" onclick="selPago(this,'res')" type="button">
-                        <img src="../estilos/img/nequi.png" alt="Nequi">
-                        Nequi
-                    </button>
-                    <button class="co-pay-opt" data-val="daviplata" onclick="selPago(this,'res')" type="button">
-                        <img src="../estilos/img/daviplata.png" alt="Daviplata">
-                        Daviplata
+                    <button class="co-pay-opt" data-val="bre-b" onclick="selPago(this,'res')" type="button">
+                        <img src="/burguersoft/estilos/img/dinero.png" alt="Bre-B">
+                        Bre-B
                     </button>
                 </div>
                 <input type="hidden" id="co-res-pago" value=""/>
