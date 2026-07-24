@@ -34,7 +34,6 @@ function agregarAlCarrito(id, nombre, precio, img, tipo, btnElement) {
         }, 800);
     }
 }
-
 function actualizarCarrito() {
     const badge       = document.getElementById('badge-carrito');
     const cartItems   = document.getElementById('cartItems');
@@ -62,33 +61,113 @@ function actualizarCarrito() {
             cartItems.appendChild(emptyCart);
         }
         if (btnCheckout) btnCheckout.disabled = true;
+
     } else {
+
         if (emptyCart) emptyCart.style.display = 'none';
         if (btnCheckout) btnCheckout.disabled = false;
 
         for (const [, item] of map.entries()) {
+
             const div = document.createElement('div');
-            div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee';
+            div.className = "cart-item";
+
+            const descripcion = item.nota && item.nota.trim()
+                ? item.nota
+                : (item.tipo === 'promocion' ? 'Combo promocional' : 'Producto individual');
+
             div.innerHTML = `
-                <img src="${item.img}"
-                     style="width:50px;height:50px;object-fit:cover;border-radius:8px"
-                     onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
-                <div style="flex:1">
-                    <div style="font-weight:600;font-size:13px">${item.nombre}</div>
-                    <div style="font-size:12px;color:#888">
-                        x${item.cantidad} — $${(item.precio * item.cantidad).toLocaleString('es-CO')}
+                <img class="cart-img"
+                    src="${item.img}"
+                    onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
+
+                <div class="cart-info">
+
+                    <div class="cart-top">
+                        <span class="cart-name">${item.nombre}</span>
+                        <span class="cart-price">
+                            $${(item.precio * item.cantidad).toLocaleString('es-CO')}
+                        </span>
                     </div>
+
+                    <div class="cart-desc">
+                        ${descripcion}
+                    </div>
+
+                    <div class="cart-bottom">
+                        <div class="cart-actions-text">
+                            <button class="cart-delete"
+                                onclick="quitarDelCarrito('${item.nombre}')">
+                                Eliminar
+                            </button>
+                            <span class="cart-sep">|</span>
+                            <button class="cart-edit"
+                                onclick="editarProducto('${item.nombre}')">
+                                Editar
+                            </button>
+                        </div>
+
+                        <div class="cart-qty">
+                            <button class="cart-qty-btn" onclick="disminuirCantidad('${item.nombre}')">−</button>
+                            <span class="cart-qty-num">${item.cantidad}</span>
+                            <button class="cart-qty-btn" onclick="aumentarCantidad('${item.nombre}')">+</button>
+                        </div>
+                    </div>
+
                 </div>
-                <button onclick="quitarDelCarrito('${item.nombre}')"
-                    style="background:none;border:none;color:#e63946;font-size:18px;cursor:pointer;padding:4px">×</button>
             `;
+
             cartItems.appendChild(div);
         }
     }
 
-    if (cartTotal) cartTotal.textContent = '$' + total.toLocaleString('es-CO');
+    if (cartTotal) {
+        cartTotal.textContent = '$' + total.toLocaleString('es-CO');
+    }
 }
 
+function aumentarCantidad(nombre) {
+    const base = carrito.find(i => i.nombre === nombre);
+    if (base) {
+        carrito.push({ ...base });
+        guardarCarrito();
+        actualizarCarrito();
+    }
+}
+
+function disminuirCantidad(nombre) {
+    const idx = carrito.findIndex(i => i.nombre === nombre);
+    if (idx !== -1) {
+        carrito.splice(idx, 1);
+        guardarCarrito();
+        actualizarCarrito();
+    }
+}
+
+function quitarDelCarrito(nombre) {
+    carrito = carrito.filter(i => i.nombre !== nombre);
+    guardarCarrito();
+    actualizarCarrito();
+}
+
+function editarProducto(nombre) {
+    const actual = carrito.find(i => i.nombre === nombre);
+    const notaActual = actual?.nota || '';
+
+    const nuevaNota = prompt(
+        `Observaciones para "${nombre}" (ej: sin cebolla, extra salsa):`,
+        notaActual
+    );
+
+    if (nuevaNota === null) return; // canceló
+
+    carrito.forEach(item => {
+        if (item.nombre === nombre) item.nota = nuevaNota.trim();
+    });
+
+    guardarCarrito();
+    actualizarCarrito();
+}
 function quitarDelCarrito(nombre) {
     const idx = carrito.findIndex(i => i.nombre === nombre);
     if (idx !== -1) carrito.splice(idx, 1);

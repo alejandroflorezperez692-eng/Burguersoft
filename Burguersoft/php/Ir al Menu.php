@@ -268,6 +268,112 @@ if (!function_exists('formatCOP')) {
             color: #888;
             font-size: 16px;
         }
+        .cart-item{
+            display:flex;
+            gap:14px;
+            padding:16px 0;
+            border-bottom:1px solid #F0EAE0;
+        }
+        .cart-item:last-child{ border-bottom:none; }
+
+        .cart-img{
+            width:64px;
+            height:64px;
+            object-fit:cover;
+            border-radius:10px;
+            flex-shrink:0;
+            background:#F7F2EA;
+        }
+
+        .cart-info{
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            min-width:0;
+        }
+
+        .cart-top{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:10px;
+        }
+
+        .cart-name{
+            font-weight:700;
+            font-size:14px;
+            color:#1C1410;
+            line-height:1.3;
+        }
+
+        .cart-price{
+            font-weight:700;
+            font-size:14px;
+            color:#1C1410;
+            white-space:nowrap;
+        }
+
+        .cart-desc{
+            font-size:12px;
+            color:#9A8C7A;
+            line-height:1.4;
+        }
+
+        .cart-bottom{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-top:4px;
+        }
+
+        .cart-delete{
+            background:none;
+            border:none;
+            color:#1C1410;
+            font-weight:700;
+            font-size:12px;
+            cursor:pointer;
+            padding:0;
+            transition:color .15s;
+        }
+        .cart-delete:hover{ color:#C0392B; }
+
+        .cart-qty{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .cart-qty-btn{
+            width:26px;
+            height:26px;
+            border-radius:50%;
+            border:1.5px solid #1C1410;
+            background:#fff;
+            color:#1C1410;
+            font-size:14px;
+            font-weight:700;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            line-height:1;
+            transition:background .15s,color .15s;
+        }
+        .cart-qty-btn:hover{
+            background:#1C1410;
+            color:#fff;
+        }
+
+        .cart-qty-num{
+            font-weight:700;
+            font-size:14px;
+            color:#1C1410;
+            min-width:14px;
+            text-align:center;
+        }
+
     </style>
 </head>
 <body>
@@ -355,7 +461,7 @@ function irLoginConAviso(tipo) {
 }
 </script>
 
-<script src="/burguersoft/js/Menu.js"></script>
+<script src="/burguersoft/js/Menu.js?v=2"></script>
 
 <div class="acc-panel" id="accPanel">
     <div class="acc-panel-title">Accesibilidad</div>

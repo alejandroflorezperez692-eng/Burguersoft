@@ -730,6 +730,7 @@ body { overflow-x: hidden; width: 100%; }
     .mp-full{grid-column:1}
     .mp-body,.mp-head{padding:16px}
 }
+
 </style>
 
 <script src="/burguersoft/js/Menu.js"></script>

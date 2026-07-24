@@ -96,29 +96,48 @@ function actualizarCarrito() {
 
         for (const [, item] of map.entries()) {
             const div = document.createElement('div');
-            div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee';
+            div.className = 'cart-item';
+
+            const descripcion = item.nota && item.nota.trim()
+                ? item.nota
+                : (item.tipo === 'promocion' ? 'Combo promocional' : 'Producto individual');
+
             div.innerHTML = `
-                <img src="${item.img}"
-                     style="width:50px;height:50px;object-fit:cover;border-radius:8px"
+                <img class="cart-img"
+                     src="${item.img}"
                      onerror="this.src='/burguersoft/estilos/img/placeholder.png'">
-                <div style="flex:1">
-                    <div style="font-weight:600;font-size:13px">${item.nombre}</div>
-                    <div style="font-size:12px;color:#888">
-                        x${item.cantidad} — $${(item.precio * item.cantidad).toLocaleString('es-CO')}
+
+                <div class="cart-info">
+                    <div class="cart-top">
+                        <span class="cart-name">${item.nombre}</span>
+                        <span class="cart-price">
+                            $${(item.precio * item.cantidad).toLocaleString('es-CO')}
+                        </span>
                     </div>
-                </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                    <button onclick="event.stopPropagation(); event.preventDefault(); aumentarCantidad('${item.nombre}')"
-                        style="width:28px;height:28px;border:none;border-radius:6px;background:#F18921;color:white;font-size:18px;cursor:pointer">
-                        +
-                    </button>
-                    <span style="font-weight:bold">
-                        ${item.cantidad}
-                    </span>
-                    <button onclick="event.stopPropagation(); event.preventDefault(); disminuirCantidad('${item.nombre}')"
-                        style="width:28px;height:28px;border:none;border-radius:6px;background:#F18921;color:white;font-size:18px;cursor:pointer">
-                        -
-                    </button>
+
+                    <div class="cart-desc">${descripcion}</div>
+
+                    <div class="cart-bottom">
+                        <div class="cart-actions-text">
+                            <button class="cart-delete"
+                                onclick="event.stopPropagation(); quitarDelCarrito('${item.nombre}')">
+                                Eliminar
+                            </button>
+                            <span class="cart-sep">|</span>
+                            <button class="cart-edit"
+                                onclick="event.stopPropagation(); editarProducto('${item.nombre}')">
+                                Editar
+                            </button>
+                        </div>
+
+                        <div class="cart-qty">
+                            <button class="cart-qty-btn"
+                                onclick="event.stopPropagation(); disminuirCantidad('${item.nombre}')">−</button>
+                            <span class="cart-qty-num">${item.cantidad}</span>
+                            <button class="cart-qty-btn"
+                                onclick="event.stopPropagation(); aumentarCantidad('${item.nombre}')">+</button>
+                        </div>
+                    </div>
                 </div>
             `;
             cartItems.appendChild(div);
@@ -128,7 +147,26 @@ function actualizarCarrito() {
     if (cartTotal) cartTotal.textContent = '$' + total.toLocaleString('es-CO');
 }
 
-function aumentarCantidad(nombre){
+function editarProducto(nombre) {
+    const actual = carrito.find(i => i.nombre === nombre);
+    const notaActual = actual?.nota || '';
+
+    const nuevaNota = prompt(
+        `Observaciones para "${nombre}" (ej: sin cebolla, extra salsa):`,
+        notaActual
+    );
+
+    if (nuevaNota === null) return;
+
+    carrito.forEach(item => {
+        if (item.nombre === nombre) item.nota = nuevaNota.trim();
+    });
+
+    guardarCarrito();
+    actualizarCarrito();
+}
+
+function aumentarCantidad(nombre) {
     const producto = carrito.find(p => p.nombre === nombre);
     if (!producto) return;
     const cantidadActual = carrito.filter(p => p.id === producto.id).length;
@@ -143,26 +181,11 @@ function aumentarCantidad(nombre){
     actualizarCarrito();
 }
 
-function disminuirCantidad(nombre){
+function disminuirCantidad(nombre) {
     const indice = carrito.findIndex(p => p.nombre === nombre);
-    if(indice !== -1){
-        carrito.splice(indice,1);
+    if (indice !== -1) {
+        carrito.splice(indice, 1);
     }
-    guardarCarrito();
-    actualizarCarrito();
-}
-
-function quitarDelCarrito(nombre) {
-    const idx = carrito.findIndex(i => i.nombre === nombre);
-    if (idx !== -1)
-        carrito.splice(idx,1);
-    guardarCarrito();
-    actualizarCarrito();
-}
-
-function vaciarCarrito() {
-    if (!confirm('¿Vaciar el carrito?')) return;
-    carrito = [];
     guardarCarrito();
     actualizarCarrito();
 }
