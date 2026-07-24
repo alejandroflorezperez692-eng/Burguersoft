@@ -1,11 +1,13 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+require_once __DIR__ . '/../includes/sesion_segura.php';
 require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
+    requerirCSRF();
 
     $nombre           = limpiar($_POST['nombre']           ?? '');
     $apellido         = limpiar($_POST['apellido']         ?? '');
@@ -59,11 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['success' => true]);
     exit;
 }
+
+$csrfToken = generarCSRFToken();
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-<head>  
+<head>
+    <meta name="csrf-token" content="<?= htmlspecialchars($csrfToken) ?>">
     <meta charset="UTF-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../estilos/estilos-registro.css">
     <link rel="stylesheet" href="../estilos/estilos-login.css">
     <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
+    <script src="../js/csrf.js"></script>
     <script src="../js/Registro.js" defer></script>
     <style>
         .btn-toggle-password:hover {

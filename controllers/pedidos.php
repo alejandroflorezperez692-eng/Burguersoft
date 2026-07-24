@@ -8,6 +8,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method !== 'POST') jsonResponse(['error' => 'Método no permitido'], 405);
 
 iniciarSesionSegura();
+requerirCSRF();
 $usuario_id = (int)($_SESSION['id_usuario'] ?? 0);
 
 $body   = json_decode(file_get_contents('php://input'), true) ?? [];

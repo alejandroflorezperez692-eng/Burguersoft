@@ -1,0 +1,5 @@
+# Evita que se puedan ejecutar scripts (PHP, CGI, etc.) dentro de /uploads
+# aunque alguien lograra subir un archivo malicioso disfrazado de imagen.
+<FilesMatch "\.(php|php\d?|phtml|phar|pl|py|cgi|sh)$">
+    Require all denied
+</FilesMatch>

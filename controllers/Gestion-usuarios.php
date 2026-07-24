@@ -3,13 +3,18 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 iniciarSesionSegura();
+requerirCSRF();
 if (empty($_SESSION['id_usuario']))             { http_response_code(401); echo json_encode(['error' => 'No autorizado']); exit; }
 if (($_SESSION['rol_usuario'] ?? '') !== 'Administrador') { http_response_code(403); echo json_encode(['error' => 'Sin permisos']); exit; }
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+// CORS restringido al propio dominio: nunca combinar '*' con endpoints
+// autenticados por cookie de sesión, o cualquier sitio podría leer la respuesta.
+$origenPropio = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+header("Access-Control-Allow-Origin: $origenPropio");
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, PUT, DELETE');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
 
 $pdo = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];

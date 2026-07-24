@@ -1,10 +1,11 @@
 <?php
 
-session_start();
+require_once __DIR__ . '/../includes/sesion_segura.php';
 
 $mensaje = $_SESSION['mensaje'] ?? '';
 $tipo    = $_SESSION['tipo_mensaje'] ?? '';
 unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
+$csrfToken = generarCSRFToken();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -84,6 +85,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
         <?php endif; ?>
 
         <form method="POST" action="../procesar_recuperacion.php">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
             <input id="rec-email" name="correo" type="email" class="input"
                    placeholder="Correo electrónico (obligatorio)" required autocomplete="off">
             <button type="submit" class="btn-primario">Enviar código de recuperación</button>

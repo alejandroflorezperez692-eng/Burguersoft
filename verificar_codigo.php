@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'includes/sesion_segura.php';
 require_once 'includes/conexion.php';
 require_once 'includes/funciones.php';
 
@@ -12,22 +12,19 @@ $error  = '';
 $bloqueado = false;
 $segundos_restantes = 0;
 $LIMITE_INTENTOS = 3;
-$TIEMPO_BLOQUEO  = 60; 
+$TIEMPO_BLOQUEO  = 60;
 
+$pdoSeg = getPDO();
+$csrfToken = generarCSRFToken();
 
-if (isset($_SESSION['codigo_bloqueado_hasta'])) {
-    $restante = $_SESSION['codigo_bloqueado_hasta'] - time();
-    if ($restante > 0) {
-        $bloqueado          = true;
-        $segundos_restantes = $restante;
-        $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
-    } else {
-    
-        unset($_SESSION['codigo_bloqueado_hasta'], $_SESSION['codigo_intentos']);
-    }
+$segundos_restantes = segundosBloqueoRestante($pdoSeg, 'verificar_codigo', strtolower($correo), $LIMITE_INTENTOS, $TIEMPO_BLOQUEO);
+if ($segundos_restantes > 0) {
+    $bloqueado = true;
+    $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
 }
 
 if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    requerirCSRFFormulario('verificar_codigo.php');
 
     $codigo = '';
     for ($i = 1; $i <= 6; $i++) {
@@ -38,36 +35,33 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Ingresa los 6 dígitos del código.';
     } else {
         $stmt = $conn->prepare(
-            "SELECT id FROM usuario
+            "SELECT id, token_recuperacion FROM usuario
              WHERE correo              = ?
-               AND token_recuperacion  = ?
+               AND token_recuperacion IS NOT NULL
                AND expiracion_token    > NOW()"
         );
-        $stmt->bind_param('ss', $correo, $codigo);
+        $stmt->bind_param('s', $correo);
         $stmt->execute();
         $stmt->store_result();
+        $stmt->bind_result($idUsuario, $hashGuardado);
+        $encontrado = $stmt->fetch();
+        $stmt->close();
 
-        if ($stmt->num_rows === 0) {
-     
-            $_SESSION['codigo_intentos'] = ($_SESSION['codigo_intentos'] ?? 0) + 1;
-            $intentos_restantes = $LIMITE_INTENTOS - $_SESSION['codigo_intentos'];
+        if (!$encontrado || !password_verify($codigo, $hashGuardado)) {
+            registrarIntentoFallido($pdoSeg, 'verificar_codigo', strtolower($correo));
+            $segundos_restantes = segundosBloqueoRestante($pdoSeg, 'verificar_codigo', strtolower($correo), $LIMITE_INTENTOS, $TIEMPO_BLOQUEO);
 
-            if ($_SESSION['codigo_intentos'] >= $LIMITE_INTENTOS) {
-                $_SESSION['codigo_bloqueado_hasta'] = time() + $TIEMPO_BLOQUEO;
-                $bloqueado          = true;
-                $segundos_restantes = $TIEMPO_BLOQUEO;
+            if ($segundos_restantes > 0) {
+                $bloqueado = true;
                 $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
             } else {
-                $error = 'Código incorrecto o expirado. Te quedan ' . $intentos_restantes . ' intento(s).';
+                $error = 'Código incorrecto o expirado.';
             }
         } else {
-          
-            unset($_SESSION['codigo_intentos'], $_SESSION['codigo_bloqueado_hasta']);
+            limpiarIntentos($pdoSeg, 'verificar_codigo', strtolower($correo));
             $_SESSION['codigo_verificado'] = true;
-            $stmt->close();
             redirigir('restablecer_contrasena.php');
         }
-        $stmt->close();
     }
 }
 ?>
@@ -195,6 +189,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" id="formCodigo">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
             <div class="codigo-inputs">
                 <?php for ($i = 1; $i <= 6; $i++): ?>
                     <input type="text" name="d<?= $i ?>" id="d<?= $i ?>"

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 iniciarSesionSegura();
+requerirCSRF();
 
 $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
@@ -62,12 +63,13 @@ if ($method === 'POST' && ($_POST['_method'] ?? '') !== 'PUT') {
 
     $imagen = '../estilos/img/promocion.png';
     if (!empty($_FILES['imagen']['tmp_name'])) {
+        $validacion = validarImagenSubida($_FILES['imagen']);
+        if (!$validacion)
+            jsonResponse(['error' => 'Imagen invalida: solo se permiten JPG, PNG, WEBP, GIF o AVIF de maximo 5MB'], 400);
+
         $dir = __DIR__ . '/../uploads/promociones/';
-        if (!is_dir($dir)) mkdir($dir, 0755, true);
-        $ext            = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-        $nombre_archivo = time() . '_' . uniqid() . '.' . $ext;
-        move_uploaded_file($_FILES['imagen']['tmp_name'], $dir . $nombre_archivo);
-        $imagen = '../uploads/promociones/' . $nombre_archivo;
+        guardarImagenValidada($_FILES['imagen'], $dir, $validacion['nombre_archivo']);
+        $imagen = '../uploads/promociones/' . $validacion['nombre_archivo'];
     }
 
     $pdo->beginTransaction();
@@ -112,12 +114,13 @@ if ($method === 'PUT' || ($method === 'POST' && ($_POST['_method'] ?? '') === 'P
     if (!$nombre || $precio <= 0) jsonResponse(['error' => 'Nombre y precio requeridos'], 400);
 
     if (!empty($_FILES['imagen']['tmp_name'])) {
+        $validacion = validarImagenSubida($_FILES['imagen']);
+        if (!$validacion)
+            jsonResponse(['error' => 'Imagen invalida: solo se permiten JPG, PNG, WEBP, GIF o AVIF de maximo 5MB'], 400);
+
         $dir = __DIR__ . '/../uploads/promociones/';
-        if (!is_dir($dir)) mkdir($dir, 0755, true);
-        $ext            = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-        $nombre_archivo = time() . '_' . uniqid() . '.' . $ext;
-        move_uploaded_file($_FILES['imagen']['tmp_name'], $dir . $nombre_archivo);
-        $imagen = '../uploads/promociones/' . $nombre_archivo;
+        guardarImagenValidada($_FILES['imagen'], $dir, $validacion['nombre_archivo']);
+        $imagen = '../uploads/promociones/' . $validacion['nombre_archivo'];
     } else {
         $s = $pdo->prepare("SELECT imagen FROM promocion WHERE id = ?");
         $s->execute([$id]);

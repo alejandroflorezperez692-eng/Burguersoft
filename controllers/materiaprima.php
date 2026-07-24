@@ -3,6 +3,7 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 iniciarSesionSegura();
+requerirCSRF();
 if (empty($_SESSION['id_usuario'])) jsonResponse(['error' => 'No autorizado'], 401);
 
 $pdo    = getPDO();

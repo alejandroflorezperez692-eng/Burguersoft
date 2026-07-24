@@ -1,5 +1,8 @@
 <?php
 
+require_once __DIR__ . '/env.php';
+require_once __DIR__ . '/seguridad.php';
+
 function redirigir(string $url): void
 {
     header("Location: $url");
@@ -27,10 +30,16 @@ function urlBase(): string
 function getPDO(): PDO {
     static $pdo = null;
     if ($pdo === null) {
+        cargarEnv(__DIR__ . '/../.env');
+        $host   = env('DB_HOST', 'localhost');
+        $nombre = env('DB_NOMBRE', 'burguersoft');
+        $user   = env('DB_USUARIO', 'root');
+        $pass   = env('DB_PASSWORD', '');
+
         $pdo = new PDO(
-            'mysql:host=localhost;dbname=burguersoft;charset=utf8mb4',
-            'root',
-            '',
+            "mysql:host=$host;dbname=$nombre;charset=utf8mb4",
+            $user,
+            $pass,
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
              PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
         );
@@ -39,7 +48,11 @@ function getPDO(): PDO {
 }
 
 function iniciarSesionSegura(): void {
-    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        if (function_exists('configurarCookieSesion')) configurarCookieSesion();
+        session_start();
+    }
+    if (function_exists('enviarCabecerasSeguridad')) enviarCabecerasSeguridad();
 }
 
 function requerirLogin(): void {

@@ -2,15 +2,18 @@
 require_once __DIR__ . '/../PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/../PHPMailer/src/Exception.php';
+require_once __DIR__ . '/env.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-define('SMTP_HOST',     'smtp.gmail.com');
-define('SMTP_PORT',     587);
-define('SMTP_USUARIO',  'burguersoft@gmail.com');
-define('SMTP_PASSWORD', 'zxvh jfaq dylw ndzq');
-define('SMTP_REMITENTE','BURGUERSOFT - El Oriente');
+cargarEnv(__DIR__ . '/../.env');
+
+define('SMTP_HOST',     env('SMTP_HOST', 'smtp.gmail.com'));
+define('SMTP_PORT',     (int) env('SMTP_PORT', '587'));
+define('SMTP_USUARIO',  env('SMTP_USUARIO', ''));
+define('SMTP_PASSWORD', env('SMTP_PASSWORD', ''));
+define('SMTP_REMITENTE', env('SMTP_REMITENTE', 'BURGUERSOFT'));
 
 function enviarCodigoRecuperacion(string $correoDestino, string $codigo): bool
 {

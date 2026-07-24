@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+require_once 'includes/sesion_segura.php';
 require_once 'includes/conexion.php';
 require_once 'includes/funciones.php';
 require_once 'includes/enviar_correo.php';
@@ -9,10 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirigir('php/recuperar_contrasena.php');
 }
 
+requerirCSRFFormulario('/burguersoft/php/recuperar_contrasena.php');
+
 $correo = limpiar($_POST['correo'] ?? '');
 
 if (!$correo || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
     $_SESSION['mensaje']      = 'Por favor ingresa un correo válido.';
+    $_SESSION['tipo_mensaje'] = 'error';
+    redirigir('php/recuperar_contrasena.php');
+}
+
+$pdoSeg = getPDO();
+$segundos_restantes = segundosBloqueoRestante($pdoSeg, 'solicitar_codigo', strtolower($correo), 3, 300);
+if ($segundos_restantes > 0) {
+    $_SESSION['mensaje']      = 'Has solicitado demasiados códigos. Espera unos minutos antes de intentarlo de nuevo.';
     $_SESSION['tipo_mensaje'] = 'error';
     redirigir('php/recuperar_contrasena.php');
 }
@@ -23,20 +33,23 @@ $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows === 0) {
+    registrarIntentoFallido($pdoSeg, 'solicitar_codigo', strtolower($correo));
     $_SESSION['mensaje']      = 'Si el correo está registrado recibirás el código en breve.';
     $_SESSION['tipo_mensaje'] = 'exito';
     $stmt->close();
     redirigir('php/recuperar_contrasena.php');
 }
 $stmt->close();
+registrarIntentoFallido($pdoSeg, 'solicitar_codigo', strtolower($correo));
 
-$codigo     = strval(random_int(100000, 999999));
-$expiracion = date('Y-m-d H:i:s', time() + 1800); 
+$codigo      = strval(random_int(100000, 999999));
+$codigo_hash = password_hash($codigo, PASSWORD_DEFAULT); // nunca se guarda el código en texto plano
+$expiracion  = date('Y-m-d H:i:s', time() + 1800);
 
 $stmt = $conn->prepare(
     "UPDATE usuario SET token_recuperacion = ?, expiracion_token = ? WHERE correo = ?"
 );
-$stmt->bind_param('sss', $codigo, $expiracion, $correo);
+$stmt->bind_param('sss', $codigo_hash, $expiracion, $correo);
 $stmt->execute();
 $stmt->close();
 

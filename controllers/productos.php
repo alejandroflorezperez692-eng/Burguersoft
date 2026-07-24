@@ -3,6 +3,7 @@ require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
 iniciarSesionSegura();
+requerirCSRF();
 
 $pdo    = getPDO();
 $method = $_SERVER['REQUEST_METHOD'];
@@ -64,12 +65,13 @@ if ($accion === 'productos') {
         if (empty($_FILES['imagen']['tmp_name']))
             jsonResponse(['error' => 'La imagen es obligatoria'], 400);
 
+        $validacion = validarImagenSubida($_FILES['imagen']);
+        if (!$validacion)
+            jsonResponse(['error' => 'Imagen inválida: solo se permiten JPG, PNG, WEBP, GIF o AVIF de máximo 5MB'], 400);
+
         $dir = __DIR__ . '/../uploads/productos/';
-        if (!is_dir($dir)) mkdir($dir, 0755, true);
-        $ext  = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-        $file = time() . '_' . uniqid() . '.' . $ext;
-        move_uploaded_file($_FILES['imagen']['tmp_name'], $dir . $file);
-        $img = '../uploads/productos/' . $file;
+        guardarImagenValidada($_FILES['imagen'], $dir, $validacion['nombre_archivo']);
+        $img = '../uploads/productos/' . $validacion['nombre_archivo'];
 
         $pdo->prepare(
             "INSERT INTO producto (nombre, valor, descripcion, img, cantidad, categoria, estado)
@@ -96,12 +98,13 @@ if ($accion === 'productos') {
             jsonResponse(['error' => 'Precio y categoría son obligatorios'], 400);
 
         if (!empty($_FILES['imagen']['tmp_name'])) {
+            $validacion = validarImagenSubida($_FILES['imagen']);
+            if (!$validacion)
+                jsonResponse(['error' => 'Imagen inválida: solo se permiten JPG, PNG, WEBP, GIF o AVIF de máximo 5MB'], 400);
+
             $dir = __DIR__ . '/../uploads/productos/';
-            if (!is_dir($dir)) mkdir($dir, 0755, true);
-            $ext  = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-            $file = time() . '_' . uniqid() . '.' . $ext;
-            move_uploaded_file($_FILES['imagen']['tmp_name'], $dir . $file);
-            $img = '../uploads/productos/' . $file;
+            guardarImagenValidada($_FILES['imagen'], $dir, $validacion['nombre_archivo']);
+            $img = '../uploads/productos/' . $validacion['nombre_archivo'];
         } else {
             $s = $pdo->prepare("SELECT img FROM producto WHERE id = ?");
             $s->execute([$id]);

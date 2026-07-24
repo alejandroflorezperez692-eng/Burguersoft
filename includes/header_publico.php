@@ -13,7 +13,13 @@ if ($logueado) {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perfil'])) {
 
-        if ($_POST['accion_perfil'] === 'datos') {
+        $tokenValido = !empty($_POST['csrf_token']) && !empty($_SESSION['csrf_token'])
+            && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
+
+        if (!$tokenValido) {
+            $modalError = 'Tu sesión expiró. Vuelve a intentarlo.';
+            $modalTab   = $_POST['accion_perfil'] === 'password' ? 'pwd' : 'datos';
+        } elseif ($_POST['accion_perfil'] === 'datos') {
             $nombre         = trim($_POST['nombre']         ?? '');
             $apellido       = trim($_POST['apellido']       ?? '');
             $Tdocumento     = trim($_POST['Tdocumento']     ?? '');
@@ -92,6 +98,10 @@ $iniciales = strtoupper(mb_substr($uModal['nombre'] ?? '', 0, 1));
 
 include $_SERVER['DOCUMENT_ROOT'] . '/burguersoft/php/checkout_modal.php'; 
 ?>
+<?php if (function_exists('generarCSRFToken')): ?>
+<script>window.CSRF_TOKEN = <?= json_encode(generarCSRFToken()) ?>;</script>
+<script src="../js/csrf.js"></script>
+<?php endif; ?>
 <link rel="stylesheet" href="../estilos/accesibilidad.css?v=2">
 <script src="../js/accesibilidad.js"></script>
 <header>
@@ -286,6 +296,7 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
 
         <div class="mp-tab-panel" id="mp-panel-datos">
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generarCSRFToken()) ?>"/>
                 <input type="hidden" name="accion_perfil" value="datos"/>
                 <div class="mp-grid">
 
@@ -350,6 +361,7 @@ $claseShow = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_perf
 
         <div class="mp-tab-panel mp-hidden" id="mp-panel-pwd">
             <form method="POST" action="" onsubmit="return validarFormPassword()">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generarCSRFToken()) ?>"/>
                 <input type="hidden" name="accion_perfil" value="password"/>
                 <div class="mp-grid">
 

@@ -1,10 +1,12 @@
 <?php
-session_start();
+require_once 'includes/sesion_segura.php';
 require_once 'includes/funciones.php';
 
 if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificado'])) {
     redirigir('recuperar_contrasena.php');
 }
+
+$csrfToken = generarCSRFToken();
 
 
 ?>
@@ -155,6 +157,7 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
         <p class="descripcion" style="margin-bottom: 15px; font-size: 14px;">Ingresa y confirma tu nueva contraseña.</p>
 
         <form method="POST" action="guardar_nueva_contrasena.php" id="formNuevaPass">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
             <div class="campo">
                 <label for="password">NUEVA CONTRASEÑA*</label>

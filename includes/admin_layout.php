@@ -4,7 +4,10 @@ $navActivo   = $navActivo ?? '';
 $nombreAdmin = ($_SESSION['nombre'] ?? '') . ' ' . ($_SESSION['apellido'] ?? '');
 $rolAdmin    = $_SESSION['rol_usuario'] ?? 'Cliente';
 $esAdmin     = $rolAdmin === 'Administrador';
+$csrfTokenLayout = generarCSRFToken();
 ?>
+<script>window.CSRF_TOKEN = <?= json_encode($csrfTokenLayout) ?>;</script>
+<script src="../js/csrf.js"></script>
 <div class="sidebar">
     <div class="sidebar-header">
         <img src="../estilos/img/icono1.png" alt="Logo" class="logo logo-claro">

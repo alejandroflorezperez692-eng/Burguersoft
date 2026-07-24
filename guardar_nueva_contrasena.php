@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'includes/sesion_segura.php';
 require_once 'includes/conexion.php';
 require_once 'includes/funciones.php';
 
@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirigir('php/recuperar_contrasena.php');
 }
 
+requerirCSRFFormulario('restablecer_contrasena.php');
 
 if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificado'])) {
     redirigir('php/recuperar_contrasena.php');

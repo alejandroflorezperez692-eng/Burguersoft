@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/sesion_segura.php';
 require_once __DIR__ . '/../includes/conexion.php';
 require_once __DIR__ . '/../includes/funciones.php';
 
@@ -25,23 +25,27 @@ $mensaje_exito = $_SESSION['mensaje'] ?? '';
 $tipo_exito    = $_SESSION['tipo_mensaje'] ?? '';
 unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
 
-if (isset($_SESSION['login_bloqueado_hasta'])) {
-    $restante = $_SESSION['login_bloqueado_hasta'] - time();
-    if ($restante > 0) {
-        $bloqueado          = true;
-        $segundos_restantes = $restante;
+$csrfToken = generarCSRFToken();
+$pdo       = getPDO();
+
+// El bloqueo se calcula por IP + correo intentado (no solo por sesión),
+// así no se puede evadir simplemente borrando cookies.
+$correo_intentado = limpiar($_POST['correo'] ?? ($_GET['correo'] ?? ''));
+if ($correo_intentado) {
+    $segundos_restantes = segundosBloqueoRestante($pdo, 'login', strtolower($correo_intentado), $LIMITE_INTENTOS, $TIEMPO_BLOQUEO);
+    if ($segundos_restantes > 0) {
+        $bloqueado = true;
         $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
-    } else {
-        unset($_SESSION['login_bloqueado_hasta'], $_SESSION['login_intentos']);
     }
 }
 
 if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    requerirCSRFFormulario('/burguersoft/php/login.php');
+
     $correo     = limpiar($_POST['correo']     ?? '');
     $contrasena = $_POST['contrasena'] ?? '';
 
     if ($correo && $contrasena) {
-        $pdo  = getPDO();
         $stmt = $pdo->prepare(
             "SELECT u.id, u.nombre, u.apellido, u.correo, u.contrasena, u.telefono, r.nombre AS nombre_rol
              FROM usuario u
@@ -52,7 +56,10 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuario = $stmt->fetch();
 
         if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
-            unset($_SESSION['login_intentos'], $_SESSION['login_bloqueado_hasta']);
+            limpiarIntentos($pdo, 'login', strtolower($correo));
+
+            // Evita fijación de sesión: nuevo ID de sesión tras autenticar
+            regenerarSesionTrasLogin();
 
             $_SESSION['id_usuario']  = $usuario['id'];
             $_SESSION['nombre']      = $usuario['nombre'];
@@ -67,16 +74,14 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 redirigir('/burguersoft/php/Burguersoft.php?toast=login_ok');
             }
         } else {
-            $_SESSION['login_intentos'] = ($_SESSION['login_intentos'] ?? 0) + 1;
-            $intentos_restantes = $LIMITE_INTENTOS - $_SESSION['login_intentos'];
+            registrarIntentoFallido($pdo, 'login', strtolower($correo));
+            $segundos_restantes = segundosBloqueoRestante($pdo, 'login', strtolower($correo), $LIMITE_INTENTOS, $TIEMPO_BLOQUEO);
 
-            if ($_SESSION['login_intentos'] >= $LIMITE_INTENTOS) {
-                $_SESSION['login_bloqueado_hasta'] = time() + $TIEMPO_BLOQUEO;
-                $bloqueado          = true;
-                $segundos_restantes = $TIEMPO_BLOQUEO;
+            if ($segundos_restantes > 0) {
+                $bloqueado = true;
                 $error = "Demasiados intentos fallidos. Espera <span id='countdown'>{$segundos_restantes}</span> segundo(s) para intentar de nuevo.";
             } else {
-                $error = 'Correo o contraseña incorrectos. Te quedan ' . $intentos_restantes . ' intento(s).';
+                $error = 'Correo o contraseña incorrectos.';
             }
         }
     } else {
@@ -218,6 +223,7 @@ if (!$bloqueado && $_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form id="loginForm" method="POST" action="login.php">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                 <h2>CORREO*</h2>
                 <input type="email" name="correo" id="email" class="input"
                        placeholder="ejemplo@gmail.com" required autocomplete="off"
