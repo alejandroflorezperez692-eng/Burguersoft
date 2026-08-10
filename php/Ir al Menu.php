@@ -46,6 +46,7 @@
         <link rel="icon" href="../estilos/img/icono1-oscuro.png" type="image/x-icon">
         <link rel="stylesheet" href="../estilos/Estilos-paginas-clientes.css">
         <link rel="stylesheet" href="../estilos/factura-estilos.css">
+        <script src="../js/Hero-Carrusel.js" defer></script>
         
         <style>
             .prod-stock{
