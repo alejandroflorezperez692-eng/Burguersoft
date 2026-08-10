@@ -87,6 +87,9 @@ form {
 }
 
 .btn-regresar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: var(--color-oscuro);
     color: var(--color-card);
     padding: 9px 20px;
@@ -98,9 +101,10 @@ form {
     text-transform: uppercase;
     border: 1px solid rgba(232, 130, 26, 0.35);
     transition: all var(--transicion);
-    position: static; 
+    position: static !important;
     top: auto;
     right: auto;
+    box-shadow: none;
 }
 
 .btn-regresar:hover {
@@ -274,12 +278,12 @@ h2 {
 .linea {
     flex: 1;
     height: 1px;
-    background: rgba(44, 24, 16, 0.12);
+    background: #000000;
 }
 
 .circulo {
     font-size: 13px;
-    color: #aaa;
+    color: #000000;
     font-weight: 400;
     letter-spacing: 0.3px;
 }
@@ -287,11 +291,23 @@ h2 {
 .enlace-externo {
     text-align: center;
     font-size: 14px;
-    color: #666;
+    color: #ffffff;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0;
+    padding: 0;
+}
+
+.recuperacion-ayuda {
+    color: #2c1810;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin: 12px 0 0;
 }
 
 .enlace-externo a {
-    color: var(--color-primario);
+    color: #ffffff;
     text-decoration: none;
     font-weight: 800;
     margin-left: 4px;

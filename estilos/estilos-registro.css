@@ -138,11 +138,15 @@ body {
 
 .encabezado p {
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.65);
+    color: #ffffff;
     margin-top: 8px;
     font-weight: 300;
 }
 
+body.dark-mode #registroForm .encabezado p,
+body:not(.dark-mode) #registroForm .encabezado p {
+    color: #ffffff !important;
+}
 
 .contenedor > *:not(.encabezado) {
     padding-left: 64px;

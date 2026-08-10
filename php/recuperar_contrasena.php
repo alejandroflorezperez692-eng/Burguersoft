@@ -28,10 +28,14 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
             background-color: #ffffff !important; 
         }
 
+        .circulo {
+            color: #000000 !important;
+        }
+
        
         body:not(.dark-mode) .separador-contenedor .linea {
-            background-color: rgba(0, 0, 0, 0.25) !important;
-            background: rgba(0, 0, 0, 0.25) !important;
+            background-color: #000000 !important;
+            background: #000000 !important;
             height: 1px !important;
             display: block !important;
         }
@@ -89,7 +93,7 @@ unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
             <button type="submit" class="btn-primario">Enviar código de recuperación</button>
         </form>
 
-        <p style="color: #2c1810;">¿No puedes cambiar la contraseña?</p>
+        <p class="recuperacion-ayuda">¿No puedes cambiar la contraseña?</p>
 
         <div class="separador-contenedor">
             <div class="linea"></div>

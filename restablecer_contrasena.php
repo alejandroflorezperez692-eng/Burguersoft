@@ -68,17 +68,18 @@ if (empty($_SESSION['correo_recuperacion']) || empty($_SESSION['codigo_verificad
         }
       
         #password {
-            background: #e8f0fe; 
+            background: #ffffff;
         }
         #confirmar-password {
-            background: #faf6f0;
+            background: #ffffff;
             border: 1px solid #eadecc;
         }
         
         .input-wrapper input:focus {
             border-color: #2c1810;
             background: #fff !important;
-            box-shadow: 0 0 0 3px rgba(44, 24, 16, 0.06);
+            box-shadow: none;
+            outline: none;
         }
 
         .btn-toggle-pass {

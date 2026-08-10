@@ -65,7 +65,7 @@
 .acc-btn-reset {
     width: 100%;
     flex: none;
-    color: var(--text-600, #6b4c38);
+    color: #000000;
 }
 
 
@@ -762,9 +762,25 @@ body:not(.dark-mode) .enlace-externo a:hover {
 }
 
 body:not(.dark-mode) .enlace-externo {
-    color: #000000 !important;
+    color: #2c1810 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
 }
 
+body:not(.dark-mode) .enlace-externo a {
+    color: #E8821A !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body:not(.dark-mode) .enlace-externo a:hover {
+    color: #cf6f13 !important;
+}
 
 body:not(.dark-mode) .separador-contenedor .circulo {
     color: #000000 !important;

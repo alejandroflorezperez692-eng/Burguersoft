@@ -279,7 +279,7 @@ h2 {
 
 .circulo {
     font-size: 13px;
-    color: #aaa;
+    color: #000000;
     font-weight: 400;
     letter-spacing: 0.3px;
 }
@@ -287,7 +287,19 @@ h2 {
 .enlace-externo {
     text-align: center;
     font-size: 14px;
-    color: #666;
+    color: #2c1810;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0;
+    padding: 0;
+}
+
+.recuperacion-ayuda {
+    color: #2c1810;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin: 12px 0 0;
 }
 
 .enlace-externo a {
